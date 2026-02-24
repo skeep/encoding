@@ -21,3 +21,48 @@ The output contract includes:
   - `normal`: `mu`, `sigma`
   - `log_normal`: `mu_log`, `sigma_log`
   - `empirical`: `p05`, `p50`, `p95`
+
+## Score Claimed Income Field
+
+Run a deterministic, taxonomy-driven score for the `claimed_income` field:
+
+```python
+from scoring_engine import score_field
+
+raw_json = [
+  {
+    "AL/2024/00381939|936770": {
+      "current_employment": {
+        "1838704": {"claimed_income": "58000.000000"}
+      }
+    }
+  }
+]
+
+result = score_field(
+    raw_json=raw_json,
+    taxonomy_path="docs/field_taxonomy/claimed_income.yaml",
+    stats_path="data/stats/minimal_stats_artifact.json",
+    ocr_confidence_map={"claimed_income": 0.93},
+    context={"amount_applied_amount": 890400.0, "applied_term": 60},
+)
+print(result)
+```
+
+Output contains:
+- `field_id`
+- `raw_value`, `normalized_value`
+- `field_score`, `status`
+- `component_scores` (`ocr`, `format`, `statistical`, `cross_field`)
+- `rule_outputs` (cross-field rule results)
+
+## Add Next Field Taxonomy
+
+To onboard another field without changing pipeline orchestration:
+1. Add a new taxonomy YAML under `docs/field_taxonomy/`.
+2. Reuse existing registry IDs where possible.
+3. If new behavior is needed, register new IDs in `registry.py`:
+   - custom format rules
+   - statistical scorers
+   - cross-field rules
+   - hard-fail conditions / aggregators
