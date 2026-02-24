@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from scoring_types import RuleOutput, ValidationResult, clamp_01
+from app.core.scoring_types import RuleOutput, ValidationResult, clamp_01
 
 
 def validate_cross_field(

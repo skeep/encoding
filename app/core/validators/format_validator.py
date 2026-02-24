@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from scoring_types import ValidationResult, clamp_01
+from app.core.scoring_types import ValidationResult, clamp_01
 
 
 def _check_bounds(value: float, bounds: dict) -> tuple[bool, str]:

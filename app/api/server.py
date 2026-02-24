@@ -5,7 +5,7 @@ from typing import Any
 from fastapi import FastAPI
 from pydantic import BaseModel
 
-from scoring_service import get_supported_fields, score_document
+from app.core.scoring_service import get_supported_fields, score_document
 
 
 class ScoreRequest(BaseModel):

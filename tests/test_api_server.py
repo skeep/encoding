@@ -2,7 +2,7 @@ import unittest
 
 from fastapi.testclient import TestClient
 
-from api_server import app
+from app.api.server import app
 
 
 def make_document(claimed_income_value: str | None) -> list[dict]:

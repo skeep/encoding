@@ -3,7 +3,7 @@ from __future__ import annotations
 import math
 from typing import Callable
 
-from scoring_types import RuleOutput, clamp_01
+from app.core.scoring_types import RuleOutput, clamp_01
 
 
 CustomFormatRule = Callable[[float], tuple[bool, str, list[str]]]
@@ -112,22 +112,18 @@ CUSTOM_FORMAT_RULES: dict[str, CustomFormatRule] = {
     "income_must_be_positive": income_must_be_positive,
 }
 
-
 SCORERS: dict[str, ScorerFn] = {
     "zscore_linear": zscore_linear,
 }
-
 
 AGGREGATORS: dict[str, AggregatorFn] = {
     "available_components_weighted_mean": available_components_weighted_mean,
 }
 
-
 HARD_FAIL_CONDITIONS: dict[str, HardFailConditionFn] = {
     "required_missing": required_missing,
     "non_numeric_value": non_numeric_value,
 }
-
 
 CROSS_FIELD_RULES: dict[str, CrossFieldRuleFn] = {
     "income_positive": income_positive,

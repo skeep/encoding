@@ -6,7 +6,7 @@ from pathlib import Path
 
 import yaml
 
-from scoring_engine import score_field
+from app.core.scoring_engine import score_field
 
 
 def write_yaml(path: Path, data: dict) -> None:

@@ -1,6 +1,6 @@
 import unittest
 
-from scoring_service import get_supported_fields, score_document
+from app.core.scoring_service import get_supported_fields, score_document
 
 
 def make_raw_json(claimed_income_value: str | None) -> list[dict]:

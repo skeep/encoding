@@ -5,11 +5,11 @@ from typing import Any
 
 import yaml
 
-from scoring_engine import score_field
-from scoring_types import clamp_01
+from app.core.scoring_engine import score_field
+from app.core.scoring_types import clamp_01
 
 
-PROJECT_ROOT = Path(__file__).resolve().parent
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_TAXONOMY_INDEX_PATH = PROJECT_ROOT / "config/field_taxonomy_index.yaml"
 DEFAULT_STATS_PATH = PROJECT_ROOT / "data/stats/minimal_stats_artifact.json"
 

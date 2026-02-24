@@ -6,17 +6,17 @@ from typing import Any
 
 import yaml
 
-from registry import (
+from app.core.registry import (
     AGGREGATORS,
     CROSS_FIELD_RULES,
     CUSTOM_FORMAT_RULES,
     HARD_FAIL_CONDITIONS,
     SCORERS,
 )
-from scoring_types import FieldScoreResult, RuleOutput, clamp_01
-from validators.cross_field_validator import validate_cross_field
-from validators.format_validator import validate_format
-from validators.statistical_validator import validate_statistical
+from app.core.scoring_types import FieldScoreResult, RuleOutput, clamp_01
+from app.core.validators.cross_field_validator import validate_cross_field
+from app.core.validators.format_validator import validate_format
+from app.core.validators.statistical_validator import validate_statistical
 
 
 def load_yaml(path: str | Path) -> dict:

@@ -27,7 +27,7 @@ The output contract includes:
 Run a deterministic, taxonomy-driven score for the `claimed_income` field:
 
 ```python
-from scoring_engine import score_field
+from app.core.scoring_engine import score_field
 
 raw_json = [
   {
@@ -61,7 +61,7 @@ Output contains:
 To onboard another field without changing pipeline orchestration:
 1. Add a new taxonomy YAML under `docs/field_taxonomy/`.
 2. Reuse existing registry IDs where possible.
-3. If new behavior is needed, register new IDs in `registry.py`:
+3. If new behavior is needed, register new IDs in `app/core/registry.py`:
    - custom format rules
    - statistical scorers
    - cross-field rules
@@ -72,7 +72,13 @@ To onboard another field without changing pipeline orchestration:
 Start the FastAPI service:
 
 ```bash
-uvicorn api_server:app --reload --port 8000
+uvicorn app.api.server:app --reload --port 8000
+```
+
+Or run with Docker Compose:
+
+```bash
+docker compose up --build
 ```
 
 Available endpoints:
@@ -106,4 +112,4 @@ curl -X POST "http://127.0.0.1:8000/score" \
 Extension flow:
 1. Add taxonomy file under `docs/field_taxonomy/`.
 2. Add field path to `config/field_taxonomy_index.yaml`.
-3. Reuse/add registry IDs in `registry.py` only when new behavior is needed.
+3. Reuse/add registry IDs in `app/core/registry.py` only when new behavior is needed.
