@@ -1,0 +1,58 @@
+{
+  "stats_version": "v2_2026_02_seed",
+  "preprocessing_policy_version": "dataset_policy_v2",
+  "generated_at": "2026-02-24T00:00:00Z",
+  "source_dataset": "data/canonical/minimal_canonical_dataset_v2.csv",
+  "source_record_count": 8,
+  "fields": {
+    "claimed_income": {
+      "distribution": "log_normal",
+      "n": 8,
+      "params": {
+        "mu_log": 10.921949755457506,
+        "sigma_log": 0.17538467844445432
+      }
+    },
+    "cash_price": {
+      "distribution": "log_normal",
+      "n": 8,
+      "params": {
+        "mu_log": 14.051925269328311,
+        "sigma_log": 0.15670245727993892
+      }
+    },
+    "amount_applied_amount": {
+      "distribution": "log_normal",
+      "n": 8,
+      "params": {
+        "mu_log": 13.692336440531022,
+        "sigma_log": 0.15633462553326088
+      }
+    },
+    "employment_tenure_months": {
+      "distribution": "log_normal",
+      "n": 8,
+      "params": {
+        "mu_log": 4.470281307949744,
+        "sigma_log": 0.44786595144850855
+      }
+    },
+    "age_years": {
+      "distribution": "normal",
+      "n": 8,
+      "params": {
+        "mu": 34.5,
+        "sigma": 4.242640687119285
+      }
+    },
+    "ltv_ratio": {
+      "distribution": "empirical",
+      "n": 8,
+      "params": {
+        "p05": 0.689516129032258,
+        "p50": 0.7,
+        "p95": 0.7
+      }
+    }
+  }
+}

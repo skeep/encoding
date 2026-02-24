@@ -1,5 +1,8 @@
 # Dataset Policy v1
 
+> Status: Superseded by `dataset_policy_v2` for mixed-distribution profiling (`normal` + `log_normal`).
+> Keep v1 only for backward compatibility with `minimal_stats_artifact_v1.json`.
+
 ## Purpose
 
 This policy defines how to build a canonical dataset used to generate statistical plausibility parameters (`mu`, `sigma`) for the confidence scoring engine.
