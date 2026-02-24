@@ -1,8 +1,6 @@
 {
-  "stats_version": "v2_2026_02_seed",
-  "preprocessing_policy_version": "dataset_policy_v2",
   "generated_at": "2026-02-24T00:00:00Z",
-  "source_dataset": "data/canonical/minimal_canonical_dataset_v2.csv",
+  "source_dataset": "data/canonical/minimal_canonical_dataset.csv",
   "source_record_count": 8,
   "fields": {
     "claimed_income": {

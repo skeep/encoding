@@ -1,4 +1,4 @@
-# Dataset Policy v2
+# Dataset Policy
 
 ## Purpose
 
@@ -7,15 +7,15 @@ This policy defines canonical extraction and statistical profiling for mixed dis
 - `log_normal`
 - `empirical` (bounded-ratio fallback)
 
-The policy supports deterministic generation of a v2 stats artifact for confidence scoring.
+It supports deterministic generation of a stats artifact for confidence scoring.
 
 ## Scope
 
-v2 profiles base monetary fields and derived behavioral fields:
+Profiles base monetary fields and derived behavioral fields:
 - Base fields: `claimed_income`, `cash_price`, `amount_applied_amount`
 - Derived fields: `age_years`, `employment_tenure_months`, `ltv_ratio`
 
-## Canonical Schema (v2)
+## Canonical Schema
 
 ### Required source fields
 
@@ -73,7 +73,7 @@ v2 profiles base monetary fields and derived behavioral fields:
 - `normal`:
   - `age_years`
 - `empirical` fallback:
-  - `ltv_ratio` (bounded-ratio by default in v2 seed profile)
+  - `ltv_ratio` (bounded-ratio by default in seed profile)
 
 ## Parameter Computation Rules
 
@@ -89,11 +89,9 @@ For each field, require at least 3 valid values and a strictly positive scale pa
 - `empirical`:
   - `p05`, `p50`, `p95` percentiles
 
-## v2 Stats Artifact Contract
+## Stats Artifact Contract
 
 Top-level keys:
-- `stats_version`
-- `preprocessing_policy_version`
 - `generated_at`
 - `source_dataset`
 - `source_record_count`
@@ -106,17 +104,3 @@ Per-field keys:
   - normal: `mu`, `sigma`
   - log_normal: `mu_log`, `sigma_log`
   - empirical: `p05`, `p50`, `p95`
-
-## Versioning
-
-- Set `preprocessing_policy_version` to `dataset_policy_v2`.
-- Bump `stats_version` when:
-  - distribution assignment changes
-  - derived formulas change
-  - outlier preprocessing changes
-
-## Forward Compatibility
-
-1. Add segmented profiles by `product_type`, `region`, `employment_type`.
-2. Add fit diagnostics and optional auto-switch between `normal` and `empirical`.
-3. Add multivariate anomaly profile in a separate artifact section without breaking per-field contract.
