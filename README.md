@@ -66,3 +66,44 @@ To onboard another field without changing pipeline orchestration:
    - statistical scorers
    - cross-field rules
    - hard-fail conditions / aggregators
+
+## Run API Server (n8n integration)
+
+Start the FastAPI service:
+
+```bash
+uvicorn api_server:app --reload --port 8000
+```
+
+Available endpoints:
+- `GET /health`
+- `GET /supported-fields`
+- `POST /score`
+
+Example request:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/score" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "document": [
+      {
+        "AL/2024/00381939|936770": {
+          "current_employment": {
+            "1838704": {
+              "claimed_income": "58000.000000"
+            }
+          }
+        }
+      }
+    ],
+    "fields_to_score": ["claimed_income"],
+    "ocr_confidence_map": {"claimed_income": 0.93},
+    "context": {"amount_applied_amount": 890400.0, "applied_term": 60}
+  }'
+```
+
+Extension flow:
+1. Add taxonomy file under `docs/field_taxonomy/`.
+2. Add field path to `config/field_taxonomy_index.yaml`.
+3. Reuse/add registry IDs in `registry.py` only when new behavior is needed.
