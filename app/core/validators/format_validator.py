@@ -1,9 +1,16 @@
+"""Format validation layer for field-level scoring.
+
+This module performs deterministic checks such as type/bounds/custom rules
+and emits a normalized `ValidationResult` with score + diagnostic flags.
+"""
+
 from __future__ import annotations
 
 from app.core.scoring_types import ValidationResult, clamp_01
 
 
 def _check_bounds(value: float, bounds: dict) -> tuple[bool, str]:
+    """Evaluate numeric bounds according to inclusive/exclusive settings."""
     min_value = bounds.get("min")
     max_value = bounds.get("max")
     min_inclusive = bool(bounds.get("min_inclusive", True))
@@ -30,6 +37,16 @@ def validate_format(
     field_cfg: dict,
     custom_rule_registry: dict,
 ) -> ValidationResult:
+    """Validate format constraints for a preprocessed field value.
+
+    Args:
+        value: Normalized field value after preprocessing.
+        field_cfg: Field taxonomy configuration.
+        custom_rule_registry: Mapping of custom rule IDs to callables.
+
+    Returns:
+        ValidationResult with format score, pass/fail, and machine flags.
+    """
     format_cfg = field_cfg.get("validators", {}).get("format", {})
     checks: list[tuple[bool, str]] = []
     flags: list[str] = []
@@ -70,6 +87,7 @@ def validate_format(
         flags.extend(rule_flags)
 
     if not checks:
+        # No configured checks implies neutral pass for this component.
         return ValidationResult(
             score=1.0,
             passed=True,

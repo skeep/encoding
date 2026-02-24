@@ -1,3 +1,9 @@
+"""Cross-field validation layer.
+
+Executes taxonomy-referenced rule IDs against the current field value and
+optional context, then aggregates only applicable rule scores.
+"""
+
 from __future__ import annotations
 
 from app.core.scoring_types import RuleOutput, ValidationResult, clamp_01
@@ -10,6 +16,19 @@ def validate_cross_field(
     context: dict,
     cross_field_rule_registry: dict,
 ) -> tuple[ValidationResult, list[RuleOutput]]:
+    """Run cross-field rules and compute a cross-field component score.
+
+    Args:
+        value: Current field's normalized value.
+        field_cfg: Field taxonomy configuration.
+        context: Additional values required by certain cross-field rules.
+        cross_field_rule_registry: Mapping of rule IDs to callables.
+
+    Returns:
+        Tuple of:
+        - ValidationResult for cross-field component
+        - List of per-rule outputs for explainability
+    """
     rule_ids = field_cfg.get("cross_field_rule_ids", []) or []
     if not rule_ids:
         return (
@@ -41,10 +60,12 @@ def validate_cross_field(
 
         out = rule_fn(value, context)
         outputs.append(out)
+        # Rules can declare themselves not applicable when dependencies are missing.
         if out.applicable and out.score is not None:
             applicable_scores.append(float(out.score))
 
     if not applicable_scores:
+        # Component is unavailable if no rule could be evaluated.
         return (
             ValidationResult(
                 score=None,

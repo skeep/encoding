@@ -1,3 +1,10 @@
+"""Statistical plausibility validation layer.
+
+Uses field taxonomy scoring settings plus stats artifact parameters to
+produce a component score in [0,1], including fallback behavior when
+parameters are missing.
+"""
+
 from __future__ import annotations
 
 from app.core.scoring_types import ValidationResult, clamp_01
@@ -10,6 +17,17 @@ def validate_statistical(
     stats_artifact: dict,
     scorer_registry: dict,
 ) -> ValidationResult:
+    """Validate statistical plausibility for a preprocessed numeric value.
+
+    Args:
+        value: Normalized numeric value for the field.
+        field_cfg: Field taxonomy configuration.
+        stats_artifact: Loaded stats JSON with per-field params.
+        scorer_registry: Mapping of scorer IDs to scorer callables.
+
+    Returns:
+        ValidationResult with statistical score and diagnostics.
+    """
     stat_cfg = field_cfg.get("validators", {}).get("statistical", {})
     if not stat_cfg.get("enabled", False):
         return ValidationResult(
@@ -33,6 +51,7 @@ def validate_statistical(
     field_params = stats_fields.get(params_key)
 
     if not field_params:
+        # Fallback policy controls whether missing stats penalize, skip, or pass.
         policy = stat_cfg.get("fallback_policy", "neutral_1")
         if policy == "neutral_1":
             return ValidationResult(

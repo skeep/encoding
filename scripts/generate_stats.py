@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Generate mixed-distribution stats artifact from canonical CSV."""
+"""Generate mixed-distribution stats artifact from canonical CSV.
+
+This script builds the statistical parameter artifact consumed by runtime
+field scoring. It computes derived features, fits distribution-specific
+parameters, and writes a deterministic JSON contract.
+"""
 
 from __future__ import annotations
 
@@ -39,7 +44,14 @@ FIELD_DISTRIBUTIONS = {
 
 
 def load_csv(path: Path) -> tuple[list[dict[str, str]], list[str]]:
-    """Load canonical CSV rows and header names."""
+    """Load canonical CSV rows and header names.
+
+    Args:
+        path: Input CSV file path.
+
+    Returns:
+        Tuple of parsed rows and header names.
+    """
     with path.open("r", encoding="utf-8", newline="") as handle:
         reader = csv.DictReader(handle)
         rows = list(reader)
@@ -50,14 +62,14 @@ def load_csv(path: Path) -> tuple[list[dict[str, str]], list[str]]:
 
 
 def validate_required_columns(headers: list[str]) -> None:
-    """Ensure required source columns exist."""
+    """Ensure required source columns exist before derivation/profiling."""
     missing = [name for name in REQUIRED_COLUMNS if name not in headers]
     if missing:
         raise StatsGenerationError(f"Missing required columns: {', '.join(missing)}")
 
 
 def parse_iso_date(raw_value: str, field_name: str, row_number: int) -> date:
-    """Parse ISO-8601 date in YYYY-MM-DD form."""
+    """Parse ISO-8601 date in YYYY-MM-DD form with row-aware errors."""
     value = (raw_value or "").strip()
     try:
         return date.fromisoformat(value)
@@ -68,7 +80,7 @@ def parse_iso_date(raw_value: str, field_name: str, row_number: int) -> date:
 
 
 def parse_birth_date(raw_value: str, field_name: str, row_number: int) -> date:
-    """Parse DOB using supported formats."""
+    """Parse DOB using supported formats (`%m/%d/%Y`, `%Y-%m-%d`)."""
     value = (raw_value or "").strip()
     for fmt in ("%m/%d/%Y", "%Y-%m-%d"):
         try:
@@ -81,7 +93,7 @@ def parse_birth_date(raw_value: str, field_name: str, row_number: int) -> date:
 
 
 def parse_float(raw_value: str, field_name: str, row_number: int) -> float:
-    """Parse numeric value from raw string."""
+    """Parse numeric value from raw string with explicit diagnostics."""
     value = (raw_value or "").strip()
     if value == "":
         raise StatsGenerationError(
@@ -124,7 +136,13 @@ def percentile(values: list[float], q: float) -> float:
 
 
 def derive_row(row: dict[str, str], row_number: int) -> dict[str, float]:
-    """Derive all profile fields from one canonical row."""
+    """Derive profile fields required for distribution fitting.
+
+    Derived values:
+    - `age_years`
+    - `employment_tenure_months`
+    - `ltv_ratio`
+    """
     application_date = parse_iso_date(
         row.get("application_date", ""), "application_date", row_number
     )
@@ -161,7 +179,7 @@ def derive_row(row: dict[str, str], row_number: int) -> dict[str, float]:
 
 
 def compute_normal(values: list[float], field_name: str) -> dict[str, float | int]:
-    """Compute normal distribution params."""
+    """Compute normal distribution params (`mu`, `sigma`, `n`)."""
     if len(values) < 3:
         raise StatsGenerationError(
             f"Field '{field_name}' requires at least 3 values, got {len(values)}"
@@ -203,7 +221,7 @@ def compute_log_normal(values: list[float], field_name: str) -> dict[str, float 
 
 
 def compute_empirical(values: list[float], field_name: str) -> dict[str, float | int]:
-    """Compute empirical percentile summary."""
+    """Compute empirical percentile summary (`p05`, `p50`, `p95`, `n`)."""
     if len(values) < 3:
         raise StatsGenerationError(
             f"Field '{field_name}' requires at least 3 values, got {len(values)}"
@@ -220,7 +238,10 @@ def compute_empirical(values: list[float], field_name: str) -> dict[str, float |
 
 
 def build_field_profiles(rows: list[dict[str, str]]) -> dict[str, dict[str, object]]:
-    """Derive field values and compute distribution parameters."""
+    """Derive field values and compute distribution parameters.
+
+    Distribution type is chosen from FIELD_DISTRIBUTIONS mapping.
+    """
     derived_values: dict[str, list[float]] = {name: [] for name in FIELD_DISTRIBUTIONS}
     for row_number, row in enumerate(rows, start=2):
         derived = derive_row(row, row_number)
@@ -249,7 +270,16 @@ def generate_stats_artifact(
     output_path: Path,
     generated_at: str | None = None,
 ) -> dict[str, object]:
-    """Generate mixed-distribution stats artifact."""
+    """Generate mixed-distribution stats artifact.
+
+    Args:
+        input_path: Canonical CSV path.
+        output_path: Destination JSON path.
+        generated_at: Optional timestamp override for reproducibility.
+
+    Returns:
+        Artifact dictionary written to `output_path`.
+    """
     rows, headers = load_csv(input_path)
     validate_required_columns(headers)
     fields = build_field_profiles(rows)
@@ -285,7 +315,7 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> int:
-    """CLI entry point."""
+    """CLI entry point returning shell-friendly exit code."""
     args = parse_args()
     try:
         generate_stats_artifact(

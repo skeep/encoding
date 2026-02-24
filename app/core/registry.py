@@ -1,3 +1,9 @@
+"""Registry of extension points referenced by taxonomy IDs.
+
+Taxonomy files are declarative and reference string IDs. This module binds
+those IDs to concrete Python callables used by the runtime engine.
+"""
+
 from __future__ import annotations
 
 import math
@@ -20,12 +26,14 @@ AggregatorFn = Callable[[dict[str, float | None], dict[str, float]], float]
 
 
 def income_must_be_positive(value: float) -> tuple[bool, str, list[str]]:
+    """Custom format rule: claimed income must be strictly positive."""
     if value > 0:
         return True, "income_must_be_positive passed", []
     return False, "income_must_be_positive failed", ["non_positive_income"]
 
 
 def zscore_linear(value: float, params: dict, scoring_cfg: dict) -> tuple[float, str]:
+    """Compute bounded linear z-score plausibility for normal/log-normal fields."""
     z_cap = float(scoring_cfg.get("z_cap", 4.0))
     distribution = params.get("distribution")
     raw_params = params.get("params", {})
@@ -48,6 +56,7 @@ def zscore_linear(value: float, params: dict, scoring_cfg: dict) -> tuple[float,
 def available_components_weighted_mean(
     components: dict[str, float | None], weights: dict[str, float]
 ) -> float:
+    """Aggregate available component scores using configured weights only."""
     total_weight = 0.0
     weighted_sum = 0.0
     for key, weight in weights.items():
@@ -63,14 +72,17 @@ def available_components_weighted_mean(
 
 
 def required_missing(flags: set[str]) -> bool:
+    """Hard-fail condition for required value missing."""
     return "required_missing" in flags
 
 
 def non_numeric_value(flags: set[str]) -> bool:
+    """Hard-fail condition for non-numeric value after preprocessing."""
     return "non_numeric_value" in flags
 
 
 def income_positive(value: float | None, context: dict) -> RuleOutput:
+    """Cross-field rule ensuring income is present and positive."""
     if value is None:
         return RuleOutput(
             rule_name="income_positive",
@@ -90,6 +102,11 @@ def income_positive(value: float | None, context: dict) -> RuleOutput:
 
 
 def affordability_income_vs_loan(value: float | None, context: dict) -> RuleOutput:
+    """Cross-field affordability heuristic based on amount/term vs income.
+
+    Uses `context["amount_applied_amount"]` and `context["applied_term"]`.
+    Returns `applicable=False` when required context is missing.
+    """
     amount = context.get("amount_applied_amount")
     term = context.get("applied_term")
     if value is None or amount is None or term is None:

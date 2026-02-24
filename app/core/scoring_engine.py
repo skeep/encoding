@@ -1,3 +1,9 @@
+"""Single-field deterministic scoring pipeline.
+
+This module executes extraction, preprocessing, validation, component
+aggregation, and hard-fail logic for one taxonomy field at a time.
+"""
+
 from __future__ import annotations
 
 import json
@@ -32,6 +38,7 @@ def load_json(path: str | Path) -> dict:
 
 
 def _iter_children(node: Any) -> list[Any]:
+    """Return iterable children for wildcard traversal."""
     if isinstance(node, dict):
         return list(node.values())
     if isinstance(node, list):
@@ -40,6 +47,7 @@ def _iter_children(node: Any) -> list[Any]:
 
 
 def _find_key_in_descendants(node: Any, key: str) -> list[Any]:
+    """Breadth-first search for all occurrences of `key` in nested payload."""
     found: list[Any] = []
     queue = [node]
     while queue:
@@ -54,7 +62,13 @@ def _find_key_in_descendants(node: Any, key: str) -> list[Any]:
 
 
 def extract_by_path(raw_json: Any, source_path: str) -> Any:
-    """Resolve a dotted source path with wildcard support from raw payload."""
+    """Resolve a dotted source path with wildcard support from raw payload.
+
+    Supports:
+    - dot notation (`a.b.c`)
+    - wildcard segment (`*`) over dict/list children
+    - descendant fallback lookup for partially anchored paths
+    """
     parts = source_path.split(".")
     current_nodes = [raw_json]
     for part in parts:
@@ -93,7 +107,11 @@ def extract_field_value(raw_json: Any, source_paths: list[str]) -> Any:
 
 
 def preprocess_value(raw_value: Any, preprocess_cfg: dict) -> Any:
-    """Normalize extracted value using taxonomy preprocessing settings."""
+    """Normalize extracted value using taxonomy preprocessing settings.
+
+    Preprocessing is intentionally non-scoring: it only transforms values
+    into a canonical shape for downstream validators.
+    """
     if raw_value is None:
         return None
 
@@ -157,6 +175,16 @@ def score_field(
     1) extract, 2) preprocess, 3) format validate,
     4) statistical validate, 5) cross-field validate,
     6) aggregate components, 7) apply hard-fail conditions.
+
+    Args:
+        raw_json: Full extracted JSON payload.
+        taxonomy_path: Path to per-field taxonomy YAML.
+        stats_path: Path to stats artifact JSON.
+        ocr_confidence_map: Optional map of field IDs to OCR confidences.
+        context: Optional additional values for cross-field rules.
+
+    Returns:
+        API-serializable dictionary with detailed component/rule outputs.
     """
     taxonomy = load_yaml(taxonomy_path)
     stats = load_json(stats_path)
@@ -222,6 +250,7 @@ def score_field(
         cross_field_result.details,
     ]
     if triggered_hard_fail:
+        # Hard-fail conditions override weighted component score by design.
         field_score = 0.0
         status = "failed"
         details.append(f"hard_fail_conditions_triggered={triggered_hard_fail}")
