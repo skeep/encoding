@@ -1,0 +1,73 @@
+field:
+  id: claimed_income
+  type: numeric
+  # If required=true and value is missing after extraction, field can hard-fail
+  # or be routed to manual review depending on engine policy.
+  required: true
+
+  # Extraction paths from raw JSON. Engine tries in order.
+  source_paths:
+    - current_employment.*.claimed_income
+
+  preprocessing:
+    # Preprocessing is data cleaning only. It does NOT score confidence.
+    # Output of this step is the normalized value used by validators.
+    cast: float
+    trim: true
+    remove_separators: [",", " "]
+
+  validators:
+    format:
+      # Format validation runs first (type/bounds/custom checks).
+      # This produces format_score in [0,1].
+      type_check: true
+      bounds:
+        min: 0
+        min_inclusive: false
+        max: 10000000
+        max_inclusive: false
+      # Registry IDs: engine resolves these to Python validator functions.
+      custom_rule_ids:
+        - income_must_be_positive
+
+    statistical:
+      # Statistical plausibility runs after format normalization.
+      # This produces statistical_score in [0,1].
+      enabled: true
+      distribution: log_normal
+      params:
+        source: data/stats/minimal_stats_artifact.json
+        key: claimed_income
+      scoring:
+        # Built-in scorer ID in engine (no eval of formula strings).
+        # For zscore_linear, engine computes z from normalized value + stats params.
+        scorer_id: zscore_linear
+        z_cap: 4.0
+      # Policy ID, not a method call.
+      # Recommended engine options: neutral_1 | skip_component | fail_0
+      # neutral_1 means: if stats params are unavailable, assign statistical_score=1.0
+      # and continue instead of failing the field.
+      fallback_policy: neutral_1
+
+  # Cross-field rule IDs resolved by cross-field rule registry.
+  # These are executed in the cross-field stage, separate from field-format/stat stages.
+  cross_field_rule_ids:
+    - income_positive
+    - affordability_income_vs_loan
+
+  scoring:
+    # Final field score is calculated from these component scores.
+    component_weights:
+      ocr: 0.35
+      format: 0.30
+      statistical: 0.25
+      cross_field: 0.10
+    # Built-in aggregator ID:
+    # weighted mean over available components only.
+    aggregation: available_components_weighted_mean
+    # Built-in condition IDs or registry IDs.
+    # If any listed condition is true, engine can force field score to 0
+    # or mark field as failed per implementation policy.
+    hard_fail_condition_ids:
+      - required_missing
+      - non_numeric_value
