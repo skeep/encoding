@@ -1,0 +1,91 @@
+[
+    {
+      "AL/2024/00381939|936770": {
+        "personal_details": {
+          "1838704": {
+            "id_type_1": "TIN",
+            "id_issuing_country": "PHILIPPINES",
+            "id_type_2": "SSS ID",
+            "id_issuing_country_2": "PHILIPPINES",
+            "salutation": "Mr",
+            "relationship_to_application": "Primary Borrower",
+            "gender": "MALE",
+            "residency_type": "Citizen",
+            "marital_status": "Single",
+            "id_no_1_or_biz_reg_no_1": "311586081",
+            "id_no_2_or_biz_reg_no_2": "0121939908",
+            "last_name": "GARIBAY",
+            "first_name": "OLIVER",
+            "middle_name": "BALCITA",
+            "mothers_maiden_name": "GUDELIA BALCITA",
+            "no_of_dependent": "0",
+            "no_of_children": "0"
+          }
+        },
+        "current_employment": {
+          "1838704": {
+            "employment_type": "Employed",
+            "job_title": "Manager/Supervisor/Middle Level (with people under their supervision)",
+            "employer_name": "COCA COLA BOTTLER'S PHILIPPINES INC",
+            "risk_classification": "L",
+            "bsp_economic_activity": "0400",
+            "length_of_service_years": "8",
+            "length_of_service_months": "0",
+            "claimed_income": "58000.000000"
+          }
+        },
+        "address_details": {
+          "1838704": {
+            "1838704|5449448": {
+              "residential_status": "Used Free",
+              "years_at_address": "33"
+            },
+            "1838704|5449449": {
+              "years_at_address": "8"
+            }
+          }
+        },
+        "contact_details": {
+          "1838704": {
+            "1838704|4887645": {
+              "contact_type": "Email",
+              "contact_email": "oliver.garibay@coca-cola.com.ph"
+            },
+            "1838704|4887646": {
+              "contact_type": "Mobile (Ex: 917-xxxxxxx)",
+              "contact_phone_country_code": "+63",
+              "contact_phone_no": "977-1935669"
+            },
+            "1838704|4888524": {
+              "contact_type": "Office Telephone (Ex: 2-8xxxxxxx)",
+              "contact_phone_country_code": "+63",
+              "contact_phone_no": "977-1935669"
+            }
+          }
+        },
+        "collateral_details": {
+          "936770": {
+            "make": "TOYOTA",
+            "model": "YARIS CROSS 1.5 V",
+            "cash_price": "1302000.000000",
+            "manufactured_year": "2025"
+          }
+        },
+        "facility_details": {
+          "943671": {
+            "amount_applied_code": "Philippine Peso",
+            "down_payment": "30.000000",
+            "amount_applied_amount": "890400.000000",
+            "applied_term": "60"
+          }
+        },
+        "search_customer": {
+          "1838704": {
+            "last_name": "GARIBAY",
+            "first_name": "OLIVER",
+            "date_of_birth": "11/16/1991"
+          }
+        }
+      }
+    }
+  ]
