@@ -113,3 +113,8 @@ Extension flow:
 1. Add taxonomy file under `docs/field_taxonomy/`.
 2. Add field path to `config/field_taxonomy_index.yaml`.
 3. Reuse/add registry IDs in `app/core/registry.py` only when new behavior is needed.
+
+## Developer Docs
+
+For implementation details, extension points, and scoring flow:
+- `docs/DEVELOPER_GUIDE.md`

@@ -15,6 +15,7 @@ DEFAULT_STATS_PATH = PROJECT_ROOT / "data/stats/minimal_stats_artifact.json"
 
 
 def load_taxonomy_index(path: str | Path = DEFAULT_TAXONOMY_INDEX_PATH) -> dict[str, str]:
+    """Load field taxonomy index mapping field IDs to taxonomy files."""
     with Path(path).open("r", encoding="utf-8") as handle:
         payload = yaml.safe_load(handle) or {}
     fields = payload.get("fields", {})
@@ -22,11 +23,13 @@ def load_taxonomy_index(path: str | Path = DEFAULT_TAXONOMY_INDEX_PATH) -> dict[
 
 
 def get_supported_fields(path: str | Path = DEFAULT_TAXONOMY_INDEX_PATH) -> list[str]:
+    """Return sorted list of scoreable field IDs from taxonomy index."""
     index = load_taxonomy_index(path)
     return sorted(index.keys())
 
 
 def _resolve_path(path_str: str) -> Path:
+    """Resolve absolute path or project-root-relative path."""
     path = Path(path_str)
     if path.is_absolute():
         return path
@@ -34,6 +37,7 @@ def _resolve_path(path_str: str) -> Path:
 
 
 def _aggregate_application_confidence(field_results: dict[str, dict]) -> float | None:
+    """Compute simple mean of scored field confidences for MVP application score."""
     scores = [result["field_score"] for result in field_results.values()]
     if not scores:
         return None
@@ -49,6 +53,12 @@ def score_document(
     taxonomy_index_path: str | Path = DEFAULT_TAXONOMY_INDEX_PATH,
     stats_path: str | Path = DEFAULT_STATS_PATH,
 ) -> dict:
+    """Score one or more fields and return aggregated application summary.
+
+    This function never fails the whole request for unsupported fields.
+    Unsupported field IDs are reported in `unsupported_fields`.
+    Per-field runtime issues are collected under `errors`.
+    """
     taxonomy_index = load_taxonomy_index(taxonomy_index_path)
     requested_fields = fields_to_score or sorted(taxonomy_index.keys())
 

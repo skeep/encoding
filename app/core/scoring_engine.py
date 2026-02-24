@@ -20,11 +20,13 @@ from app.core.validators.statistical_validator import validate_statistical
 
 
 def load_yaml(path: str | Path) -> dict:
+    """Load taxonomy YAML document."""
     with Path(path).open("r", encoding="utf-8") as handle:
         return yaml.safe_load(handle)
 
 
 def load_json(path: str | Path) -> dict:
+    """Load JSON document (stats artifact)."""
     with Path(path).open("r", encoding="utf-8") as handle:
         return json.load(handle)
 
@@ -52,6 +54,7 @@ def _find_key_in_descendants(node: Any, key: str) -> list[Any]:
 
 
 def extract_by_path(raw_json: Any, source_path: str) -> Any:
+    """Resolve a dotted source path with wildcard support from raw payload."""
     parts = source_path.split(".")
     current_nodes = [raw_json]
     for part in parts:
@@ -81,6 +84,7 @@ def extract_by_path(raw_json: Any, source_path: str) -> Any:
 
 
 def extract_field_value(raw_json: Any, source_paths: list[str]) -> Any:
+    """Try configured source paths in order and return first resolved value."""
     for path in source_paths:
         value = extract_by_path(raw_json, path)
         if value is not None:
@@ -89,6 +93,7 @@ def extract_field_value(raw_json: Any, source_paths: list[str]) -> Any:
 
 
 def preprocess_value(raw_value: Any, preprocess_cfg: dict) -> Any:
+    """Normalize extracted value using taxonomy preprocessing settings."""
     if raw_value is None:
         return None
 
@@ -115,6 +120,7 @@ def preprocess_value(raw_value: Any, preprocess_cfg: dict) -> Any:
 
 
 def _evaluate_hard_fail(flags: set[str], condition_ids: list[str]) -> list[str]:
+    """Evaluate configured hard-fail condition IDs against collected flags."""
     triggered: list[str] = []
     for condition_id in condition_ids or []:
         fn = HARD_FAIL_CONDITIONS.get(condition_id)
@@ -124,6 +130,7 @@ def _evaluate_hard_fail(flags: set[str], condition_ids: list[str]) -> list[str]:
 
 
 def _serialize_rules(rule_outputs: list[RuleOutput]) -> list[dict]:
+    """Convert rule dataclasses to API-safe dictionaries."""
     return [
         {
             "rule_name": r.rule_name,
@@ -144,6 +151,13 @@ def score_field(
     ocr_confidence_map: dict[str, float] | None = None,
     context: dict | None = None,
 ) -> dict:
+    """Score one field deterministically using taxonomy + stats artifact.
+
+    Execution order:
+    1) extract, 2) preprocess, 3) format validate,
+    4) statistical validate, 5) cross-field validate,
+    6) aggregate components, 7) apply hard-fail conditions.
+    """
     taxonomy = load_yaml(taxonomy_path)
     stats = load_json(stats_path)
     field_cfg = taxonomy["field"]

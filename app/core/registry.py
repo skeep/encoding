@@ -6,6 +6,12 @@ from typing import Callable
 from app.core.scoring_types import RuleOutput, clamp_01
 
 
+# NOTE FOR DEVELOPERS:
+# Taxonomy YAMLs reference these registry IDs. When introducing a new
+# `custom_rule_id`, `scorer_id`, `cross_field_rule_id`, `aggregation`,
+# or `hard_fail_condition_id`, add the Python function and register it here.
+# This keeps orchestration generic and field-agnostic.
+
 CustomFormatRule = Callable[[float], tuple[bool, str, list[str]]]
 ScorerFn = Callable[[float, dict, dict], tuple[float, str]]
 HardFailConditionFn = Callable[[set[str]], bool]
