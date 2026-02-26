@@ -1,0 +1,105 @@
+{
+    "application_metadata": {
+      "app_no": null,
+      "date": "12/26/2025",
+      "dealer": "TOYOTA BALINTAWAK",
+      "marketing_prof": "LUCHIE ALBA",
+      "application_type": null
+    },
+    "applicant": {
+      "surname": "MENDIOLA",
+      "first_name": "GERALD",
+      "middle_name": "SY",
+      "civil_status": "Married",
+      "gender": null,
+      "date_of_birth": "06/20/1994",
+      "citizenship": "FILIPINO",
+      "acr_no": null,
+      "no_of_years": 10.0,
+      "ages_of_dependents": "0",
+      "number_of_dependents": 0.0
+    },
+    "spouse": {
+      "surname": "MENDIOLA",
+      "first_name": "HANNAH",
+      "middle_initial": "Q.",
+      "maiden_name_if_wife": null
+    },
+    "address": {
+      "complete_home_address": "20C Cadena De Amor St. Brgy. East Rembo, Makati City, Metro Manila",
+      "home_ownership": "Rented",
+      "home_tel_nos": "2-85315455",
+      "yrs_stayed": 35.0,
+      "cellphone_no": "957-5599661 957-5599662",
+      "zip_code": "1216",
+      "email_address": "carmALoan4430@mail.com",
+      "educational_attainment": "College",
+      "provincial_address": "N/A",
+      "provincial_tel_no": "N/A"
+    },
+    "vehicle_owned_mortgaged_to": "PRIMARY BORROWER",
+    "applicant_employment": {
+      "employer_name": "San Miguel Corporation",
+      "employment_sector": "Private",
+      "nature_of_business": "FOOD PRDUCTS & BEVERAGES",
+      "business_address": "01 San Miguel Ave., Brgy. San Antonio, Pasig City, Metro Manila",
+      "fax_no": null,
+      "tel_no": "2-84815149",
+      "position_title": "Advertising Manager",
+      "length_of_stay": 31.0
+    },
+    "spouse_employment": {
+      "employer_name": "BPI",
+      "employment_sector": "Private",
+      "nature_of_business": "CENTRALIZED BANKING",
+      "business_address": "30 Ayala Triangle Paseo De Roxas Ave., Brgy. Bel-air, Makati City, Metro Manila",
+      "fax_no": null,
+      "tel_no": null,
+      "position_title": "Bank Teller",
+      "length_of_stay": 31.0
+    },
+    "financial": {
+      "applicant_monthly_take_home_pay": 40000.0,
+      "spouse_monthly_take_home_pay": 10000.0,
+      "other_monthly_income": null,
+      "total_monthly_income": 50000.0,
+      "less_amortization": null,
+      "rentals": 7000.0,
+      "household_expenses": null,
+      "other_expenses": null,
+      "total_expenses": 7000.0
+    },
+    "main_bank": {
+      "branch": null,
+      "ca_no": null,
+      "sa_no": null
+    },
+    "bank_credit_references": [],
+    "nearest_relatives": [],
+    "personal_references": [],
+    "children_dependents": [],
+    "affiliations": [],
+    "vehicle": {
+      "make": "TOYOTA",
+      "variant": "86 WHITE PEARL MT",
+      "term_months": "36",
+      "price": 1985000.0,
+      "downpayment_pct": 0.35,
+      "amount_financed": 750000.0,
+      "insurance_coverage": null,
+      "premium": null,
+      "insurance_term": "1 YEAR",
+      "area_normal_use": null,
+      "vehicle_type": "New Unit",
+      "vehicle_use": "PU",
+      "year": "2021",
+      "application_status": "Approved"
+    },
+    "required_documents": [],
+    "borrower_ids": {
+      "tin": "184847238",
+      "ctc_no": null,
+      "ctc_issued_at": null,
+      "ctc_date": null
+    }
+  }
