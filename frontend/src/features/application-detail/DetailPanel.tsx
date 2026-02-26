@@ -179,6 +179,30 @@ function buildAttachmentPreviewUrl(fileName: string, mimeType: string, sizeKb: n
   return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
 }
 
+function AttachmentList(props: { detail: ApplicationDetail }): JSX.Element {
+  const { detail } = props;
+  return (
+    <ol className="attachment-list">
+      {detail.attachments.map((attachment) => (
+        <li key={attachment.name}>
+          <a
+            className="attachment-link"
+            href={buildAttachmentPreviewUrl(attachment.name, attachment.mimeType, attachment.sizeKb)}
+            target="_blank"
+            rel="noreferrer"
+          >
+            <span className="attachment-badge">{getAttachmentBadge(attachment.mimeType, attachment.name)}</span>
+            <span>{attachment.name}</span>
+          </a>
+          <span className="attachment-meta">
+            ({attachment.mimeType}, {attachment.sizeKb} KB)
+          </span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 export function DetailPanel(props: {
   activeStatus: QueueStatus;
   selectedAppId: string | null;
@@ -189,6 +213,9 @@ export function DetailPanel(props: {
   const [editableValues, setEditableValues] = useState<Record<string, string>>({});
   const [feedbackNotes, setFeedbackNotes] = useState<Record<string, string>>({});
   const [saveMessage, setSaveMessage] = useState<string>("");
+  const [encodingTab, setEncodingTab] = useState<"application" | "adjustment">("application");
+  const [selectedFieldPath, setSelectedFieldPath] = useState<string>("");
+  const [showFieldMeta, setShowFieldMeta] = useState(false);
 
   useEffect(() => {
     const initialValues: Record<string, string> = {};
@@ -198,6 +225,9 @@ export function DetailPanel(props: {
     setEditableValues(initialValues);
     setFeedbackNotes({});
     setSaveMessage("");
+    setEncodingTab("application");
+    setShowFieldMeta(false);
+    setSelectedFieldPath(editableSeed[0]?.path ?? "");
   }, [selectedAppId, activeStatus, editableSeed]);
 
   if (!selectedAppId) {
@@ -230,175 +260,245 @@ export function DetailPanel(props: {
     prompt_improvement_required: true,
     captured_at: new Date().toISOString()
   }));
+  const selectedField = editableSeed.find((field) => field.path === selectedFieldPath) ?? editableSeed[0];
+  const selectedFieldCurrentValue = selectedField ? editableValues[selectedField.path] ?? "" : "";
+  const selectedFieldBaselineValue = selectedField
+    ? baselineValues[selectedField.path] ?? ""
+    : "";
+  const selectedFieldChanged = selectedFieldCurrentValue !== selectedFieldBaselineValue;
+  const selectedFieldMeta = selectedField
+    ? buildScoringMeta(selectedField.path, selectedFieldCurrentValue)
+    : null;
+  const isEncodingCompletedView = activeStatus === "ENCODING_COMPLETED" && !!state.encoding;
 
   return (
     <div className="detail-content">
-      <section className="detail-section">
-        <h3>Overview</h3>
-        <p>
-          <strong>Applicant:</strong> {state.detail.applicantName}
-        </p>
-        <p>
-          <strong>Status:</strong> {statusLabels[state.detail.status]}
-        </p>
-        <p>
-          <strong>Received:</strong> {formatIsoDate(state.detail.receivedAt)}
-        </p>
-        <p>
-          <strong>Email:</strong> {state.detail.emailFrom}
-        </p>
-      </section>
+      {!isEncodingCompletedView ? (
+        <>
+          <section className="detail-section">
+            <h3>Overview</h3>
+            <p>
+              <strong>Applicant:</strong> {state.detail.applicantName}
+            </p>
+            <p>
+              <strong>Status:</strong> {statusLabels[state.detail.status]}
+            </p>
+            <p>
+              <strong>Received:</strong> {formatIsoDate(state.detail.receivedAt)}
+            </p>
+            <p>
+              <strong>Email:</strong> {state.detail.emailFrom}
+            </p>
+          </section>
 
-      <section className="detail-section">
-        <h3>Attachments</h3>
-        <ol className="attachment-list">
-          {state.detail.attachments.map((attachment) => (
-            <li key={attachment.name}>
-              <a
-                className="attachment-link"
-                href={buildAttachmentPreviewUrl(attachment.name, attachment.mimeType, attachment.sizeKb)}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <span className="attachment-badge">
-                  {getAttachmentBadge(attachment.mimeType, attachment.name)}
-                </span>
-                <span>{attachment.name}</span>
-              </a>
-              <span className="attachment-meta">
-                ({attachment.mimeType}, {attachment.sizeKb} KB)
-              </span>
-            </li>
-          ))}
-        </ol>
-      </section>
+          <section className="detail-section">
+            <h3>Attachments</h3>
+            <AttachmentList detail={state.detail} />
+          </section>
+        </>
+      ) : null}
 
-      {activeStatus === "ENCODING_COMPLETED" && state.encoding ? (
+      {isEncodingCompletedView && state.encoding ? (
         <section className="detail-section">
           <h3>Final Encoding Adjustment</h3>
           <p className="muted-text">
             Final analyst review before triggering Decision AI. Any changed field is captured as extraction
             feedback for prompt improvement.
           </p>
-          <div className="encoding-adjustment-layout">
-            <div className="encoding-doc-panel">
-              <h4>Document Viewer</h4>
-              <p className="muted-text">Source package attached to this application</p>
-              <ul>
-                {state.encoding.documentPreview.map((document) => (
-                  <li key={document.name}>
-                    {document.name} ({document.type}, {document.pages} pages)
-                  </li>
-                ))}
-              </ul>
-              <h4>Extraction Summary</h4>
-              <ul>
-                {state.encoding.fields.map((field) => (
-                  <li key={field.fieldName}>
-                    {field.fieldName}: {field.extractedValue} ({formatPercent(field.confidence)})
-                  </li>
-                ))}
-              </ul>
+          <div className="encoding-section-tabs">
+            <button
+              type="button"
+              className={`section-tab-button ${encodingTab === "application" ? "active" : ""}`}
+              onClick={() => setEncodingTab("application")}
+            >
+              Application Details
+            </button>
+            <button
+              type="button"
+              className={`section-tab-button ${encodingTab === "adjustment" ? "active" : ""}`}
+              onClick={() => setEncodingTab("adjustment")}
+            >
+              Final Encoding Adjustment
+            </button>
+          </div>
+
+          {encodingTab === "application" ? (
+            <div className="encoding-adjustment-layout">
+              <div className="encoding-doc-panel">
+                <h4>Document Viewer</h4>
+                <p className="muted-text">Source package attached to this application</p>
+                <ul>
+                  {state.encoding.documentPreview.map((document) => (
+                    <li key={document.name}>
+                      {document.name} ({document.type}, {document.pages} pages)
+                    </li>
+                  ))}
+                </ul>
+                <h4>Extraction Summary</h4>
+                <ul>
+                  {state.encoding.fields.map((field) => (
+                    <li key={field.fieldName}>
+                      {field.fieldName}: {field.extractedValue} ({formatPercent(field.confidence)})
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="encoding-form-panel">
+                <section className="detail-section nested-section">
+                  <h4>Application Details</h4>
+                  <p>
+                    <strong>Applicant:</strong> {state.detail.applicantName}
+                  </p>
+                  <p>
+                    <strong>Status:</strong> {statusLabels[state.detail.status]}
+                  </p>
+                  <p>
+                    <strong>Received:</strong> {formatIsoDate(state.detail.receivedAt)}
+                  </p>
+                  <p>
+                    <strong>Email:</strong> {state.detail.emailFrom}
+                  </p>
+                </section>
+                <section className="detail-section nested-section">
+                  <h4>Attachments</h4>
+                  <AttachmentList detail={state.detail} />
+                </section>
+              </div>
             </div>
-
-            <div className="encoding-form-panel">
-              <div className="encoding-form-grid">
+          ) : (
+            <div className="encoding-form-split">
+              <div className="encoding-field-list">
                 {editableSeed.map((field) => {
-                  const currentValue = editableValues[field.path] ?? "";
-                  const fieldChanged = currentValue !== baselineValues[field.path];
-                  const meta = buildScoringMeta(field.path, currentValue);
+                  const fieldCurrentValue = editableValues[field.path] ?? "";
+                  const fieldChanged = fieldCurrentValue !== baselineValues[field.path];
                   return (
-                    <article
+                    <button
                       key={field.path}
-                      className={`field-card analyst-field-card ${fieldChanged ? "field-changed" : ""}`}
+                      type="button"
+                      className={`encoding-field-item ${selectedField?.path === field.path ? "active" : ""}`}
+                      onClick={() => {
+                        setSelectedFieldPath(field.path);
+                        setShowFieldMeta(false);
+                      }}
                     >
-                      <h4>{field.path}</h4>
-                      <label className="analyst-input-label">
-                        <span>Analyst Value</span>
-                        <input
-                          className="analyst-input"
-                          value={currentValue}
-                          onChange={(event) =>
-                            setEditableValues((prev) => ({
-                              ...prev,
-                              [field.path]: event.target.value
-                            }))
-                          }
-                        />
-                      </label>
-
-                      <div className="scoring-meta">
-                        <p>
-                          <strong>field_id:</strong> {meta.field_id}
-                        </p>
-                        <p>
-                          <strong>raw_value:</strong> {meta.raw_value || "<empty>"}
-                        </p>
-                        <p>
-                          <strong>normalized_value:</strong>{" "}
-                          {meta.normalized_value === null ? "<null>" : String(meta.normalized_value)}
-                        </p>
-                        <p>
-                          <strong>field_score:</strong> {meta.field_score}
-                        </p>
-                        <p>
-                          <strong>status:</strong> {meta.status}
-                        </p>
-                        <p>
-                          <strong>component_scores:</strong> ocr={meta.component_scores.ocr}, format=
-                          {meta.component_scores.format}, statistical={meta.component_scores.statistical},
-                          cross_field={meta.component_scores.cross_field}
-                        </p>
-                        <p>
-                          <strong>details:</strong> {meta.details.join(" | ")}
-                        </p>
-                        <p>
-                          <strong>rule_outputs:</strong> {meta.rule_outputs.map((rule) => rule.rule_name).join(", ")}
-                        </p>
-                      </div>
-
-                      {fieldChanged ? (
-                        <label className="analyst-input-label">
-                          <span>Feedback for Prompt Improvement</span>
-                          <textarea
-                            className="analyst-textarea"
-                            placeholder="Why extraction was incorrect and how prompt should improve..."
-                            value={feedbackNotes[field.path] ?? ""}
-                            onChange={(event) =>
-                              setFeedbackNotes((prev) => ({
-                                ...prev,
-                                [field.path]: event.target.value
-                              }))
-                            }
-                          />
-                        </label>
-                      ) : null}
-                    </article>
+                      <span>{field.path}</span>
+                      {fieldChanged ? <em>changed</em> : null}
+                    </button>
                   );
                 })}
               </div>
 
-              <div className="encoding-submit-panel">
-                <p>
-                  <strong>Changed fields:</strong> {changedFields.length}
-                </p>
-                <button
-                  type="button"
-                  disabled={changedFields.length === 0}
-                  onClick={() => setSaveMessage("Adjustments captured. Ready to trigger Decision AI.")}
-                >
-                  Save Adjustments & Trigger Decision
-                </button>
-                {saveMessage ? <p className="muted-text">{saveMessage}</p> : null}
-                {feedbackPayload.length > 0 ? (
-                  <>
-                    <h4>Feedback Capture Preview</h4>
-                    <pre className="feedback-preview">{JSON.stringify(feedbackPayload, null, 2)}</pre>
-                  </>
-                ) : null}
+              <div className="encoding-field-editor">
+                {selectedField ? (
+                  <article
+                    className={`field-card analyst-field-card ${selectedFieldChanged ? "field-changed" : ""}`}
+                  >
+                    <h4>{selectedField.path}</h4>
+                    <label className="analyst-input-label">
+                      <span>Analyst Value</span>
+                      <input
+                        className="analyst-input"
+                        value={selectedFieldCurrentValue}
+                        onChange={(event) =>
+                          setEditableValues((prev) => ({
+                            ...prev,
+                            [selectedField.path]: event.target.value
+                          }))
+                        }
+                      />
+                    </label>
+
+                    <div className="field-meta-row">
+                      <button
+                        type="button"
+                        className="field-meta-button"
+                        onClick={() => setShowFieldMeta((prev) => !prev)}
+                      >
+                        i
+                      </button>
+                      <span className="muted-text">Show extraction/scoring details</span>
+                    </div>
+
+                    {showFieldMeta && selectedFieldMeta ? (
+                      <div className="field-meta-popover">
+                        <p>
+                          <strong>field_id:</strong> {selectedFieldMeta.field_id}
+                        </p>
+                        <p>
+                          <strong>raw_value:</strong> {selectedFieldMeta.raw_value || "<empty>"}
+                        </p>
+                        <p>
+                          <strong>normalized_value:</strong>{" "}
+                          {selectedFieldMeta.normalized_value === null
+                            ? "<null>"
+                            : String(selectedFieldMeta.normalized_value)}
+                        </p>
+                        <p>
+                          <strong>field_score:</strong> {selectedFieldMeta.field_score}
+                        </p>
+                        <p>
+                          <strong>status:</strong> {selectedFieldMeta.status}
+                        </p>
+                        <p>
+                          <strong>component_scores:</strong> ocr={selectedFieldMeta.component_scores.ocr},
+                          format={selectedFieldMeta.component_scores.format}, statistical=
+                          {selectedFieldMeta.component_scores.statistical}, cross_field=
+                          {selectedFieldMeta.component_scores.cross_field}
+                        </p>
+                        <p>
+                          <strong>details:</strong> {selectedFieldMeta.details.join(" | ")}
+                        </p>
+                        <p>
+                          <strong>rule_outputs:</strong>{" "}
+                          {selectedFieldMeta.rule_outputs.map((rule) => rule.rule_name).join(", ")}
+                        </p>
+                      </div>
+                    ) : null}
+
+                    {selectedFieldChanged ? (
+                      <label className="analyst-input-label">
+                        <span>Feedback for Prompt Improvement</span>
+                        <textarea
+                          className="analyst-textarea"
+                          placeholder="Why extraction was incorrect and how prompt should improve..."
+                          value={feedbackNotes[selectedField.path] ?? ""}
+                          onChange={(event) =>
+                            setFeedbackNotes((prev) => ({
+                              ...prev,
+                              [selectedField.path]: event.target.value
+                            }))
+                          }
+                        />
+                      </label>
+                    ) : null}
+                  </article>
+                ) : (
+                  <div className="state-box">No editable fields found.</div>
+                )}
+
+                <div className="encoding-submit-panel">
+                  <p>
+                    <strong>Changed fields:</strong> {changedFields.length}
+                  </p>
+                  <button
+                    type="button"
+                    disabled={changedFields.length === 0}
+                    onClick={() => setSaveMessage("Adjustments captured. Ready to trigger Decision AI.")}
+                  >
+                    Save Adjustments & Trigger Decision
+                  </button>
+                  {saveMessage ? <p className="muted-text">{saveMessage}</p> : null}
+                  {feedbackPayload.length > 0 ? (
+                    <>
+                      <h4>Feedback Capture Preview</h4>
+                      <pre className="feedback-preview">{JSON.stringify(feedbackPayload, null, 2)}</pre>
+                    </>
+                  ) : null}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </section>
       ) : null}
 

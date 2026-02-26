@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { apiClient } from "../../api/client";
 import type {
@@ -38,6 +38,9 @@ export function QueueDashboard(): JSX.Element {
   });
   const [tableLoading, setTableLoading] = useState(false);
   const [tableError, setTableError] = useState<string | undefined>();
+  const [leftPanePercent, setLeftPanePercent] = useState(60);
+  const [isResizing, setIsResizing] = useState(false);
+  const mainRef = useRef<HTMLElement | null>(null);
 
   const [detailState, setDetailState] = useState<DetailPanelState>({
     loading: false
@@ -62,6 +65,29 @@ export function QueueDashboard(): JSX.Element {
     }
     void fetchDetail(selectedAppId, activeStatus);
   }, [selectedAppId, activeStatus]);
+
+  useEffect(() => {
+    function handlePointerMove(event: MouseEvent): void {
+      if (!isResizing || !mainRef.current) {
+        return;
+      }
+      const rect = mainRef.current.getBoundingClientRect();
+      const raw = ((event.clientX - rect.left) / rect.width) * 100;
+      const clamped = Math.max(40, Math.min(70, raw));
+      setLeftPanePercent(clamped);
+    }
+
+    function handlePointerUp(): void {
+      setIsResizing(false);
+    }
+
+    window.addEventListener("mousemove", handlePointerMove);
+    window.addEventListener("mouseup", handlePointerUp);
+    return () => {
+      window.removeEventListener("mousemove", handlePointerMove);
+      window.removeEventListener("mouseup", handlePointerUp);
+    };
+  }, [isResizing]);
 
   async function refreshSummary(): Promise<void> {
     const next = await apiClient.getQueueSummary();
@@ -170,7 +196,13 @@ export function QueueDashboard(): JSX.Element {
         </div>
       </header>
 
-      <main className="dashboard-main">
+      <main
+        ref={mainRef}
+        className="dashboard-main"
+        style={{
+          gridTemplateColumns: `${leftPanePercent}% 8px ${100 - leftPanePercent}%`
+        }}
+      >
         <section className="queue-column">
           <div className="tab-row" role="tablist" aria-label="Workflow state tabs">
             {queueStatuses.map((status) => {
@@ -307,6 +339,14 @@ export function QueueDashboard(): JSX.Element {
             ) : null}
           </div>
         </section>
+
+        <div
+          className={`pane-resizer ${isResizing ? "active" : ""}`}
+          onMouseDown={() => setIsResizing(true)}
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize panels"
+        />
 
         <aside className="detail-column">
           <div className="detail-header">
