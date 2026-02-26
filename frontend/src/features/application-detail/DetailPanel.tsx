@@ -25,7 +25,18 @@ type ScalarValue = string | number | boolean | null;
 
 type EditableField = {
   path: string;
+  label: string;
   value: ScalarValue;
+};
+
+type EditorTarget = {
+  id: string;
+  sectionKey: string;
+  sectionLabel: string;
+  itemLabel: string;
+  isRepeatable: boolean;
+  instanceId?: string;
+  fields: EditableField[];
 };
 
 type FieldScoringMeta = {
@@ -61,7 +72,7 @@ function flattenObjectFields(input: unknown, prefix = ""): EditableField[] {
   Object.entries(input as Record<string, unknown>).forEach(([key, value]) => {
     const nextPath = prefix ? `${prefix}.${key}` : key;
     if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
-      result.push({ path: nextPath, value });
+      result.push({ path: nextPath, label: nextPath, value });
       return;
     }
     if (Array.isArray(value)) {
@@ -70,6 +81,99 @@ function flattenObjectFields(input: unknown, prefix = ""): EditableField[] {
     result.push(...flattenObjectFields(value, nextPath));
   });
   return result;
+}
+
+function humanizeKey(key: string): string {
+  return key
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function buildEditorTargets(input: unknown): EditorTarget[] {
+  if (!input || typeof input !== "object" || Array.isArray(input)) {
+    return [];
+  }
+
+  const targets: EditorTarget[] = [];
+  Object.entries(input as Record<string, unknown>).forEach(([sectionKey, sectionValue]) => {
+    const sectionLabel = humanizeKey(sectionKey);
+    if (Array.isArray(sectionValue)) {
+      if (sectionValue.length === 0) {
+        targets.push({
+          id: `${sectionKey}::empty`,
+          sectionKey,
+          sectionLabel,
+          itemLabel: `${sectionLabel} (0)`,
+          isRepeatable: true,
+          fields: []
+        });
+        return;
+      }
+      sectionValue.forEach((entry, index) => {
+        const basePath = `${sectionKey}[${index}]`;
+        let fields: EditableField[] = [];
+        if (entry && typeof entry === "object" && !Array.isArray(entry)) {
+          fields = flattenObjectFields(entry, "").map((field) => ({
+            ...field,
+            path: `${basePath}.${field.path}`,
+            label: field.label
+          }));
+        } else {
+          fields = [
+            {
+              path: basePath,
+              label: "value",
+              value: entry as ScalarValue
+            }
+          ];
+        }
+        targets.push({
+          id: `${sectionKey}::${index}`,
+          sectionKey,
+          sectionLabel,
+          itemLabel: `#${index + 1}`,
+          isRepeatable: true,
+          instanceId: `${sectionKey}_${index + 1}`,
+          fields
+        });
+      });
+      return;
+    }
+
+    if (sectionValue && typeof sectionValue === "object") {
+      const fields = flattenObjectFields(sectionValue, "").map((field) => ({
+        ...field,
+        path: `${sectionKey}.${field.path}`,
+        label: field.label
+      }));
+      targets.push({
+        id: `${sectionKey}::single`,
+        sectionKey,
+        sectionLabel,
+        itemLabel: sectionLabel,
+        isRepeatable: false,
+        fields
+      });
+      return;
+    }
+
+    targets.push({
+      id: `${sectionKey}::single`,
+      sectionKey,
+      sectionLabel,
+      itemLabel: sectionLabel,
+      isRepeatable: false,
+      fields: [
+        {
+          path: sectionKey,
+          label: sectionKey,
+          value: sectionValue as ScalarValue
+        }
+      ]
+    });
+  });
+
+  return targets;
 }
 
 function normalizeValue(value: string): string | number | null {
@@ -209,26 +313,38 @@ export function DetailPanel(props: {
   state: DetailPanelState;
 }): JSX.Element {
   const { activeStatus, selectedAppId, state } = props;
-  const editableSeed = useMemo(() => flattenObjectFields(samplePostEncoding), []);
+  const editorTargets = useMemo(() => buildEditorTargets(samplePostEncoding), []);
   const [editableValues, setEditableValues] = useState<Record<string, string>>({});
   const [feedbackNotes, setFeedbackNotes] = useState<Record<string, string>>({});
   const [saveMessage, setSaveMessage] = useState<string>("");
   const [encodingTab, setEncodingTab] = useState<"application" | "adjustment">("application");
-  const [selectedFieldPath, setSelectedFieldPath] = useState<string>("");
-  const [showFieldMeta, setShowFieldMeta] = useState(false);
+  const [selectedTargetId, setSelectedTargetId] = useState<string>("");
+  const [openMetaFieldPath, setOpenMetaFieldPath] = useState<string | null>(null);
 
   useEffect(() => {
     const initialValues: Record<string, string> = {};
-    editableSeed.forEach((field) => {
-      initialValues[field.path] = field.value === null ? "" : String(field.value);
+    editorTargets.forEach((target) => {
+      target.fields.forEach((field) => {
+        initialValues[field.path] = field.value === null ? "" : String(field.value);
+      });
     });
     setEditableValues(initialValues);
     setFeedbackNotes({});
     setSaveMessage("");
     setEncodingTab("application");
-    setShowFieldMeta(false);
-    setSelectedFieldPath(editableSeed[0]?.path ?? "");
-  }, [selectedAppId, activeStatus, editableSeed]);
+    setOpenMetaFieldPath(null);
+    setSelectedTargetId(editorTargets[0]?.id ?? "");
+  }, [selectedAppId, activeStatus, editorTargets]);
+
+  const groupedTargets = useMemo(() => {
+    return editorTargets.reduce<Record<string, EditorTarget[]>>((acc, target) => {
+      if (!acc[target.sectionKey]) {
+        acc[target.sectionKey] = [];
+      }
+      acc[target.sectionKey].push(target);
+      return acc;
+    }, {});
+  }, [editorTargets]);
 
   if (!selectedAppId) {
     return <div className="state-box">Select an application to view details.</div>;
@@ -243,8 +359,10 @@ export function DetailPanel(props: {
     return <div className="state-box">No details available.</div>;
   }
 
-  const baselineValues = editableSeed.reduce<Record<string, string>>((acc, field) => {
-    acc[field.path] = field.value === null ? "" : String(field.value);
+  const baselineValues = editorTargets.reduce<Record<string, string>>((acc, target) => {
+    target.fields.forEach((field) => {
+      acc[field.path] = field.value === null ? "" : String(field.value);
+    });
     return acc;
   }, {});
   const changedFields = Object.keys(editableValues).filter(
@@ -260,15 +378,7 @@ export function DetailPanel(props: {
     prompt_improvement_required: true,
     captured_at: new Date().toISOString()
   }));
-  const selectedField = editableSeed.find((field) => field.path === selectedFieldPath) ?? editableSeed[0];
-  const selectedFieldCurrentValue = selectedField ? editableValues[selectedField.path] ?? "" : "";
-  const selectedFieldBaselineValue = selectedField
-    ? baselineValues[selectedField.path] ?? ""
-    : "";
-  const selectedFieldChanged = selectedFieldCurrentValue !== selectedFieldBaselineValue;
-  const selectedFieldMeta = selectedField
-    ? buildScoringMeta(selectedField.path, selectedFieldCurrentValue)
-    : null;
+  const selectedTarget = editorTargets.find((target) => target.id === selectedTargetId) ?? editorTargets[0];
   const isEncodingCompletedView = activeStatus === "ENCODING_COMPLETED" && !!state.encoding;
 
   return (
@@ -369,109 +479,134 @@ export function DetailPanel(props: {
           ) : (
             <div className="encoding-form-split">
               <div className="encoding-field-list">
-                {editableSeed.map((field) => {
-                  const fieldCurrentValue = editableValues[field.path] ?? "";
-                  const fieldChanged = fieldCurrentValue !== baselineValues[field.path];
-                  return (
-                    <button
-                      key={field.path}
-                      type="button"
-                      className={`encoding-field-item ${selectedField?.path === field.path ? "active" : ""}`}
-                      onClick={() => {
-                        setSelectedFieldPath(field.path);
-                        setShowFieldMeta(false);
-                      }}
-                    >
-                      <span>{field.path}</span>
-                      {fieldChanged ? <em>changed</em> : null}
-                    </button>
-                  );
-                })}
+                {Object.entries(groupedTargets).map(([sectionKey, targets]) => (
+                  <div key={sectionKey} className="encoding-section-group">
+                    <h5>{targets[0].sectionLabel}</h5>
+                    {targets.map((target) => {
+                      const hasChanges = target.fields.some(
+                        (field) => (editableValues[field.path] ?? "") !== (baselineValues[field.path] ?? "")
+                      );
+                      return (
+                        <button
+                          key={target.id}
+                          type="button"
+                          className={`encoding-field-item ${selectedTarget?.id === target.id ? "active" : ""}`}
+                          onClick={() => {
+                            setSelectedTargetId(target.id);
+                            setOpenMetaFieldPath(null);
+                          }}
+                        >
+                          <span>{target.itemLabel}</span>
+                          {hasChanges ? <em>changed</em> : null}
+                        </button>
+                      );
+                    })}
+                  </div>
+                ))}
               </div>
 
               <div className="encoding-field-editor">
-                {selectedField ? (
-                  <article
-                    className={`field-card analyst-field-card ${selectedFieldChanged ? "field-changed" : ""}`}
-                  >
-                    <h4>{selectedField.path}</h4>
-                    <label className="analyst-input-label">
-                      <span>Analyst Value</span>
-                      <input
-                        className="analyst-input"
-                        value={selectedFieldCurrentValue}
-                        onChange={(event) =>
-                          setEditableValues((prev) => ({
-                            ...prev,
-                            [selectedField.path]: event.target.value
-                          }))
-                        }
-                      />
-                    </label>
+                {selectedTarget ? (
+                  <article className="field-card analyst-field-card">
+                    <h4>
+                      {selectedTarget.sectionLabel}
+                      {selectedTarget.isRepeatable ? ` ${selectedTarget.itemLabel}` : ""}
+                    </h4>
 
-                    <div className="field-meta-row">
-                      <button
-                        type="button"
-                        className="field-meta-button"
-                        onClick={() => setShowFieldMeta((prev) => !prev)}
-                      >
-                        i
-                      </button>
-                      <span className="muted-text">Show extraction/scoring details</span>
-                    </div>
+                    {selectedTarget.fields.length === 0 ? (
+                      <p className="muted-text">No extracted rows for this section.</p>
+                    ) : (
+                      <div className="nested-field-table">
+                        {selectedTarget.fields.map((field) => {
+                          const currentValue = editableValues[field.path] ?? "";
+                          const previousValue = baselineValues[field.path] ?? "";
+                          const fieldChanged = currentValue !== previousValue;
+                          const meta = buildScoringMeta(field.path, currentValue);
+                          const isMetaOpen = openMetaFieldPath === field.path;
+                          return (
+                            <div
+                              key={field.path}
+                              className={`nested-field-row ${fieldChanged ? "field-changed" : ""}`}
+                            >
+                              <div className="nested-field-header">
+                                <span className="nested-field-name">{field.label}</span>
+                                <button
+                                  type="button"
+                                  className="field-meta-button"
+                                  onClick={() =>
+                                    setOpenMetaFieldPath((prev) => (prev === field.path ? null : field.path))
+                                  }
+                                >
+                                  i
+                                </button>
+                              </div>
 
-                    {showFieldMeta && selectedFieldMeta ? (
-                      <div className="field-meta-popover">
-                        <p>
-                          <strong>field_id:</strong> {selectedFieldMeta.field_id}
-                        </p>
-                        <p>
-                          <strong>raw_value:</strong> {selectedFieldMeta.raw_value || "<empty>"}
-                        </p>
-                        <p>
-                          <strong>normalized_value:</strong>{" "}
-                          {selectedFieldMeta.normalized_value === null
-                            ? "<null>"
-                            : String(selectedFieldMeta.normalized_value)}
-                        </p>
-                        <p>
-                          <strong>field_score:</strong> {selectedFieldMeta.field_score}
-                        </p>
-                        <p>
-                          <strong>status:</strong> {selectedFieldMeta.status}
-                        </p>
-                        <p>
-                          <strong>component_scores:</strong> ocr={selectedFieldMeta.component_scores.ocr},
-                          format={selectedFieldMeta.component_scores.format}, statistical=
-                          {selectedFieldMeta.component_scores.statistical}, cross_field=
-                          {selectedFieldMeta.component_scores.cross_field}
-                        </p>
-                        <p>
-                          <strong>details:</strong> {selectedFieldMeta.details.join(" | ")}
-                        </p>
-                        <p>
-                          <strong>rule_outputs:</strong>{" "}
-                          {selectedFieldMeta.rule_outputs.map((rule) => rule.rule_name).join(", ")}
-                        </p>
+                              <input
+                                className="analyst-input"
+                                value={currentValue}
+                                onChange={(event) =>
+                                  setEditableValues((prev) => ({
+                                    ...prev,
+                                    [field.path]: event.target.value
+                                  }))
+                                }
+                              />
+
+                              {isMetaOpen ? (
+                                <div className="field-meta-popover">
+                                  <p>
+                                    <strong>field_id:</strong> {meta.field_id}
+                                  </p>
+                                  <p>
+                                    <strong>raw_value:</strong> {meta.raw_value || "<empty>"}
+                                  </p>
+                                  <p>
+                                    <strong>normalized_value:</strong>{" "}
+                                    {meta.normalized_value === null ? "<null>" : String(meta.normalized_value)}
+                                  </p>
+                                  <p>
+                                    <strong>field_score:</strong> {meta.field_score}
+                                  </p>
+                                  <p>
+                                    <strong>status:</strong> {meta.status}
+                                  </p>
+                                  <p>
+                                    <strong>component_scores:</strong> ocr={meta.component_scores.ocr}, format=
+                                    {meta.component_scores.format}, statistical=
+                                    {meta.component_scores.statistical}, cross_field=
+                                    {meta.component_scores.cross_field}
+                                  </p>
+                                  <p>
+                                    <strong>details:</strong> {meta.details.join(" | ")}
+                                  </p>
+                                  <p>
+                                    <strong>rule_outputs:</strong>{" "}
+                                    {meta.rule_outputs.map((rule) => rule.rule_name).join(", ")}
+                                  </p>
+                                </div>
+                              ) : null}
+
+                              {fieldChanged ? (
+                                <label className="analyst-input-label">
+                                  <span>Feedback for Prompt Improvement</span>
+                                  <textarea
+                                    className="analyst-textarea"
+                                    placeholder="Why extraction was incorrect and how prompt should improve..."
+                                    value={feedbackNotes[field.path] ?? ""}
+                                    onChange={(event) =>
+                                      setFeedbackNotes((prev) => ({
+                                        ...prev,
+                                        [field.path]: event.target.value
+                                      }))
+                                    }
+                                  />
+                                </label>
+                              ) : null}
+                            </div>
+                          );
+                        })}
                       </div>
-                    ) : null}
-
-                    {selectedFieldChanged ? (
-                      <label className="analyst-input-label">
-                        <span>Feedback for Prompt Improvement</span>
-                        <textarea
-                          className="analyst-textarea"
-                          placeholder="Why extraction was incorrect and how prompt should improve..."
-                          value={feedbackNotes[selectedField.path] ?? ""}
-                          onChange={(event) =>
-                            setFeedbackNotes((prev) => ({
-                              ...prev,
-                              [selectedField.path]: event.target.value
-                            }))
-                          }
-                        />
-                      </label>
-                    ) : null}
+                    )}
                   </article>
                 ) : (
                   <div className="state-box">No editable fields found.</div>
