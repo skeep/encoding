@@ -137,22 +137,22 @@ export function QueueDashboard(): JSX.Element {
 
   return (
     <div className="dashboard-root">
-      <header className="top-header">
-        <div>
-          <h1>Credit Workflow Queue</h1>
-          <p className="muted-text">Traceable, explainable queue-based application processing</p>
+      <header className="top-nav">
+        <div className="top-nav-left">
+          <h1>Credit Trace Platform</h1>
+          <p className="muted-text">Workflow Dashboard</p>
         </div>
-        <div className="top-header-meta">
-          <label className="global-search">
-            <span>Search</span>
-            <input
-              placeholder="Application ID, applicant, product"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-            />
-          </label>
-          <button onClick={() => void refreshSummary()}>Refresh</button>
-          <small>Last refreshed: {formatIsoDate(lastRefreshedAt)}</small>
+        <div className="top-nav-center">
+          <input
+            className="top-nav-search"
+            placeholder="Search by application ID, applicant, product"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+          />
+        </div>
+        <div className="top-nav-right">
+          <span className="user-name">Suman Paul</span>
+          <button type="button">Logout</button>
         </div>
       </header>
 
@@ -181,9 +181,13 @@ export function QueueDashboard(): JSX.Element {
           <div className="table-shell" aria-busy={tableLoading}>
             <div className="table-headline">
               <h2>{statusLabels[activeStatus]}</h2>
-              <span className="muted-text">
-                {activeSummary ? `${activeSummary.count} in queue` : "Queue count unavailable"}
-              </span>
+              <div className="table-headline-actions">
+                <span className="muted-text">
+                  {activeSummary ? `${activeSummary.count} in queue` : "Queue count unavailable"}
+                </span>
+                <button onClick={() => void refreshSummary()}>Refresh</button>
+                <small className="muted-text">Updated: {formatIsoDate(lastRefreshedAt)}</small>
+              </div>
             </div>
             {tableError ? (
               <div className="state-box error-box">
@@ -249,6 +253,10 @@ export function QueueDashboard(): JSX.Element {
           <DetailPanel activeStatus={activeStatus} selectedAppId={selectedAppId} state={detailState} />
         </aside>
       </main>
+      <footer className="app-footer">
+        <span>Credit Traceability Engine</span>
+        <span className="muted-text">Audit-safe, explainable workflow view</span>
+      </footer>
     </div>
   );
 }
