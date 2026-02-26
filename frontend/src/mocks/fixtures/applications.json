@@ -1,0 +1,79 @@
+[
+  {
+    "applicationId": "APP-2026-0001",
+    "status": "EMAIL_RECEIVED",
+    "applicantName": "Arun Menon",
+    "product": "Home Loan",
+    "receivedAt": "2026-02-26T08:05:00Z",
+    "lastUpdatedAt": "2026-02-26T08:05:00Z",
+    "slaAgeMinutes": 42,
+    "priority": "MEDIUM",
+    "riskFlag": "NONE"
+  },
+  {
+    "applicationId": "APP-2026-0002",
+    "status": "ENCODING_QUEUED",
+    "applicantName": "Nisha Das",
+    "product": "Personal Loan",
+    "receivedAt": "2026-02-26T07:25:00Z",
+    "lastUpdatedAt": "2026-02-26T08:15:00Z",
+    "slaAgeMinutes": 84,
+    "priority": "HIGH",
+    "riskFlag": "MEDIUM"
+  },
+  {
+    "applicationId": "APP-2026-0003",
+    "status": "ENCODING_RUNNING",
+    "applicantName": "Ravi Kumar",
+    "product": "Auto Loan",
+    "receivedAt": "2026-02-26T07:00:00Z",
+    "lastUpdatedAt": "2026-02-26T08:20:00Z",
+    "slaAgeMinutes": 105,
+    "priority": "HIGH",
+    "riskFlag": "NONE"
+  },
+  {
+    "applicationId": "APP-2026-0004",
+    "status": "ENCODING_COMPLETED",
+    "applicantName": "Meera Iyer",
+    "product": "Home Loan",
+    "receivedAt": "2026-02-26T06:55:00Z",
+    "lastUpdatedAt": "2026-02-26T08:22:00Z",
+    "slaAgeMinutes": 110,
+    "priority": "HIGH",
+    "riskFlag": "MEDIUM"
+  },
+  {
+    "applicationId": "APP-2026-0005",
+    "status": "DECISION_QUEUED",
+    "applicantName": "Sahil Kapoor",
+    "product": "Business Loan",
+    "receivedAt": "2026-02-26T06:20:00Z",
+    "lastUpdatedAt": "2026-02-26T08:24:00Z",
+    "slaAgeMinutes": 145,
+    "priority": "MEDIUM",
+    "riskFlag": "HIGH"
+  },
+  {
+    "applicationId": "APP-2026-0006",
+    "status": "DECISION_RUNNING",
+    "applicantName": "Rohan Dutta",
+    "product": "Personal Loan",
+    "receivedAt": "2026-02-26T05:50:00Z",
+    "lastUpdatedAt": "2026-02-26T08:27:00Z",
+    "slaAgeMinutes": 176,
+    "priority": "HIGH",
+    "riskFlag": "HIGH"
+  },
+  {
+    "applicationId": "APP-2026-0007",
+    "status": "DECISION_COMPLETED",
+    "applicantName": "Priya Shah",
+    "product": "Home Loan",
+    "receivedAt": "2026-02-26T04:45:00Z",
+    "lastUpdatedAt": "2026-02-26T08:28:00Z",
+    "slaAgeMinutes": 241,
+    "priority": "LOW",
+    "riskFlag": "NONE"
+  }
+]

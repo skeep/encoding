@@ -1,0 +1,81 @@
+[
+  {
+    "applicationId": "APP-2026-0004",
+    "documentPreview": [
+      { "name": "salary_slip_jan.pdf", "pages": 2, "type": "Salary Slip" },
+      { "name": "bank_statement_q4.pdf", "pages": 12, "type": "Bank Statement" }
+    ],
+    "fields": [
+      {
+        "fieldName": "claimed_income",
+        "extractedValue": "98000",
+        "confidence": 0.94,
+        "sourceTrace": {
+          "documentName": "salary_slip_jan.pdf",
+          "page": 1,
+          "location": "x=312,y=418,w=140,h=28"
+        },
+        "originalOcrValue": "98,000.00",
+        "transformationLog": [
+          {
+            "step": "trim",
+            "input": " 98,000.00 ",
+            "output": "98,000.00",
+            "rationale": "Leading/trailing spaces removed"
+          },
+          {
+            "step": "remove_commas",
+            "input": "98,000.00",
+            "output": "98000.00",
+            "rationale": "Numeric normalization"
+          },
+          {
+            "step": "cast_to_number",
+            "input": "98000.00",
+            "output": "98000",
+            "rationale": "Canonical integer income value"
+          }
+        ],
+        "triangulation": {
+          "selectedValue": "98000",
+          "selectionReason": "Highest confidence and consistent with bank credits",
+          "candidates": [
+            {
+              "source": "salary_slip_jan.pdf",
+              "value": "98000",
+              "confidence": 0.94,
+              "selected": true,
+              "reason": "Primary employer-issued document"
+            },
+            {
+              "source": "bank_statement_q4.pdf",
+              "value": "97500",
+              "confidence": 0.88,
+              "selected": false,
+              "reason": "Average monthly credit slightly lower"
+            }
+          ]
+        }
+      },
+      {
+        "fieldName": "employer_name",
+        "extractedValue": "BluePeak Technologies",
+        "confidence": 0.91,
+        "sourceTrace": {
+          "documentName": "salary_slip_jan.pdf",
+          "page": 1,
+          "location": "x=92,y=132,w=268,h=24"
+        },
+        "originalOcrValue": "BluePeak Technologies",
+        "transformationLog": [
+          {
+            "step": "trim",
+            "input": "BluePeak Technologies",
+            "output": "BluePeak Technologies",
+            "rationale": "No formatting adjustments required"
+          }
+        ]
+      }
+    ]
+  }
+]

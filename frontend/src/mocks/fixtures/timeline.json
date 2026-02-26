@@ -1,0 +1,37 @@
+[
+  {
+    "eventId": "EVT-01",
+    "timestamp": "2026-02-26T06:55:00Z",
+    "actor": "system",
+    "type": "EMAIL_RECEIVED",
+    "description": "Incoming email ingested and application created."
+  },
+  {
+    "eventId": "EVT-02",
+    "timestamp": "2026-02-26T07:05:00Z",
+    "actor": "system",
+    "type": "ENCODING_QUEUED",
+    "description": "Application queued for encoding worker."
+  },
+  {
+    "eventId": "EVT-03",
+    "timestamp": "2026-02-26T07:15:00Z",
+    "actor": "encoding-worker-3",
+    "type": "ENCODING_RUNNING",
+    "description": "Encoding job started by worker."
+  },
+  {
+    "eventId": "EVT-04",
+    "timestamp": "2026-02-26T08:22:00Z",
+    "actor": "encoding-worker-3",
+    "type": "ENCODING_COMPLETED",
+    "description": "Structured extraction with lineage and confidence completed."
+  },
+  {
+    "eventId": "EVT-05",
+    "timestamp": "2026-02-26T08:25:00Z",
+    "actor": "system",
+    "type": "DECISION_QUEUED",
+    "description": "Application queued for decision engine."
+  }
+]

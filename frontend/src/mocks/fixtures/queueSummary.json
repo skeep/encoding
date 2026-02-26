@@ -1,0 +1,9 @@
+[
+  { "status": "EMAIL_RECEIVED", "count": 3, "stale": false },
+  { "status": "ENCODING_QUEUED", "count": 4, "stale": false },
+  { "status": "ENCODING_RUNNING", "count": 2, "stale": false },
+  { "status": "ENCODING_COMPLETED", "count": 5, "stale": false },
+  { "status": "DECISION_QUEUED", "count": 3, "stale": false },
+  { "status": "DECISION_RUNNING", "count": 1, "stale": true },
+  { "status": "DECISION_COMPLETED", "count": 6, "stale": false }
+]

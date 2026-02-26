@@ -1,0 +1,42 @@
+[
+  {
+    "applicationId": "APP-2026-0007",
+    "summary": {
+      "finalDecision": "APPROVE",
+      "riskScore": 0.23,
+      "riskGrade": "A2",
+      "policyVersion": "PL-2026.02",
+      "stpEligible": true
+    },
+    "rules": [
+      {
+        "ruleId": "R001",
+        "description": "Minimum age threshold",
+        "inputValues": { "age": "32" },
+        "conditionEvaluated": "age >= 21",
+        "passed": true,
+        "explanation": "Applicant meets minimum legal age criteria.",
+        "impact": "No negative impact"
+      },
+      {
+        "ruleId": "R012",
+        "description": "Debt to income ratio check",
+        "inputValues": { "monthly_debt": "18000", "monthly_income": "98000" },
+        "conditionEvaluated": "dti <= 0.45",
+        "passed": true,
+        "explanation": "Computed DTI is 0.18, which is within policy limits.",
+        "impact": "Supports approval recommendation"
+      },
+      {
+        "ruleId": "R037",
+        "description": "Recent delinquency in bureau report",
+        "inputValues": { "bureau_dpd_12m": "0" },
+        "conditionEvaluated": "bureau_dpd_12m == 0",
+        "passed": true,
+        "explanation": "No recent delinquencies were detected.",
+        "impact": "Improves risk grade"
+      }
+    ],
+    "creditMemo": "Applicant demonstrates stable income, low leverage, and clean repayment history. All mandatory policy checks passed with favorable risk indicators. Recommendation is Approve under policy PL-2026.02 with standard pricing."
+  }
+]
