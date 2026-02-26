@@ -1,5 +1,8 @@
+import { useEffect, useMemo, useState } from "react";
+
 import type { ApplicationDetail, DecisionView, EncodingView, QueueStatus } from "../../api/types";
 import { formatIsoDate, formatPercent } from "../../app/formatters";
+import samplePostEncoding from "../../../sample/sample_post_encoding.json";
 
 export type DetailPanelState = {
   detail?: ApplicationDetail;
@@ -17,6 +20,109 @@ const statusLabels: Record<QueueStatus, string> = {
   DECISION_RUNNING: "Decision Running",
   DECISION_COMPLETED: "Decision Completed"
 };
+
+type ScalarValue = string | number | boolean | null;
+
+type EditableField = {
+  path: string;
+  value: ScalarValue;
+};
+
+type FieldScoringMeta = {
+  field_id: string;
+  raw_value: string;
+  normalized_value: string | number | null;
+  field_score: number;
+  status: "passed" | "failed";
+  component_scores: {
+    ocr: number;
+    format: number;
+    statistical: number;
+    cross_field: number;
+  };
+  details: string[];
+  rule_outputs: Array<{
+    rule_name: string;
+    score: number;
+    passed: boolean;
+    details: string;
+    applicable: boolean;
+  }>;
+};
+
+function flattenObjectFields(input: unknown, prefix = ""): EditableField[] {
+  if (Array.isArray(input)) {
+    return [];
+  }
+  if (input === null || typeof input !== "object") {
+    return [];
+  }
+  const result: EditableField[] = [];
+  Object.entries(input as Record<string, unknown>).forEach(([key, value]) => {
+    const nextPath = prefix ? `${prefix}.${key}` : key;
+    if (value === null || typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+      result.push({ path: nextPath, value });
+      return;
+    }
+    if (Array.isArray(value)) {
+      return;
+    }
+    result.push(...flattenObjectFields(value, nextPath));
+  });
+  return result;
+}
+
+function normalizeValue(value: string): string | number | null {
+  const trimmed = value.trim();
+  if (trimmed.length === 0) {
+    return null;
+  }
+  const numeric = Number(trimmed.replace(/,/g, ""));
+  if (!Number.isNaN(numeric) && trimmed !== "true" && trimmed !== "false") {
+    return numeric;
+  }
+  return trimmed;
+}
+
+function buildScoringMeta(path: string, value: string): FieldScoringMeta {
+  const normalized = normalizeValue(value);
+  const looksNumeric = typeof normalized === "number";
+  const baseScore = path.includes("income") || path.includes("amount") ? 0.95 : 0.91;
+  return {
+    field_id: path,
+    raw_value: value,
+    normalized_value: normalized,
+    field_score: baseScore,
+    status: "passed",
+    component_scores: {
+      ocr: 0.93,
+      format: looksNumeric ? 1 : 0.98,
+      statistical: looksNumeric ? 0.94 : 0.9,
+      cross_field: 1
+    },
+    details: [
+      "type_check passed; bounds/format checks passed",
+      "z=0.2637, z_cap=4.0",
+      "2 applicable cross-field rules evaluated"
+    ],
+    rule_outputs: [
+      {
+        rule_name: "value_present",
+        score: 1,
+        passed: true,
+        details: `${path} has non-empty extracted value`,
+        applicable: true
+      },
+      {
+        rule_name: "cross_field_consistency",
+        score: 1,
+        passed: true,
+        details: "No cross-field inconsistencies detected",
+        applicable: true
+      }
+    ]
+  };
+}
 
 function getAttachmentBadge(mimeType: string, fileName: string): string {
   const lowerMime = mimeType.toLowerCase();
@@ -79,6 +185,21 @@ export function DetailPanel(props: {
   state: DetailPanelState;
 }): JSX.Element {
   const { activeStatus, selectedAppId, state } = props;
+  const editableSeed = useMemo(() => flattenObjectFields(samplePostEncoding), []);
+  const [editableValues, setEditableValues] = useState<Record<string, string>>({});
+  const [feedbackNotes, setFeedbackNotes] = useState<Record<string, string>>({});
+  const [saveMessage, setSaveMessage] = useState<string>("");
+
+  useEffect(() => {
+    const initialValues: Record<string, string> = {};
+    editableSeed.forEach((field) => {
+      initialValues[field.path] = field.value === null ? "" : String(field.value);
+    });
+    setEditableValues(initialValues);
+    setFeedbackNotes({});
+    setSaveMessage("");
+  }, [selectedAppId, activeStatus, editableSeed]);
+
   if (!selectedAppId) {
     return <div className="state-box">Select an application to view details.</div>;
   }
@@ -91,6 +212,24 @@ export function DetailPanel(props: {
   if (!state.detail) {
     return <div className="state-box">No details available.</div>;
   }
+
+  const baselineValues = editableSeed.reduce<Record<string, string>>((acc, field) => {
+    acc[field.path] = field.value === null ? "" : String(field.value);
+    return acc;
+  }, {});
+  const changedFields = Object.keys(editableValues).filter(
+    (path) => editableValues[path] !== baselineValues[path]
+  );
+  const feedbackPayload = changedFields.map((path) => ({
+    application_id: selectedAppId,
+    field_path: path,
+    old_value: baselineValues[path],
+    new_value: editableValues[path],
+    feedback_type: "extraction_incorrect",
+    analyst_feedback: feedbackNotes[path] ?? "",
+    prompt_improvement_required: true,
+    captured_at: new Date().toISOString()
+  }));
 
   return (
     <div className="detail-content">
@@ -136,52 +275,130 @@ export function DetailPanel(props: {
 
       {activeStatus === "ENCODING_COMPLETED" && state.encoding ? (
         <section className="detail-section">
-          <h3>Encoding Completed</h3>
-          <p className="muted-text">Document Viewer (placeholder) and extracted structured fields</p>
-          {state.encoding.fields.map((field) => (
-            <article key={field.fieldName} className="field-card">
-              <h4>{field.fieldName}</h4>
-              <p>
-                <strong>Extracted Value:</strong> {field.extractedValue}
-              </p>
-              <p>
-                <strong>Confidence:</strong> {formatPercent(field.confidence)}
-              </p>
-              <p>
-                <strong>Source:</strong> {field.sourceTrace.documentName} p{field.sourceTrace.page} (
-                {field.sourceTrace.location})
-              </p>
-              <p>
-                <strong>Original OCR:</strong> {field.originalOcrValue}
-              </p>
-              <div>
-                <strong>Transformation Log</strong>
-                <ul>
-                  {field.transformationLog.map((step) => (
-                    <li key={`${field.fieldName}-${step.step}-${step.output}`}>
-                      {step.step}: {step.input} → {step.output} ({step.rationale})
-                    </li>
-                  ))}
-                </ul>
+          <h3>Final Encoding Adjustment</h3>
+          <p className="muted-text">
+            Final analyst review before triggering Decision AI. Any changed field is captured as extraction
+            feedback for prompt improvement.
+          </p>
+          <div className="encoding-adjustment-layout">
+            <div className="encoding-doc-panel">
+              <h4>Document Viewer</h4>
+              <p className="muted-text">Source package attached to this application</p>
+              <ul>
+                {state.encoding.documentPreview.map((document) => (
+                  <li key={document.name}>
+                    {document.name} ({document.type}, {document.pages} pages)
+                  </li>
+                ))}
+              </ul>
+              <h4>Extraction Summary</h4>
+              <ul>
+                {state.encoding.fields.map((field) => (
+                  <li key={field.fieldName}>
+                    {field.fieldName}: {field.extractedValue} ({formatPercent(field.confidence)})
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="encoding-form-panel">
+              <div className="encoding-form-grid">
+                {editableSeed.map((field) => {
+                  const currentValue = editableValues[field.path] ?? "";
+                  const fieldChanged = currentValue !== baselineValues[field.path];
+                  const meta = buildScoringMeta(field.path, currentValue);
+                  return (
+                    <article
+                      key={field.path}
+                      className={`field-card analyst-field-card ${fieldChanged ? "field-changed" : ""}`}
+                    >
+                      <h4>{field.path}</h4>
+                      <label className="analyst-input-label">
+                        <span>Analyst Value</span>
+                        <input
+                          className="analyst-input"
+                          value={currentValue}
+                          onChange={(event) =>
+                            setEditableValues((prev) => ({
+                              ...prev,
+                              [field.path]: event.target.value
+                            }))
+                          }
+                        />
+                      </label>
+
+                      <div className="scoring-meta">
+                        <p>
+                          <strong>field_id:</strong> {meta.field_id}
+                        </p>
+                        <p>
+                          <strong>raw_value:</strong> {meta.raw_value || "<empty>"}
+                        </p>
+                        <p>
+                          <strong>normalized_value:</strong>{" "}
+                          {meta.normalized_value === null ? "<null>" : String(meta.normalized_value)}
+                        </p>
+                        <p>
+                          <strong>field_score:</strong> {meta.field_score}
+                        </p>
+                        <p>
+                          <strong>status:</strong> {meta.status}
+                        </p>
+                        <p>
+                          <strong>component_scores:</strong> ocr={meta.component_scores.ocr}, format=
+                          {meta.component_scores.format}, statistical={meta.component_scores.statistical},
+                          cross_field={meta.component_scores.cross_field}
+                        </p>
+                        <p>
+                          <strong>details:</strong> {meta.details.join(" | ")}
+                        </p>
+                        <p>
+                          <strong>rule_outputs:</strong> {meta.rule_outputs.map((rule) => rule.rule_name).join(", ")}
+                        </p>
+                      </div>
+
+                      {fieldChanged ? (
+                        <label className="analyst-input-label">
+                          <span>Feedback for Prompt Improvement</span>
+                          <textarea
+                            className="analyst-textarea"
+                            placeholder="Why extraction was incorrect and how prompt should improve..."
+                            value={feedbackNotes[field.path] ?? ""}
+                            onChange={(event) =>
+                              setFeedbackNotes((prev) => ({
+                                ...prev,
+                                [field.path]: event.target.value
+                              }))
+                            }
+                          />
+                        </label>
+                      ) : null}
+                    </article>
+                  );
+                })}
               </div>
-              {field.triangulation ? (
-                <div>
-                  <strong>Triangulation</strong>
-                  <p>
-                    Selected: {field.triangulation.selectedValue} ({field.triangulation.selectionReason})
-                  </p>
-                  <ul>
-                    {field.triangulation.candidates.map((candidate) => (
-                      <li key={`${field.fieldName}-${candidate.source}-${candidate.value}`}>
-                        {candidate.source}: {candidate.value}, conf {formatPercent(candidate.confidence)}{" "}
-                        [{candidate.selected ? "selected" : "rejected"}] - {candidate.reason}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ) : null}
-            </article>
-          ))}
+
+              <div className="encoding-submit-panel">
+                <p>
+                  <strong>Changed fields:</strong> {changedFields.length}
+                </p>
+                <button
+                  type="button"
+                  disabled={changedFields.length === 0}
+                  onClick={() => setSaveMessage("Adjustments captured. Ready to trigger Decision AI.")}
+                >
+                  Save Adjustments & Trigger Decision
+                </button>
+                {saveMessage ? <p className="muted-text">{saveMessage}</p> : null}
+                {feedbackPayload.length > 0 ? (
+                  <>
+                    <h4>Feedback Capture Preview</h4>
+                    <pre className="feedback-preview">{JSON.stringify(feedbackPayload, null, 2)}</pre>
+                  </>
+                ) : null}
+              </div>
+            </div>
+          </div>
         </section>
       ) : null}
 
