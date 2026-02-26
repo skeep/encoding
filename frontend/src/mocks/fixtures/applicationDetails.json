@@ -8,8 +8,13 @@
     "emailSubject": "Car loan request with supporting income files",
     "emailFrom": "submissions@mitsubishi-makati.ph",
     "attachments": [
-      { "name": "salary_slip_jan.pdf", "mimeType": "application/pdf", "sizeKb": 520 },
-      { "name": "bank_statement_q4.pdf", "mimeType": "application/pdf", "sizeKb": 1280 }
+      { "name": "dealership_request.pdf", "mimeType": "application/pdf", "sizeKb": 520 },
+      { "name": "borrower_id_front.jpg", "mimeType": "image/jpeg", "sizeKb": 380 },
+      {
+        "name": "income_statement_q1.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sizeKb": 860
+      }
     ],
     "metadata": {
       "channel": "EMAIL",
@@ -26,8 +31,13 @@
     "emailSubject": "Car loan packet and buyer information",
     "emailFrom": "intake@kia-pasig.ph",
     "attachments": [
-      { "name": "loan_form.pdf", "mimeType": "application/pdf", "sizeKb": 440 },
-      { "name": "pan_card.jpg", "mimeType": "image/jpeg", "sizeKb": 220 }
+      {
+        "name": "application_form.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "sizeKb": 440
+      },
+      { "name": "gov_id_scan.png", "mimeType": "image/png", "sizeKb": 220 },
+      { "name": "dealer_quote.pdf", "mimeType": "application/pdf", "sizeKb": 512 }
     ],
     "metadata": {
       "channel": "EMAIL",
@@ -44,8 +54,17 @@
     "emailSubject": "Dealer-submitted car loan application",
     "emailFrom": "apps@suzuki-bgc.ph",
     "attachments": [
-      { "name": "application.pdf", "mimeType": "application/pdf", "sizeKb": 310 },
-      { "name": "income_proof.pdf", "mimeType": "application/pdf", "sizeKb": 640 }
+      {
+        "name": "vehicle_spec_sheet.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sizeKb": 310
+      },
+      {
+        "name": "borrower_profile.docx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        "sizeKb": 640
+      },
+      { "name": "signed_consent.pdf", "mimeType": "application/pdf", "sizeKb": 225 }
     ],
     "metadata": {
       "channel": "EMAIL",

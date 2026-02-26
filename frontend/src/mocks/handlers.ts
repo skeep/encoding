@@ -75,6 +75,18 @@ export const mockHandlers = {
     if (!summary) {
       throw new Error("Application detail not found");
     }
+    const fallbackTypes = [
+      { ext: "pdf", mimeType: "application/pdf" },
+      { ext: "jpg", mimeType: "image/jpeg" },
+      {
+        ext: "docx",
+        mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+      },
+      {
+        ext: "xlsx",
+        mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      }
+    ];
     return {
       applicationId: summary.applicationId,
       status: summary.status,
@@ -83,11 +95,14 @@ export const mockHandlers = {
       updatedAt: summary.lastUpdatedAt,
       emailSubject: `${summary.product} application package`,
       emailFrom: summary.dealerEmailFrom,
-      attachments: Array.from({ length: summary.documentCount }, (_, index) => ({
-        name: `attachment_${index + 1}.pdf`,
-        mimeType: "application/pdf",
-        sizeKb: 420 + index * 35
-      })),
+      attachments: Array.from({ length: summary.documentCount }, (_, index) => {
+        const fileType = fallbackTypes[index % fallbackTypes.length];
+        return {
+          name: `attachment_${index + 1}.${fileType.ext}`,
+          mimeType: fileType.mimeType,
+          sizeKb: 420 + index * 35
+        };
+      }),
       metadata: {
         channel: "EMAIL",
         branchCode: "PH-00",

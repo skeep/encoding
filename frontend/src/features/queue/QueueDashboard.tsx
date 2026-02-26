@@ -13,9 +13,8 @@ import { DetailPanel, type DetailPanelState } from "../application-detail/Detail
 
 const statusLabels: Record<QueueStatus, string> = {
   EMAIL_RECEIVED: "Email Received",
-  ENCODING_QUEUED: "Encoding Queued",
-  ENCODING_RUNNING: "Encoding Running",
-  ENCODING_COMPLETED: "Encoding Completed",
+  ENCODING_IN_PROGRESS: "Encoding In Progress",
+  ENCODING_COMPLETED: "Encoding Complete",
   DECISION_QUEUED: "Decision Queued",
   DECISION_RUNNING: "Decision Running",
   DECISION_COMPLETED: "Decision Completed"
@@ -98,21 +97,18 @@ export function QueueDashboard(): JSX.Element {
   async function fetchDetail(applicationId: string, status: QueueStatus): Promise<void> {
     setDetailState({ loading: true });
     try {
-      const [detail, timeline] = await Promise.all([
-        apiClient.getApplicationById(applicationId),
-        apiClient.getTimeline(applicationId)
-      ]);
+      const detail = await apiClient.getApplicationById(applicationId);
       if (status === "ENCODING_COMPLETED") {
         const encoding = await apiClient.getEncodingView(applicationId);
-        setDetailState({ detail, timeline, encoding, loading: false });
+        setDetailState({ detail, encoding, loading: false });
         return;
       }
       if (status === "DECISION_COMPLETED") {
         const decision = await apiClient.getDecisionView(applicationId);
-        setDetailState({ detail, timeline, decision, loading: false });
+        setDetailState({ detail, decision, loading: false });
         return;
       }
-      setDetailState({ detail, timeline, loading: false });
+      setDetailState({ detail, loading: false });
     } catch (error) {
       setDetailState({
         loading: false,
@@ -124,6 +120,11 @@ export function QueueDashboard(): JSX.Element {
   const totalPages = useMemo(() => {
     return Math.max(1, Math.ceil(applications.total / pageSize));
   }, [applications.total]);
+  const pageStart = useMemo(() => (applications.total === 0 ? 0 : (page - 1) * pageSize + 1), [applications.total, page]);
+  const pageEnd = useMemo(
+    () => Math.min(page * pageSize, applications.total),
+    [applications.total, page]
+  );
 
   const selectedRow = useMemo(
     () => applications.items.find((item) => item.applicationId === selectedAppId),
@@ -135,6 +136,19 @@ export function QueueDashboard(): JSX.Element {
     [summary, activeStatus]
   );
 
+  function renderEncodingStatus(value: ApplicationSummary["encodingStatus"]): string {
+    if (value === "IN_QUEUE") {
+      return "In Queue";
+    }
+    if (value === "IN_PROGRESS") {
+      return "In Progress";
+    }
+    if (value === "COMPLETED") {
+      return "Completed";
+    }
+    return "-";
+  }
+
   return (
     <div className="dashboard-root">
       <header className="top-nav">
@@ -145,7 +159,7 @@ export function QueueDashboard(): JSX.Element {
         <div className="top-nav-center">
           <input
             className="top-nav-search"
-            placeholder="Search by application ID, applicant, product"
+            placeholder="Search by application ID or dealer email"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
@@ -201,60 +215,93 @@ export function QueueDashboard(): JSX.Element {
             ) : null}
             {!tableLoading && !tableError && applications.items.length > 0 ? (
               <>
-                <table className="queue-table">
-                  <thead>
-                    <tr>
-                      <th>Application ID</th>
-                      <th>Applicant</th>
-                      {activeStatus === "EMAIL_RECEIVED" ? (
-                        <>
-                          <th>Dealer Email (From)</th>
-                          <th>Documents</th>
-                          <th>Received Date/Time</th>
-                        </>
-                      ) : null}
-                      <th>Product</th>
-                      <th>Market</th>
-                      <th>SLA Age</th>
-                      <th>Priority</th>
-                      <th>Updated</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {applications.items.map((item: ApplicationSummary) => (
-                      <tr
-                        key={item.applicationId}
-                        className={item.applicationId === selectedAppId ? "selected-row" : ""}
-                        onClick={() => setSelectedAppId(item.applicationId)}
-                      >
-                        <td>{item.applicationId}</td>
-                        <td>{item.applicantName}</td>
-                        {activeStatus === "EMAIL_RECEIVED" ? (
+                <div className="queue-table-wrap">
+                  <table className="queue-table">
+                    <thead>
+                      <tr>
+                        <th>Application ID</th>
+                      {activeStatus === "EMAIL_RECEIVED" ||
+                      activeStatus === "ENCODING_IN_PROGRESS" ||
+                      activeStatus === "ENCODING_COMPLETED" ? (
                           <>
-                            <td>{item.dealerEmailFrom}</td>
-                            <td>{item.documentCount}</td>
-                            <td>{formatIsoDate(item.receivedAt)}</td>
+                            <th>Dealer Email (From)</th>
+                            <th>Documents</th>
+                            <th>Received Date/Time</th>
                           </>
                         ) : null}
-                        <td>{item.product}</td>
-                        <td>{item.market}</td>
-                        <td>{item.slaAgeMinutes}m</td>
-                        <td>{item.priority}</td>
-                        <td>{formatIsoDate(item.lastUpdatedAt)}</td>
+                      {activeStatus === "ENCODING_IN_PROGRESS" ||
+                      activeStatus === "ENCODING_COMPLETED" ? (
+                        <th>Encoding Status</th>
+                      ) : null}
+                      {activeStatus === "ENCODING_COMPLETED" ? (
+                        <>
+                          <th>Extracted Fields</th>
+                          <th>Avg Confidence</th>
+                        </>
+                      ) : null}
+                        <th>Updated</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {applications.items.map((item: ApplicationSummary) => (
+                        <tr
+                          key={item.applicationId}
+                          className={item.applicationId === selectedAppId ? "selected-row" : ""}
+                          onClick={() => setSelectedAppId(item.applicationId)}
+                        >
+                          <td>
+                            <span className="app-id-chip">{item.applicationId}</span>
+                          </td>
+                        {activeStatus === "EMAIL_RECEIVED" ||
+                        activeStatus === "ENCODING_IN_PROGRESS" ||
+                        activeStatus === "ENCODING_COMPLETED" ? (
+                            <>
+                              <td>{item.dealerEmailFrom}</td>
+                              <td>{item.documentCount}</td>
+                              <td>{formatIsoDate(item.receivedAt)}</td>
+                            </>
+                          ) : null}
+                        {activeStatus === "ENCODING_IN_PROGRESS" ||
+                        activeStatus === "ENCODING_COMPLETED" ? (
+                          <td>{renderEncodingStatus(item.encodingStatus)}</td>
+                        ) : null}
+                        {activeStatus === "ENCODING_COMPLETED" ? (
+                          <>
+                            <td>{item.extractedFieldCount ?? "-"}</td>
+                            <td>
+                              {typeof item.averageFieldConfidence === "number"
+                                ? `${Math.round(item.averageFieldConfidence * 100)}%`
+                                : "-"}
+                            </td>
+                          </>
+                        ) : null}
+                          <td>{formatIsoDate(item.lastUpdatedAt)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
                 <div className="pagination-row">
-                  <button disabled={page <= 1} onClick={() => setPage((prev) => prev - 1)}>
-                    Previous
-                  </button>
-                  <span>
-                    Page {page} of {totalPages}
+                  <span className="pagination-meta">
+                    Showing {pageStart}-{pageEnd} of {applications.total}
                   </span>
-                  <button disabled={page >= totalPages} onClick={() => setPage((prev) => prev + 1)}>
-                    Next
-                  </button>
+                  <div className="pagination-controls">
+                    <button disabled={page <= 1} onClick={() => setPage(1)}>
+                      First
+                    </button>
+                    <button disabled={page <= 1} onClick={() => setPage((prev) => prev - 1)}>
+                      Previous
+                    </button>
+                    <span className="pagination-page-indicator">
+                      Page {page} / {totalPages}
+                    </span>
+                    <button disabled={page >= totalPages} onClick={() => setPage((prev) => prev + 1)}>
+                      Next
+                    </button>
+                    <button disabled={page >= totalPages} onClick={() => setPage(totalPages)}>
+                      Last
+                    </button>
+                  </div>
                 </div>
               </>
             ) : null}

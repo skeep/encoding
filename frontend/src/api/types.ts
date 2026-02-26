@@ -1,7 +1,6 @@
 export const queueStatuses = [
   "EMAIL_RECEIVED",
-  "ENCODING_QUEUED",
-  "ENCODING_RUNNING",
+  "ENCODING_IN_PROGRESS",
   "ENCODING_COMPLETED",
   "DECISION_QUEUED",
   "DECISION_RUNNING",
@@ -24,6 +23,9 @@ export type ApplicationSummary = {
   market: "Philippines";
   dealerEmailFrom: string;
   documentCount: number;
+  encodingStatus?: "IN_QUEUE" | "IN_PROGRESS" | "COMPLETED";
+  extractedFieldCount?: number;
+  averageFieldConfidence?: number;
   receivedAt: string;
   lastUpdatedAt: string;
   slaAgeMinutes: number;

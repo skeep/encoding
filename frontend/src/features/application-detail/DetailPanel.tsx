@@ -1,24 +1,77 @@
-import type { ApplicationDetail, DecisionView, EncodingView, QueueStatus, TimelineEvent } from "../../api/types";
+import type { ApplicationDetail, DecisionView, EncodingView, QueueStatus } from "../../api/types";
 import { formatIsoDate, formatPercent } from "../../app/formatters";
 
 export type DetailPanelState = {
   detail?: ApplicationDetail;
   encoding?: EncodingView;
   decision?: DecisionView;
-  timeline?: TimelineEvent[];
   loading: boolean;
   error?: string;
 };
 
 const statusLabels: Record<QueueStatus, string> = {
   EMAIL_RECEIVED: "Email Received",
-  ENCODING_QUEUED: "Encoding Queued",
-  ENCODING_RUNNING: "Encoding Running",
+  ENCODING_IN_PROGRESS: "Encoding In Progress",
   ENCODING_COMPLETED: "Encoding Completed",
   DECISION_QUEUED: "Decision Queued",
   DECISION_RUNNING: "Decision Running",
   DECISION_COMPLETED: "Decision Completed"
 };
+
+function getAttachmentBadge(mimeType: string, fileName: string): string {
+  const lowerMime = mimeType.toLowerCase();
+  const lowerFile = fileName.toLowerCase();
+  if (lowerMime.includes("image/") || /\.(png|jpg|jpeg|gif|webp)$/.test(lowerFile)) {
+    return "IMG";
+  }
+  if (lowerMime.includes("pdf") || lowerFile.endsWith(".pdf")) {
+    return "PDF";
+  }
+  if (
+    lowerMime.includes("word") ||
+    lowerMime.includes("document") ||
+    /\.(doc|docx)$/.test(lowerFile)
+  ) {
+    return "DOC";
+  }
+  if (
+    lowerMime.includes("sheet") ||
+    lowerMime.includes("excel") ||
+    /\.(xls|xlsx|csv)$/.test(lowerFile)
+  ) {
+    return "XLS";
+  }
+  return "FILE";
+}
+
+function buildAttachmentPreviewUrl(fileName: string, mimeType: string, sizeKb: number): string {
+  const safeName = fileName.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const safeMime = mimeType.replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const html = `
+    <!doctype html>
+    <html>
+      <head>
+        <meta charset="utf-8" />
+        <title>${safeName}</title>
+        <style>
+          body { font-family: Arial, sans-serif; padding: 24px; color: #0f172a; }
+          .card { border: 1px solid #cbd5e1; border-radius: 10px; padding: 16px; max-width: 600px; }
+          .meta { color: #475569; margin-top: 8px; }
+        </style>
+      </head>
+      <body>
+        <div class="card">
+          <h2>Mock Attachment Preview</h2>
+          <p><strong>Name:</strong> ${safeName}</p>
+          <p class="meta"><strong>Type:</strong> ${safeMime}</p>
+          <p class="meta"><strong>Size:</strong> ${sizeKb} KB</p>
+          <p class="meta">This is a mock preview tab for frontend-only development.</p>
+        </div>
+      </body>
+    </html>
+  `;
+  return `data:text/html;charset=utf-8,${encodeURIComponent(html)}`;
+}
 
 export function DetailPanel(props: {
   activeStatus: QueueStatus;
@@ -59,13 +112,26 @@ export function DetailPanel(props: {
 
       <section className="detail-section">
         <h3>Attachments</h3>
-        <ul>
+        <ol className="attachment-list">
           {state.detail.attachments.map((attachment) => (
             <li key={attachment.name}>
-              {attachment.name} ({attachment.mimeType}, {attachment.sizeKb} KB)
+              <a
+                className="attachment-link"
+                href={buildAttachmentPreviewUrl(attachment.name, attachment.mimeType, attachment.sizeKb)}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <span className="attachment-badge">
+                  {getAttachmentBadge(attachment.mimeType, attachment.name)}
+                </span>
+                <span>{attachment.name}</span>
+              </a>
+              <span className="attachment-meta">
+                ({attachment.mimeType}, {attachment.sizeKb} KB)
+              </span>
             </li>
           ))}
-        </ul>
+        </ol>
       </section>
 
       {activeStatus === "ENCODING_COMPLETED" && state.encoding ? (
@@ -171,21 +237,6 @@ export function DetailPanel(props: {
           <p>Redirect URL: https://camunda.example/tasks/TASK-20391</p>
         </section>
       ) : null}
-
-      <section className="detail-section">
-        <h3>Audit Timeline (Read-Only)</h3>
-        {!state.timeline?.length ? (
-          <p className="muted-text">No timeline events available.</p>
-        ) : (
-          <ul>
-            {state.timeline.map((event) => (
-              <li key={event.eventId}>
-                {formatIsoDate(event.timestamp)} - {event.type} ({event.actor}): {event.description}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
     </div>
   );
 }

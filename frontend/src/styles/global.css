@@ -168,28 +168,88 @@ input {
 .queue-table {
   width: 100%;
   border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.queue-table-wrap {
+  min-height: 0;
+  overflow: auto;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
 }
 
 .queue-table th,
 .queue-table td {
   border-bottom: 1px solid #e2e8f0;
-  padding: 8px;
+  padding: 10px 12px;
   text-align: left;
   white-space: nowrap;
 }
 
+.queue-table th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 .queue-table tbody tr {
   cursor: pointer;
+  transition: background-color 120ms ease-in-out;
+}
+
+.queue-table tbody tr:hover {
+  background: #f8fbff;
 }
 
 .selected-row {
   background: #eff6ff;
 }
 
+.app-id-chip {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1d4ed8;
+  font-weight: 600;
+}
+
 .pagination-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 12px;
+  border-top: 1px solid #e2e8f0;
+  padding-top: 8px;
+}
+
+.pagination-meta {
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-page-indicator {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 92px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  border: 1px solid #dbe5f0;
+  background: #f8fafc;
+  font-size: 0.85rem;
 }
 
 .detail-column {
@@ -221,6 +281,47 @@ input {
 .detail-section h3,
 .detail-section h4 {
   margin: 0 0 8px;
+}
+
+.attachment-list {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 8px;
+}
+
+.attachment-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #1d4ed8;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.attachment-link:hover {
+  text-decoration: underline;
+}
+
+.attachment-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 36px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 9999px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #1e3a8a;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+}
+
+.attachment-meta {
+  margin-left: 8px;
+  color: #64748b;
+  font-size: 0.85rem;
 }
 
 .field-card,
@@ -314,5 +415,10 @@ button:disabled {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
+  }
+
+  .pagination-row {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
