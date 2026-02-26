@@ -21,6 +21,9 @@ export type ApplicationSummary = {
   status: QueueStatus;
   applicantName: string;
   product: string;
+  market: "Philippines";
+  dealerEmailFrom: string;
+  documentCount: number;
   receivedAt: string;
   lastUpdatedAt: string;
   slaAgeMinutes: number;

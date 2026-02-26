@@ -206,7 +206,15 @@ export function QueueDashboard(): JSX.Element {
                     <tr>
                       <th>Application ID</th>
                       <th>Applicant</th>
+                      {activeStatus === "EMAIL_RECEIVED" ? (
+                        <>
+                          <th>Dealer Email (From)</th>
+                          <th>Documents</th>
+                          <th>Received Date/Time</th>
+                        </>
+                      ) : null}
                       <th>Product</th>
+                      <th>Market</th>
                       <th>SLA Age</th>
                       <th>Priority</th>
                       <th>Updated</th>
@@ -221,7 +229,15 @@ export function QueueDashboard(): JSX.Element {
                       >
                         <td>{item.applicationId}</td>
                         <td>{item.applicantName}</td>
+                        {activeStatus === "EMAIL_RECEIVED" ? (
+                          <>
+                            <td>{item.dealerEmailFrom}</td>
+                            <td>{item.documentCount}</td>
+                            <td>{formatIsoDate(item.receivedAt)}</td>
+                          </>
+                        ) : null}
                         <td>{item.product}</td>
+                        <td>{item.market}</td>
                         <td>{item.slaAgeMinutes}m</td>
                         <td>{item.priority}</td>
                         <td>{formatIsoDate(item.lastUpdatedAt)}</td>

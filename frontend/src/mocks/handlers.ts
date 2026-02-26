@@ -54,7 +54,8 @@ export const mockHandlers = {
       return (
         item.applicationId.toLowerCase().includes(term) ||
         item.applicantName.toLowerCase().includes(term) ||
-        item.product.toLowerCase().includes(term)
+        item.product.toLowerCase().includes(term) ||
+        item.dealerEmailFrom.toLowerCase().includes(term)
       );
     });
     const pageResult = paginate(filtered, page, size);
@@ -81,11 +82,15 @@ export const mockHandlers = {
       receivedAt: summary.receivedAt,
       updatedAt: summary.lastUpdatedAt,
       emailSubject: `${summary.product} application package`,
-      emailFrom: `${summary.applicantName.toLowerCase().replace(" ", ".")}@example.com`,
-      attachments: [{ name: "application_bundle.pdf", mimeType: "application/pdf", sizeKb: 480 }],
+      emailFrom: summary.dealerEmailFrom,
+      attachments: Array.from({ length: summary.documentCount }, (_, index) => ({
+        name: `attachment_${index + 1}.pdf`,
+        mimeType: "application/pdf",
+        sizeKb: 420 + index * 35
+      })),
       metadata: {
         channel: "EMAIL",
-        branchCode: "GEN-00",
+        branchCode: "PH-00",
         assignedQueue: summary.status
       }
     };

@@ -2,11 +2,11 @@
   {
     "applicationId": "APP-2026-0004",
     "status": "ENCODING_COMPLETED",
-    "applicantName": "Meera Iyer",
+    "applicantName": "Carla Dela Cruz",
     "receivedAt": "2026-02-26T06:55:00Z",
     "updatedAt": "2026-02-26T08:22:00Z",
-    "emailSubject": "Home loan request with salary slips",
-    "emailFrom": "meera.iyer@example.com",
+    "emailSubject": "Car loan request with supporting income files",
+    "emailFrom": "submissions@mitsubishi-makati.ph",
     "attachments": [
       { "name": "salary_slip_jan.pdf", "mimeType": "application/pdf", "sizeKb": 520 },
       { "name": "bank_statement_q4.pdf", "mimeType": "application/pdf", "sizeKb": 1280 }
@@ -20,11 +20,11 @@
   {
     "applicationId": "APP-2026-0006",
     "status": "DECISION_RUNNING",
-    "applicantName": "Rohan Dutta",
+    "applicantName": "Bea Navarro",
     "receivedAt": "2026-02-26T05:50:00Z",
     "updatedAt": "2026-02-26T08:27:00Z",
-    "emailSubject": "Personal loan form and KYC documents",
-    "emailFrom": "rohan.dutta@example.com",
+    "emailSubject": "Car loan packet and buyer information",
+    "emailFrom": "intake@kia-pasig.ph",
     "attachments": [
       { "name": "loan_form.pdf", "mimeType": "application/pdf", "sizeKb": 440 },
       { "name": "pan_card.jpg", "mimeType": "image/jpeg", "sizeKb": 220 }
@@ -38,11 +38,11 @@
   {
     "applicationId": "APP-2026-0007",
     "status": "DECISION_COMPLETED",
-    "applicantName": "Priya Shah",
+    "applicantName": "Liam Bautista",
     "receivedAt": "2026-02-26T04:45:00Z",
     "updatedAt": "2026-02-26T08:28:00Z",
-    "emailSubject": "Housing loan application package",
-    "emailFrom": "priya.shah@example.com",
+    "emailSubject": "Dealer-submitted car loan application",
+    "emailFrom": "apps@suzuki-bgc.ph",
     "attachments": [
       { "name": "application.pdf", "mimeType": "application/pdf", "sizeKb": 310 },
       { "name": "income_proof.pdf", "mimeType": "application/pdf", "sizeKb": 640 }
