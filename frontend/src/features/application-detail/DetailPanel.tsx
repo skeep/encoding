@@ -16,7 +16,6 @@ const statusLabels: Record<QueueStatus, string> = {
   EMAIL_RECEIVED: "Email Received",
   ENCODING_IN_PROGRESS: "Encoding In Progress",
   ENCODING_COMPLETED: "Encoding Completed",
-  DECISION_QUEUED: "Decision Queued",
   DECISION_RUNNING: "Decision Running",
   DECISION_COMPLETED: "Decision Completed"
 };

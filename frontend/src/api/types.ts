@@ -2,7 +2,6 @@ export const queueStatuses = [
   "EMAIL_RECEIVED",
   "ENCODING_IN_PROGRESS",
   "ENCODING_COMPLETED",
-  "DECISION_QUEUED",
   "DECISION_RUNNING",
   "DECISION_COMPLETED"
 ] as const;
@@ -24,6 +23,12 @@ export type ApplicationSummary = {
   dealerEmailFrom: string;
   documentCount: number;
   encodingStatus?: "IN_QUEUE" | "IN_PROGRESS" | "COMPLETED";
+  decisionStatus?: "IN_QUEUE" | "IN_PROGRESS" | "COMPLETED";
+  finalDecision?: "APPROVE" | "REJECT" | "REFER";
+  riskScore?: number;
+  riskGrade?: string;
+  policyVersion?: string;
+  stpEligible?: boolean;
   extractedFieldCount?: number;
   averageFieldConfidence?: number;
   receivedAt: string;

@@ -15,7 +15,6 @@ const statusLabels: Record<QueueStatus, string> = {
   EMAIL_RECEIVED: "Email Received",
   ENCODING_IN_PROGRESS: "Encoding In Progress",
   ENCODING_COMPLETED: "Encoding Complete",
-  DECISION_QUEUED: "Decision Queued",
   DECISION_RUNNING: "Decision Running",
   DECISION_COMPLETED: "Decision Completed"
 };
@@ -175,6 +174,19 @@ export function QueueDashboard(): JSX.Element {
     return "-";
   }
 
+  function renderDecisionStatus(value: ApplicationSummary["decisionStatus"]): string {
+    if (value === "IN_QUEUE") {
+      return "In Queue";
+    }
+    if (value === "IN_PROGRESS") {
+      return "In Progress";
+    }
+    if (value === "COMPLETED") {
+      return "Completed";
+    }
+    return "-";
+  }
+
   return (
     <div className="dashboard-root">
       <header className="top-nav">
@@ -271,6 +283,16 @@ export function QueueDashboard(): JSX.Element {
                           <th>Avg Confidence</th>
                         </>
                       ) : null}
+                      {activeStatus === "DECISION_RUNNING" || activeStatus === "DECISION_COMPLETED" ? (
+                        <>
+                          <th>Decision Status</th>
+                          <th>Risk Score</th>
+                          <th>Risk Grade</th>
+                          <th>Policy Version</th>
+                          <th>STP</th>
+                        </>
+                      ) : null}
+                      {activeStatus === "DECISION_COMPLETED" ? <th>Final Decision</th> : null}
                         <th>Updated</th>
                       </tr>
                     </thead>
@@ -307,6 +329,22 @@ export function QueueDashboard(): JSX.Element {
                             </td>
                           </>
                         ) : null}
+                        {activeStatus === "DECISION_RUNNING" || activeStatus === "DECISION_COMPLETED" ? (
+                          <>
+                            <td>{renderDecisionStatus(item.decisionStatus)}</td>
+                            <td>{typeof item.riskScore === "number" ? item.riskScore.toFixed(2) : "-"}</td>
+                            <td>{item.riskGrade ?? "-"}</td>
+                            <td>{item.policyVersion ?? "-"}</td>
+                            <td>
+                              {typeof item.stpEligible === "boolean"
+                                ? item.stpEligible
+                                  ? "Yes"
+                                  : "No"
+                                : "-"}
+                            </td>
+                          </>
+                        ) : null}
+                        {activeStatus === "DECISION_COMPLETED" ? <td>{item.finalDecision ?? "-"}</td> : null}
                           <td>{formatIsoDate(item.lastUpdatedAt)}</td>
                         </tr>
                       ))}

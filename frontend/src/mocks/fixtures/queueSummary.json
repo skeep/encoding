@@ -2,7 +2,6 @@
   { "status": "EMAIL_RECEIVED", "count": 3, "stale": false },
   { "status": "ENCODING_IN_PROGRESS", "count": 4, "stale": false },
   { "status": "ENCODING_COMPLETED", "count": 2, "stale": false },
-  { "status": "DECISION_QUEUED", "count": 1, "stale": false },
-  { "status": "DECISION_RUNNING", "count": 1, "stale": true },
+  { "status": "DECISION_RUNNING", "count": 2, "stale": true },
   { "status": "DECISION_COMPLETED", "count": 1, "stale": false }
 ]
