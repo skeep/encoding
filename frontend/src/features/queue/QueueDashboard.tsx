@@ -11,6 +11,7 @@ import type {
 import { queueStatuses } from "../../api/types";
 import { formatIsoDate } from "../../app/formatters";
 import { DetailPanel, type DetailPanelState } from "../application-detail/DetailPanel";
+import { DataTable, type DataTableColumn } from "../../components/DataTable";
 
 const statusLabels: Record<QueueStatus, string> = {
   INTAKE_IN_PROGRESS: "Intake & Encoding In Progress",
@@ -211,6 +212,113 @@ export function QueueDashboard(): JSX.Element {
     return appStatus;
   }
 
+  const columns = useMemo<DataTableColumn<ApplicationSummary>[]>(() => {
+    const next: DataTableColumn<ApplicationSummary>[] = [
+      {
+        key: "applicationId",
+        header: "Application ID",
+        render: (item) => <span className="app-id-chip">{item.applicationId}</span>
+      }
+    ];
+
+    if (activeStatus === "INTAKE_IN_PROGRESS" || activeStatus === "ENCODING_COMPLETED") {
+      next.push(
+        {
+          key: "dealerEmailFrom",
+          header: "Dealer Email (From)",
+          render: (item) => item.dealerEmailFrom
+        },
+        {
+          key: "documentCount",
+          header: "Documents",
+          render: (item) => item.documentCount
+        },
+        {
+          key: "receivedAt",
+          header: "Received Date/Time",
+          render: (item) => formatIsoDate(item.receivedAt)
+        }
+      );
+    }
+
+    if (activeStatus === "INTAKE_IN_PROGRESS") {
+      next.push({
+        key: "status",
+        header: "Status",
+        render: (item) => renderLifecycleStatus(item.status, item.encodingStatus)
+      });
+    }
+
+    if (activeStatus === "ENCODING_COMPLETED") {
+      next.push(
+        {
+          key: "encodingStatus",
+          header: "Encoding Status",
+          render: (item) => renderEncodingStatus(item.encodingStatus)
+        },
+        {
+          key: "extractedFieldCount",
+          header: "Extracted Fields",
+          render: (item) => item.extractedFieldCount ?? "-"
+        },
+        {
+          key: "averageFieldConfidence",
+          header: "Avg Confidence",
+          render: (item) =>
+            typeof item.averageFieldConfidence === "number"
+              ? `${Math.round(item.averageFieldConfidence * 100)}%`
+              : "-"
+        }
+      );
+    }
+
+    if (activeStatus === "DECISION_RUNNING" || activeStatus === "DECISION_COMPLETED") {
+      next.push(
+        {
+          key: "decisionStatus",
+          header: "Decision Status",
+          render: (item) => renderDecisionStatus(item.decisionStatus)
+        },
+        {
+          key: "riskScore",
+          header: "Risk Score",
+          render: (item) => (typeof item.riskScore === "number" ? item.riskScore.toFixed(2) : "-")
+        },
+        {
+          key: "riskGrade",
+          header: "Risk Grade",
+          render: (item) => item.riskGrade ?? "-"
+        },
+        {
+          key: "policyVersion",
+          header: "Policy Version",
+          render: (item) => item.policyVersion ?? "-"
+        },
+        {
+          key: "stpEligible",
+          header: "STP",
+          render: (item) =>
+            typeof item.stpEligible === "boolean" ? (item.stpEligible ? "Yes" : "No") : "-"
+        }
+      );
+    }
+
+    if (activeStatus === "DECISION_COMPLETED") {
+      next.push({
+        key: "finalDecision",
+        header: "Final Decision",
+        render: (item) => item.finalDecision ?? "-"
+      });
+    }
+
+    next.push({
+      key: "lastUpdatedAt",
+      header: "Updated",
+      render: (item) => formatIsoDate(item.lastUpdatedAt)
+    });
+    return next;
+  }, [activeStatus]);
+
   return (
     <div className="dashboard-root">
       <header className="top-nav">
@@ -283,98 +391,13 @@ export function QueueDashboard(): JSX.Element {
             ) : null}
             {!tableLoading && !tableError && applications.items.length > 0 ? (
               <>
-                <div className="queue-table-wrap">
-                  <table className="queue-table">
-                    <thead>
-                      <tr>
-                        <th>Application ID</th>
-                      {activeStatus === "INTAKE_IN_PROGRESS" ||
-                      activeStatus === "ENCODING_COMPLETED" ? (
-                          <>
-                            <th>Dealer Email (From)</th>
-                            <th>Documents</th>
-                            <th>Received Date/Time</th>
-                          </>
-                        ) : null}
-                      {activeStatus === "INTAKE_IN_PROGRESS" ? <th>Status</th> : null}
-                      {activeStatus === "ENCODING_COMPLETED" ? (
-                        <th>Encoding Status</th>
-                      ) : null}
-                      {activeStatus === "ENCODING_COMPLETED" ? (
-                        <>
-                          <th>Extracted Fields</th>
-                          <th>Avg Confidence</th>
-                        </>
-                      ) : null}
-                      {activeStatus === "DECISION_RUNNING" || activeStatus === "DECISION_COMPLETED" ? (
-                        <>
-                          <th>Decision Status</th>
-                          <th>Risk Score</th>
-                          <th>Risk Grade</th>
-                          <th>Policy Version</th>
-                          <th>STP</th>
-                        </>
-                      ) : null}
-                      {activeStatus === "DECISION_COMPLETED" ? <th>Final Decision</th> : null}
-                        <th>Updated</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {applications.items.map((item: ApplicationSummary) => (
-                        <tr
-                          key={item.applicationId}
-                          className={item.applicationId === selectedAppId ? "selected-row" : ""}
-                          onClick={() => setSelectedAppId(item.applicationId)}
-                        >
-                          <td>
-                            <span className="app-id-chip">{item.applicationId}</span>
-                          </td>
-                        {activeStatus === "INTAKE_IN_PROGRESS" ||
-                      activeStatus === "ENCODING_COMPLETED" ? (
-                            <>
-                              <td>{item.dealerEmailFrom}</td>
-                              <td>{item.documentCount}</td>
-                              <td>{formatIsoDate(item.receivedAt)}</td>
-                            </>
-                          ) : null}
-                        {activeStatus === "INTAKE_IN_PROGRESS" ? (
-                          <td>{renderLifecycleStatus(item.status, item.encodingStatus)}</td>
-                        ) : null}
-                        {activeStatus === "ENCODING_COMPLETED" ? (
-                          <td>{renderEncodingStatus(item.encodingStatus)}</td>
-                        ) : null}
-                        {activeStatus === "ENCODING_COMPLETED" ? (
-                          <>
-                            <td>{item.extractedFieldCount ?? "-"}</td>
-                            <td>
-                              {typeof item.averageFieldConfidence === "number"
-                                ? `${Math.round(item.averageFieldConfidence * 100)}%`
-                                : "-"}
-                            </td>
-                          </>
-                        ) : null}
-                        {activeStatus === "DECISION_RUNNING" || activeStatus === "DECISION_COMPLETED" ? (
-                          <>
-                            <td>{renderDecisionStatus(item.decisionStatus)}</td>
-                            <td>{typeof item.riskScore === "number" ? item.riskScore.toFixed(2) : "-"}</td>
-                            <td>{item.riskGrade ?? "-"}</td>
-                            <td>{item.policyVersion ?? "-"}</td>
-                            <td>
-                              {typeof item.stpEligible === "boolean"
-                                ? item.stpEligible
-                                  ? "Yes"
-                                  : "No"
-                                : "-"}
-                            </td>
-                          </>
-                        ) : null}
-                        {activeStatus === "DECISION_COMPLETED" ? <td>{item.finalDecision ?? "-"}</td> : null}
-                          <td>{formatIsoDate(item.lastUpdatedAt)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <DataTable<ApplicationSummary>
+                  columns={columns}
+                  rows={applications.items}
+                  rowKey={(row) => row.applicationId}
+                  selectedRowKey={selectedAppId}
+                  onRowClick={(row) => setSelectedAppId(row.applicationId)}
+                />
                 <div className="pagination-row">
                   <span className="pagination-meta">
                     Showing {pageStart}-{pageEnd} of {applications.total}
