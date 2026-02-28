@@ -88,6 +88,17 @@ export function QueueDashboard(): JSX.Element {
     };
   }, [isResizing]);
 
+  useEffect(() => {
+    if (isResizing) {
+      document.body.classList.add("is-resizing-divider");
+    } else {
+      document.body.classList.remove("is-resizing-divider");
+    }
+    return () => {
+      document.body.classList.remove("is-resizing-divider");
+    };
+  }, [isResizing]);
+
   async function refreshSummary(): Promise<void> {
     const next = await apiClient.getQueueSummary();
     setSummary(next);
@@ -397,7 +408,13 @@ export function QueueDashboard(): JSX.Element {
           role="separator"
           aria-orientation="vertical"
           aria-label="Resize panels"
-        />
+        >
+          <div className="pane-resizer-handle" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        </div>
 
         <aside className="detail-column">
           <div className="detail-header">
