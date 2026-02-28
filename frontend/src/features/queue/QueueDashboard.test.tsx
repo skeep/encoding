@@ -16,7 +16,7 @@ describe("QueueDashboard", () => {
 
     await user.click(screen.getByRole("tab", { name: /Encoding Complete/i }));
     expect(await screen.findByRole("cell", { name: "APP-2026-0004" })).toBeInTheDocument();
-    expect(await screen.findByRole("heading", { name: "Final Encoding Adjustment", level: 3 })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: /Save Adjustments & Trigger Decision/i })).toBeInTheDocument();
   });
 
   it("shows decision summary when decision completed tab selected", async () => {
