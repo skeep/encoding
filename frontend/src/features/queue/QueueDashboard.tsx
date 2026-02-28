@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { apiClient } from "../../api/client";
 import type {
+  ApplicationStatus,
   ApplicationSummary,
   PaginatedApplications,
   QueueStatus,
@@ -12,8 +13,7 @@ import { formatIsoDate } from "../../app/formatters";
 import { DetailPanel, type DetailPanelState } from "../application-detail/DetailPanel";
 
 const statusLabels: Record<QueueStatus, string> = {
-  EMAIL_RECEIVED: "Email Received",
-  ENCODING_IN_PROGRESS: "Encoding In Progress",
+  INTAKE_IN_PROGRESS: "Intake & Encoding In Progress",
   ENCODING_COMPLETED: "Encoding Complete",
   DECISION_RUNNING: "Decision Running",
   DECISION_COMPLETED: "Decision Completed"
@@ -22,7 +22,7 @@ const statusLabels: Record<QueueStatus, string> = {
 const pageSize = 10;
 
 export function QueueDashboard(): JSX.Element {
-  const [activeStatus, setActiveStatus] = useState<QueueStatus>("EMAIL_RECEIVED");
+  const [activeStatus, setActiveStatus] = useState<QueueStatus>("INTAKE_IN_PROGRESS");
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
@@ -187,6 +187,19 @@ export function QueueDashboard(): JSX.Element {
     return "-";
   }
 
+  function renderLifecycleStatus(
+    appStatus: ApplicationStatus,
+    encodingStatus: ApplicationSummary["encodingStatus"]
+  ): string {
+    if (appStatus === "EMAIL_RECEIVED") {
+      return "Email Received";
+    }
+    if (appStatus === "ENCODING_IN_PROGRESS") {
+      return encodingStatus === "IN_PROGRESS" ? "Encoding In Progress" : "Encoding In Queue";
+    }
+    return appStatus;
+  }
+
   return (
     <div className="dashboard-root">
       <header className="top-nav">
@@ -264,8 +277,7 @@ export function QueueDashboard(): JSX.Element {
                     <thead>
                       <tr>
                         <th>Application ID</th>
-                      {activeStatus === "EMAIL_RECEIVED" ||
-                      activeStatus === "ENCODING_IN_PROGRESS" ||
+                      {activeStatus === "INTAKE_IN_PROGRESS" ||
                       activeStatus === "ENCODING_COMPLETED" ? (
                           <>
                             <th>Dealer Email (From)</th>
@@ -273,8 +285,8 @@ export function QueueDashboard(): JSX.Element {
                             <th>Received Date/Time</th>
                           </>
                         ) : null}
-                      {activeStatus === "ENCODING_IN_PROGRESS" ||
-                      activeStatus === "ENCODING_COMPLETED" ? (
+                      {activeStatus === "INTAKE_IN_PROGRESS" ? <th>Status</th> : null}
+                      {activeStatus === "ENCODING_COMPLETED" ? (
                         <th>Encoding Status</th>
                       ) : null}
                       {activeStatus === "ENCODING_COMPLETED" ? (
@@ -306,17 +318,18 @@ export function QueueDashboard(): JSX.Element {
                           <td>
                             <span className="app-id-chip">{item.applicationId}</span>
                           </td>
-                        {activeStatus === "EMAIL_RECEIVED" ||
-                        activeStatus === "ENCODING_IN_PROGRESS" ||
-                        activeStatus === "ENCODING_COMPLETED" ? (
+                        {activeStatus === "INTAKE_IN_PROGRESS" ||
+                      activeStatus === "ENCODING_COMPLETED" ? (
                             <>
                               <td>{item.dealerEmailFrom}</td>
                               <td>{item.documentCount}</td>
                               <td>{formatIsoDate(item.receivedAt)}</td>
                             </>
                           ) : null}
-                        {activeStatus === "ENCODING_IN_PROGRESS" ||
-                        activeStatus === "ENCODING_COMPLETED" ? (
+                        {activeStatus === "INTAKE_IN_PROGRESS" ? (
+                          <td>{renderLifecycleStatus(item.status, item.encodingStatus)}</td>
+                        ) : null}
+                        {activeStatus === "ENCODING_COMPLETED" ? (
                           <td>{renderEncodingStatus(item.encodingStatus)}</td>
                         ) : null}
                         {activeStatus === "ENCODING_COMPLETED" ? (
@@ -395,8 +408,7 @@ export function QueueDashboard(): JSX.Element {
         </aside>
       </main>
       <footer className="app-footer">
-        <span>Credit Traceability Engine</span>
-        <span className="muted-text">Audit-safe, explainable workflow view</span>
+        <span className="footer-version">Release v0.1.0</span>
       </footer>
     </div>
   );

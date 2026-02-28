@@ -1,12 +1,17 @@
 export const queueStatuses = [
-  "EMAIL_RECEIVED",
-  "ENCODING_IN_PROGRESS",
+  "INTAKE_IN_PROGRESS",
   "ENCODING_COMPLETED",
   "DECISION_RUNNING",
   "DECISION_COMPLETED"
 ] as const;
 
 export type QueueStatus = (typeof queueStatuses)[number];
+export type ApplicationStatus =
+  | "EMAIL_RECEIVED"
+  | "ENCODING_IN_PROGRESS"
+  | "ENCODING_COMPLETED"
+  | "DECISION_RUNNING"
+  | "DECISION_COMPLETED";
 
 export type QueueSummary = {
   status: QueueStatus;
@@ -16,7 +21,7 @@ export type QueueSummary = {
 
 export type ApplicationSummary = {
   applicationId: string;
-  status: QueueStatus;
+  status: ApplicationStatus;
   applicantName: string;
   product: string;
   market: "Philippines";
@@ -47,7 +52,7 @@ export type PaginatedApplications = {
 
 export type ApplicationDetail = {
   applicationId: string;
-  status: QueueStatus;
+  status: ApplicationStatus;
   applicantName: string;
   receivedAt: string;
   updatedAt: string;

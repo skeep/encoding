@@ -6,7 +6,7 @@ import { QueueDashboard } from "./QueueDashboard";
 describe("QueueDashboard", () => {
   it("renders queue tabs and table rows", async () => {
     render(<QueueDashboard />);
-    expect(screen.getByRole("tab", { name: /Email Received/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Intake & Encoding In Progress/i })).toBeInTheDocument();
     expect(await screen.findByRole("cell", { name: "APP-2026-0001" })).toBeInTheDocument();
   });
 

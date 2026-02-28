@@ -45,7 +45,11 @@ export const mockHandlers = {
     const { status, q, page = 1, size = 10 } = params;
     const term = (q ?? "").toLowerCase();
     const filtered = applications.filter((item) => {
-      if (item.status !== status) {
+      if (status === "INTAKE_IN_PROGRESS") {
+        if (item.status !== "EMAIL_RECEIVED" && item.status !== "ENCODING_IN_PROGRESS") {
+          return false;
+        }
+      } else if (item.status !== status) {
         return false;
       }
       if (!term) {

@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 
-import type { ApplicationDetail, DecisionView, EncodingView, QueueStatus } from "../../api/types";
+import type {
+  ApplicationDetail,
+  ApplicationStatus,
+  DecisionView,
+  EncodingView,
+  QueueStatus
+} from "../../api/types";
 import { formatIsoDate, formatPercent } from "../../app/formatters";
 import samplePostEncoding from "../../../sample/sample_post_encoding.json";
 
@@ -12,7 +18,7 @@ export type DetailPanelState = {
   error?: string;
 };
 
-const statusLabels: Record<QueueStatus, string> = {
+const statusLabels: Record<ApplicationStatus, string> = {
   EMAIL_RECEIVED: "Email Received",
   ENCODING_IN_PROGRESS: "Encoding In Progress",
   ENCODING_COMPLETED: "Encoding Completed",
