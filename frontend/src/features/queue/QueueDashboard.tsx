@@ -323,8 +323,11 @@ export function QueueDashboard(): JSX.Element {
     <div className="dashboard-root">
       <header className="top-nav">
         <div className="top-nav-left">
-          <h1>Credit Trace Platform</h1>
-          <p className="muted-text">Workflow Dashboard</p>
+          <img className="header-logo" src="/assets/BPHLY_BIG.D.svg" alt="BPI logo" />
+          <div className="header-title">
+            <h1>Credit Trace Platform</h1>
+            <p className="muted-text">Workflow Dashboard</p>
+          </div>
         </div>
         <div className="top-nav-center">
           <input

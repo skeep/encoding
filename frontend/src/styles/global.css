@@ -16,9 +16,13 @@
 
   --brand-red: #b11116;
   --brand-red-hover: #930e13;
+  --brand-red-grad-start: #be1a1f;
+  --brand-red-grad-end: #930e13;
   --brand-red-soft: #fdecee;
   --brand-red-soft-border: #f3c8cc;
   --brand-gold: #d5b527;
+  --brand-gold-grad-start: #dfc351;
+  --brand-gold-grad-end: #c5a21f;
   --brand-gold-soft: #f8f1cf;
   --brand-gold-strong: #8a7418;
   --brand-gold-soft-border: #e9dc98;
@@ -79,25 +83,40 @@ input {
   justify-content: space-between;
   gap: 12px;
   align-items: center;
-  background: linear-gradient(to bottom, var(--bg-header-grad-start) 0%, var(--bg-header-grad-end) 100%);
+  background: linear-gradient(to bottom, var(--brand-red-grad-start) 0%, var(--brand-red-grad-end) 100%);
   border: 0;
-  border-bottom: 1px solid var(--border-strong);
+  border-bottom: 1px solid var(--brand-red-hover);
   border-radius: 0;
   padding: 12px 18px;
 }
 
 .top-nav-left {
   min-width: 240px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.header-logo {
+  width: 132px;
+  height: 38px;
+  object-fit: contain;
+}
+
+.header-title {
+  min-width: 0;
 }
 
 .top-nav h1 {
   margin: 0;
   font-size: 1.1rem;
+  color: var(--text-on-brand);
 }
 
 .top-nav-left p {
   margin: 2px 0 0;
   font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.82);
 }
 
 .top-nav-center {
@@ -132,7 +151,7 @@ input {
 
 .user-name {
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--text-on-brand);
 }
 
 .dashboard-main {
@@ -698,9 +717,9 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(to bottom, var(--bg-header-grad-start) 0%, var(--bg-header-grad-end) 100%);
+  background: linear-gradient(to bottom, var(--brand-gold-grad-start) 0%, var(--brand-gold-grad-end) 100%);
   border: 0;
-  border-top: 1px solid var(--border-strong);
+  border-top: 1px solid var(--brand-gold-strong);
   border-radius: 0;
   padding: 10px 18px;
   font-size: 0.9rem;
@@ -708,7 +727,7 @@ input {
 
 .footer-version {
   font-weight: 600;
-  color: var(--text-secondary);
+  color: #4a3d0a;
 }
 
 button {
@@ -732,13 +751,13 @@ button:focus-visible {
 }
 
 .button-primary {
-  background: var(--brand-red);
-  border-color: var(--brand-red);
+  background: linear-gradient(to bottom, var(--brand-red-grad-start) 0%, var(--brand-red-grad-end) 100%);
+  border-color: var(--brand-red-grad-end);
   color: var(--text-on-brand);
 }
 
 .button-primary:hover:not(:disabled) {
-  background: var(--brand-red-hover);
+  background: linear-gradient(to bottom, var(--brand-red) 0%, var(--brand-red-hover) 100%);
   border-color: var(--brand-red-hover);
 }
 
