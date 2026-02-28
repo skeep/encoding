@@ -382,7 +382,9 @@ export function QueueDashboard(): JSX.Element {
             {tableError ? (
               <div className="state-box error-box">
                 <p>{tableError}</p>
-                <button onClick={() => void fetchApplications()}>Retry</button>
+                <button className="button-primary" onClick={() => void fetchApplications()}>
+                  Retry
+                </button>
               </div>
             ) : null}
             {tableLoading ? <div className="state-box">Loading queue applications...</div> : null}

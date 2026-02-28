@@ -623,6 +623,7 @@ export function DetailPanel(props: {
                   </p>
                   <button
                     type="button"
+                    className="button-primary"
                     disabled={changedFields.length === 0}
                     onClick={() => setSaveMessage("Adjustments captured. Ready to trigger Decision AI.")}
                   >
