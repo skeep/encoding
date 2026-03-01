@@ -58,14 +58,6 @@ export function useQueueColumns(activeStatus: QueueStatus): DataTableColumn<Appl
           key: "extractedFieldCount",
           header: "Extracted Fields",
           render: (item) => item.extractedFieldCount ?? "-"
-        },
-        {
-          key: "averageFieldConfidence",
-          header: "Avg Confidence",
-          render: (item) =>
-            typeof item.averageFieldConfidence === "number"
-              ? `${Math.round(item.averageFieldConfidence * 100)}%`
-              : "-"
         }
       );
     }

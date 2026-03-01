@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import type { QueueStatus } from "../../api/types";
-import { formatIsoDate } from "../../app/formatters";
 import { DataTable } from "../../components/DataTable";
 import { DetailPanel } from "../application-detail/DetailPanel";
 import { PaginationControls } from "./components/PaginationControls";
@@ -9,34 +8,97 @@ import { QueueTabs } from "./components/QueueTabs";
 import { useQueueDashboardData } from "./hooks/useQueueDashboardData";
 import { useResizableSplit } from "./hooks/useResizableSplit";
 import { useQueueColumns } from "./utils/queueColumns";
-import { statusLabels } from "./utils/statusFormatters";
+import { renderLifecycleStatus } from "./utils/statusFormatters";
+
+type FilterField = "applicationId" | "dealerEmailFrom";
+type IntakeStatusFilter = "ALL" | "ENCODING_IN_PROGRESS" | "ENCODING_IN_QUEUE" | "EMAIL_RECEIVED";
 
 export function QueueDashboard(): JSX.Element {
   const [activeStatus, setActiveStatus] = useState<QueueStatus>("INTAKE_IN_PROGRESS");
   const [search, setSearch] = useState("");
+  const [filterField, setFilterField] = useState<FilterField>("applicationId");
+  const [filterValue, setFilterValue] = useState("");
+  const [intakeStatusFilter, setIntakeStatusFilter] = useState<IntakeStatusFilter>("ALL");
   const { mainRef, leftPanePercent, isResizing, setIsResizing } = useResizableSplit(60);
   const {
     page,
     setPage,
     selectedAppId,
     setSelectedAppId,
-    lastRefreshedAt,
     summary,
     applications,
     tableLoading,
     tableError,
     detailState,
-    refreshSummary,
     refreshApplications,
     totalPages,
     pageStart,
     pageEnd
   } = useQueueDashboardData(activeStatus, search);
   const columns = useQueueColumns(activeStatus);
-  const activeSummary = useMemo(
-    () => summary.find((item) => item.status === activeStatus),
-    [summary, activeStatus]
-  );
+  const filteredRows = useMemo(() => {
+    if (!filterValue.trim()) {
+      return applications.items;
+    }
+    const query = filterValue.trim().toLowerCase();
+    return applications.items.filter((row) => String(row[filterField] ?? "").toLowerCase().includes(query));
+  }, [applications.items, filterField, filterValue]);
+  const canFilterByDealer = activeStatus === "INTAKE_IN_PROGRESS" || activeStatus === "ENCODING_COMPLETED";
+  const isIntakeTab = activeStatus === "INTAKE_IN_PROGRESS";
+
+  const visibleRows = useMemo(() => {
+    let next = filteredRows;
+    if (isIntakeTab && intakeStatusFilter !== "ALL") {
+      next = next.filter((row) => {
+        if (intakeStatusFilter === "EMAIL_RECEIVED") {
+          return row.status === "EMAIL_RECEIVED";
+        }
+        if (row.status !== "ENCODING_IN_PROGRESS") {
+          return false;
+        }
+        if (intakeStatusFilter === "ENCODING_IN_PROGRESS") {
+          return row.encodingStatus === "IN_PROGRESS";
+        }
+        return row.encodingStatus === "IN_QUEUE";
+      });
+    }
+    if (!isIntakeTab) {
+      return next;
+    }
+    return [...next].sort((left, right) => {
+      const rank = (status: string): number => {
+        if (status === "Encoding In Progress") {
+          return 0;
+        }
+        if (status === "Encoding In Queue") {
+          return 1;
+        }
+        if (status === "Email Received") {
+          return 2;
+        }
+        return 3;
+      };
+      const leftStatus = renderLifecycleStatus(left.status, left.encodingStatus);
+      const rightStatus = renderLifecycleStatus(right.status, right.encodingStatus);
+      const rankDelta = rank(leftStatus) - rank(rightStatus);
+      if (rankDelta !== 0) {
+        return rankDelta;
+      }
+      return left.applicationId.localeCompare(right.applicationId);
+    });
+  }, [filteredRows, intakeStatusFilter, isIntakeTab]);
+
+  useEffect(() => {
+    if (!canFilterByDealer && filterField === "dealerEmailFrom") {
+      setFilterField("applicationId");
+    }
+  }, [canFilterByDealer, filterField]);
+
+  useEffect(() => {
+    if (!isIntakeTab && intakeStatusFilter !== "ALL") {
+      setIntakeStatusFilter("ALL");
+    }
+  }, [intakeStatusFilter, isIntakeTab]);
 
   return (
     <div className="dashboard-root">
@@ -73,15 +135,49 @@ export function QueueDashboard(): JSX.Element {
           <QueueTabs activeStatus={activeStatus} summary={summary} onChange={setActiveStatus} />
 
           <div className="table-shell" aria-busy={tableLoading}>
-            <div className="table-headline">
-              <h2>{statusLabels[activeStatus]}</h2>
-              <div className="table-headline-actions">
-                <span className="muted-text">
-                  {activeSummary ? `${activeSummary.count} in queue` : "Queue count unavailable"}
-                </span>
-                <button onClick={() => void refreshSummary()}>Refresh</button>
-                <small className="muted-text">Updated: {formatIsoDate(lastRefreshedAt)}</small>
+            <div className="table-toolbar">
+              <div className="table-filter-controls">
+                <select
+                  className="table-filter-select"
+                  value={filterField}
+                  onChange={(event) => setFilterField(event.target.value as FilterField)}
+                >
+                  <option value="applicationId">Application ID</option>
+                  {canFilterByDealer ? <option value="dealerEmailFrom">Dealer Email</option> : null}
+                </select>
+                <input
+                  className="table-filter-input"
+                  value={filterValue}
+                  onChange={(event) => setFilterValue(event.target.value)}
+                  placeholder={`Filter visible rows by ${
+                    filterField === "dealerEmailFrom" ? "dealer email" : "application ID"
+                  }`}
+                />
+                {isIntakeTab ? (
+                  <select
+                    className="table-filter-select"
+                    value={intakeStatusFilter}
+                    onChange={(event) => setIntakeStatusFilter(event.target.value as IntakeStatusFilter)}
+                    aria-label="Filter by intake status"
+                  >
+                    <option value="ALL">All Statuses</option>
+                    <option value="ENCODING_IN_PROGRESS">Encoding In Progress</option>
+                    <option value="ENCODING_IN_QUEUE">Encoding In Queue</option>
+                    <option value="EMAIL_RECEIVED">Email Received</option>
+                  </select>
+                ) : null}
               </div>
+              <PaginationControls
+                page={page}
+                totalPages={totalPages}
+                pageStart={pageStart}
+                pageEnd={pageEnd}
+                total={applications.total}
+                onFirst={() => setPage(1)}
+                onPrev={() => setPage((prev) => prev - 1)}
+                onNext={() => setPage((prev) => prev + 1)}
+                onLast={() => setPage(totalPages)}
+              />
             </div>
             {tableError ? (
               <div className="state-box error-box">
@@ -95,25 +191,17 @@ export function QueueDashboard(): JSX.Element {
             {!tableLoading && !tableError && applications.items.length === 0 ? (
               <div className="state-box">No applications in this state.</div>
             ) : null}
-            {!tableLoading && !tableError && applications.items.length > 0 ? (
+            {!tableLoading && !tableError && applications.items.length > 0 && visibleRows.length === 0 ? (
+              <div className="state-box">No applications match the selected filters.</div>
+            ) : null}
+            {!tableLoading && !tableError && applications.items.length > 0 && visibleRows.length > 0 ? (
               <>
                 <DataTable
                   columns={columns}
-                  rows={applications.items}
+                  rows={visibleRows}
                   rowKey={(row) => row.applicationId}
                   selectedRowKey={selectedAppId}
                   onRowClick={(row) => setSelectedAppId(row.applicationId)}
-                />
-                <PaginationControls
-                  page={page}
-                  totalPages={totalPages}
-                  pageStart={pageStart}
-                  pageEnd={pageEnd}
-                  total={applications.total}
-                  onFirst={() => setPage(1)}
-                  onPrev={() => setPage((prev) => prev - 1)}
-                  onNext={() => setPage((prev) => prev + 1)}
-                  onLast={() => setPage(totalPages)}
                 />
               </>
             ) : null}

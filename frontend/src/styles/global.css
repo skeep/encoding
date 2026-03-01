@@ -211,22 +211,43 @@ input {
 .table-shell {
   min-height: 0;
   display: grid;
-  grid-template-rows: auto auto 1fr auto;
+  grid-template-rows: auto auto 1fr;
   gap: 10px;
 }
 
-.table-headline {
+.table-toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+  flex-wrap: wrap;
 }
 
-.table-headline-actions {
+.table-filter-controls {
   display: flex;
   align-items: center;
   gap: 10px;
-  flex-wrap: wrap;
+}
+
+.table-filter-select,
+.table-filter-input {
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  height: 34px;
+  padding: 0 10px;
+}
+
+.table-filter-select:focus,
+.table-filter-input:focus {
+  outline: none;
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+}
+
+.table-filter-input {
+  min-width: 280px;
 }
 
 .table-headline h2,
@@ -298,6 +319,11 @@ input {
   gap: 12px;
   border-top: 1px solid var(--border-default);
   padding-top: 8px;
+}
+
+.table-toolbar .pagination-row {
+  border-top: 0;
+  padding-top: 0;
 }
 
 .pagination-meta {
@@ -1019,6 +1045,10 @@ body.is-resizing-divider * {
   .pagination-row {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .table-filter-input {
+    min-width: 220px;
   }
 
   .encoding-adjustment-layout {
