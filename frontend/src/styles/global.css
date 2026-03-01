@@ -213,6 +213,7 @@ input {
   display: grid;
   grid-template-rows: auto auto 1fr;
   gap: 10px;
+  overflow: hidden;
 }
 
 .table-toolbar {
@@ -264,9 +265,18 @@ input {
 
 .queue-table-wrap {
   min-height: 0;
-  overflow: auto;
+  overflow: hidden;
   border: 0;
   border-radius: 0;
+  height: 100%;
+}
+
+.queue-table-wrap.table-body-scroll {
+  overflow: auto;
+}
+
+.queue-table-wrap.table-sticky-header {
+  position: relative;
 }
 
 .queue-table th,
@@ -277,7 +287,7 @@ input {
   white-space: nowrap;
 }
 
-.queue-table th {
+.queue-table.sticky-header-enabled th {
   position: sticky;
   top: 0;
   z-index: 1;
@@ -329,6 +339,29 @@ input {
 .pagination-meta {
   color: var(--text-muted);
   font-size: 0.88rem;
+}
+
+.pagination-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rows-per-page-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+  font-size: 0.84rem;
+}
+
+.rows-per-page-control select {
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  color: var(--text-primary);
+  height: 30px;
+  padding: 0 8px;
 }
 
 .pagination-controls {
@@ -1045,6 +1078,12 @@ body.is-resizing-divider * {
   .pagination-row {
     flex-direction: column;
     align-items: flex-start;
+  }
+
+  .pagination-left {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
 
   .table-filter-input {

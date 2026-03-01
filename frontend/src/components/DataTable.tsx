@@ -14,6 +14,8 @@ export type DataTableProps<T> = {
   onRowClick?: (row: T) => void;
   tableClassName?: string;
   wrapperClassName?: string;
+  stickyHeader?: boolean;
+  scrollBody?: boolean;
 };
 
 export function DataTable<T>(props: DataTableProps<T>): JSX.Element {
@@ -24,12 +26,24 @@ export function DataTable<T>(props: DataTableProps<T>): JSX.Element {
     selectedRowKey,
     onRowClick,
     tableClassName = "queue-table",
-    wrapperClassName = "queue-table-wrap"
+    wrapperClassName = "queue-table-wrap",
+    stickyHeader = true,
+    scrollBody = true
   } = props;
+  const effectiveWrapperClassName = [
+    wrapperClassName,
+    scrollBody ? "table-body-scroll" : "",
+    stickyHeader ? "table-sticky-header" : ""
+  ]
+    .filter(Boolean)
+    .join(" ");
+  const effectiveTableClassName = [tableClassName, stickyHeader ? "sticky-header-enabled" : ""]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <div className={wrapperClassName}>
-      <table className={tableClassName}>
+    <div className={effectiveWrapperClassName}>
+      <table className={effectiveTableClassName}>
         <thead>
           <tr>
             {columns.map((column) => (

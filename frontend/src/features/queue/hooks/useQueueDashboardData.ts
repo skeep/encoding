@@ -8,11 +8,17 @@ import type { PaginatedApplications, QueueStatus, QueueSummary } from "../../../
 import { queueApi } from "../../../api/queueApi";
 import type { DetailPanelState } from "../../application-detail/types";
 
-const pageSize = 10;
+const defaultPageSize = 10;
+
+type QueueDashboardDataOptions = {
+  pageSize?: number;
+  pageSizeByStatus?: Partial<Record<QueueStatus, number>>;
+};
 
 export function useQueueDashboardData(
   activeStatus: QueueStatus,
-  search: string
+  search: string,
+  options?: QueueDashboardDataOptions
 ): {
   page: number;
   setPage: Dispatch<SetStateAction<number>>;
@@ -31,6 +37,10 @@ export function useQueueDashboardData(
   pageEnd: number;
   pageSize: number;
 } {
+  const effectivePageSize = useMemo(
+    () => options?.pageSizeByStatus?.[activeStatus] ?? options?.pageSize ?? defaultPageSize,
+    [activeStatus, options?.pageSize, options?.pageSizeByStatus]
+  );
   const [page, setPage] = useState(1);
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
   const [lastRefreshedAt, setLastRefreshedAt] = useState<string>(new Date().toISOString());
@@ -39,7 +49,7 @@ export function useQueueDashboardData(
   const [applications, setApplications] = useState<PaginatedApplications>({
     items: [],
     page: 1,
-    size: pageSize,
+    size: effectivePageSize,
     total: 0
   });
   const [tableLoading, setTableLoading] = useState(false);
@@ -54,11 +64,11 @@ export function useQueueDashboardData(
 
   useEffect(() => {
     setPage(1);
-  }, [activeStatus, search]);
+  }, [activeStatus, search, effectivePageSize]);
 
   useEffect(() => {
     void refreshApplications();
-  }, [activeStatus, search, page]);
+  }, [activeStatus, search, page, effectivePageSize]);
 
   useEffect(() => {
     if (!selectedAppId) {
@@ -82,7 +92,7 @@ export function useQueueDashboardData(
         status: activeStatus,
         q: search,
         page,
-        size: pageSize
+        size: effectivePageSize
       });
       setApplications(response);
       if (response.items.length === 0) {
@@ -122,9 +132,18 @@ export function useQueueDashboardData(
     }
   }
 
-  const totalPages = useMemo(() => Math.max(1, Math.ceil(applications.total / pageSize)), [applications.total]);
-  const pageStart = useMemo(() => (applications.total === 0 ? 0 : (page - 1) * pageSize + 1), [applications.total, page]);
-  const pageEnd = useMemo(() => Math.min(page * pageSize, applications.total), [applications.total, page]);
+  const totalPages = useMemo(
+    () => Math.max(1, Math.ceil(applications.total / effectivePageSize)),
+    [applications.total, effectivePageSize]
+  );
+  const pageStart = useMemo(
+    () => (applications.total === 0 ? 0 : (page - 1) * effectivePageSize + 1),
+    [applications.total, effectivePageSize, page]
+  );
+  const pageEnd = useMemo(
+    () => Math.min(page * effectivePageSize, applications.total),
+    [applications.total, effectivePageSize, page]
+  );
 
   return {
     page,
@@ -142,6 +161,6 @@ export function useQueueDashboardData(
     totalPages,
     pageStart,
     pageEnd,
-    pageSize
+    pageSize: effectivePageSize
   };
 }
