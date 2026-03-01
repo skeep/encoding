@@ -163,11 +163,6 @@ export function QueueDashboard(): JSX.Element {
     [applications.total, page]
   );
 
-  const selectedRow = useMemo(
-    () => applications.items.find((item) => item.applicationId === selectedAppId),
-    [applications.items, selectedAppId]
-  );
-
   const activeSummary = useMemo(
     () => summary.find((item) => item.status === activeStatus),
     [summary, activeStatus]
@@ -445,10 +440,6 @@ export function QueueDashboard(): JSX.Element {
         </div>
 
         <aside className="detail-column">
-          <div className="detail-header">
-            <h2>Application Detail</h2>
-            {selectedRow ? <span>{selectedRow.applicationId}</span> : null}
-          </div>
           <DetailPanel activeStatus={activeStatus} selectedAppId={selectedAppId} state={detailState} />
         </aside>
       </main>

@@ -364,10 +364,10 @@ export function DetailPanel(props: {
   const { activeStatus, selectedAppId, state } = props;
   const editorTargets = useMemo(() => buildEditorTargets(samplePostEncoding), []);
   const [editableValues, setEditableValues] = useState<Record<string, string>>({});
-  const [feedbackNotes, setFeedbackNotes] = useState<Record<string, string>>({});
   const [saveMessage, setSaveMessage] = useState<string>("");
   const [selectedTargetId, setSelectedTargetId] = useState<string>("");
   const [openMetaFieldPath, setOpenMetaFieldPath] = useState<string | null>(null);
+  const [editorTab, setEditorTab] = useState<"fields" | "changes">("fields");
 
   useEffect(() => {
     const initialValues: Record<string, string> = {};
@@ -377,10 +377,10 @@ export function DetailPanel(props: {
       });
     });
     setEditableValues(initialValues);
-    setFeedbackNotes({});
     setSaveMessage("");
     setOpenMetaFieldPath(null);
     setSelectedTargetId(editorTargets[0]?.id ?? "");
+    setEditorTab("fields");
   }, [selectedAppId, activeStatus, editorTargets]);
 
   if (!selectedAppId) {
@@ -405,21 +405,23 @@ export function DetailPanel(props: {
   const changedFields = Object.keys(editableValues).filter(
     (path) => editableValues[path] !== baselineValues[path]
   );
-  const feedbackPayload = changedFields.map((path) => ({
-    application_id: selectedAppId,
-    field_path: path,
-    old_value: baselineValues[path],
-    new_value: editableValues[path],
-    feedback_type: "extraction_incorrect",
-    analyst_feedback: feedbackNotes[path] ?? "",
-    prompt_improvement_required: true,
-    captured_at: new Date().toISOString()
+  const fieldLabelByPath = editorTargets.reduce<Record<string, string>>((acc, target) => {
+    target.fields.forEach((field) => {
+      acc[field.path] = field.label;
+    });
+    return acc;
+  }, {});
+  const changedRows = changedFields.map((path) => ({
+    fieldPath: path,
+    fieldLabel: fieldLabelByPath[path] ?? path,
+    oldValue: baselineValues[path],
+    newValue: editableValues[path]
   }));
   const selectedTarget = editorTargets.find((target) => target.id === selectedTargetId) ?? editorTargets[0];
   const isEncodingCompletedView = activeStatus === "ENCODING_COMPLETED" && !!state.encoding;
 
   return (
-    <div className="detail-content">
+    <div className={`detail-content ${isEncodingCompletedView ? "encoding-detail-content" : ""}`}>
       {!isEncodingCompletedView ? (
         <>
           <section className="detail-section">
@@ -479,121 +481,149 @@ export function DetailPanel(props: {
             </div>
 
             <div className="encoding-field-editor">
-              {selectedTarget ? (
-                <article className="field-card analyst-field-card">
-                  <h4>
-                    {selectedTarget.sectionLabel}
-                    {selectedTarget.isRepeatable ? ` ${selectedTarget.itemLabel}` : ""}
-                  </h4>
+              <div className="editor-tab-row" role="tablist" aria-label="Encoding editor tabs">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={editorTab === "fields"}
+                  className={`editor-tab-button ${editorTab === "fields" ? "active" : ""}`}
+                  onClick={() => setEditorTab("fields")}
+                >
+                  Fields
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-selected={editorTab === "changes"}
+                  className={`editor-tab-button ${editorTab === "changes" ? "active" : ""}`}
+                  onClick={() => setEditorTab("changes")}
+                >
+                  Changes ({changedRows.length})
+                </button>
+              </div>
 
-                  {selectedTarget.fields.length === 0 ? (
-                    <p className="muted-text">No extracted rows for this section.</p>
-                  ) : (
-                    <div className="nested-field-table">
-                      {selectedTarget.fields.map((field) => {
-                        const currentValue = editableValues[field.path] ?? "";
-                        const previousValue = baselineValues[field.path] ?? "";
-                        const fieldChanged = currentValue !== previousValue;
-                        const meta = buildScoringMeta(field.path, currentValue);
-                        const isMetaOpen = openMetaFieldPath === field.path;
-                        const confidenceLabel = `${Math.round(meta.field_score * 100)}%`;
-                        return (
-                          <div
-                            key={field.path}
-                            className={`nested-field-row ${fieldChanged ? "field-changed" : ""}`}
-                          >
-                            <div className="field-row-main">
-                              <button
-                                type="button"
-                                className="field-confidence-button"
-                                onClick={() =>
-                                  setOpenMetaFieldPath((prev) => (prev === field.path ? null : field.path))
-                                }
-                                aria-label={`Show confidence details for ${field.label}`}
-                              >
-                                {confidenceLabel}
-                              </button>
-                              <span className="nested-field-name">{field.label}</span>
-                              <input
-                                className="analyst-input"
-                                value={currentValue}
-                                onChange={(event) =>
-                                  setEditableValues((prev) => ({
-                                    ...prev,
-                                    [field.path]: event.target.value
-                                  }))
-                                }
-                              />
-                            </div>
+              {editorTab === "fields" ? (
+                selectedTarget ? (
+                  <article className="field-card analyst-field-card">
+                    <h4>
+                      {selectedTarget.sectionLabel}
+                      {selectedTarget.isRepeatable ? ` ${selectedTarget.itemLabel}` : ""}
+                    </h4>
 
-                            {isMetaOpen ? (
-                              <div className="field-meta-popover">
-                                <div className="field-meta-grid">
-                                  <div className="field-meta-label">field_id</div>
-                                  <div className="field-meta-value">{meta.field_id}</div>
-
-                                  <div className="field-meta-label">raw_value</div>
-                                  <div className="field-meta-value">{meta.raw_value || "<empty>"}</div>
-
-                                  <div className="field-meta-label">normalized_value</div>
-                                  <div className="field-meta-value">
-                                    {meta.normalized_value === null ? "<null>" : String(meta.normalized_value)}
-                                  </div>
-
-                                  <div className="field-meta-label">field_score</div>
-                                  <div className="field-meta-value">{meta.field_score}</div>
-
-                                  <div className="field-meta-label">status</div>
-                                  <div className="field-meta-value">{meta.status}</div>
-
-                                  <div className="field-meta-label">component_scores</div>
-                                  <div className="field-meta-value">
-                                    ocr={meta.component_scores.ocr}, format={meta.component_scores.format},
-                                    statistical={meta.component_scores.statistical}, cross_field=
-                                    {meta.component_scores.cross_field}
-                                  </div>
-
-                                  <div className="field-meta-label">details</div>
-                                  <div className="field-meta-value">{meta.details.join(" | ")}</div>
-
-                                  <div className="field-meta-label">rule_outputs</div>
-                                  <div className="field-meta-value">
-                                    {meta.rule_outputs.map((rule) => rule.rule_name).join(", ")}
-                                  </div>
-                                </div>
-                              </div>
-                            ) : null}
-
-                            {fieldChanged ? (
-                              <label className="analyst-input-label">
-                                <span>Feedback for Prompt Improvement</span>
-                                <textarea
-                                  className="analyst-textarea"
-                                  placeholder="Why extraction was incorrect and how prompt should improve..."
-                                  value={feedbackNotes[field.path] ?? ""}
+                    {selectedTarget.fields.length === 0 ? (
+                      <p className="muted-text">No extracted rows for this section.</p>
+                    ) : (
+                      <div className="nested-field-table">
+                        {selectedTarget.fields.map((field) => {
+                          const currentValue = editableValues[field.path] ?? "";
+                          const previousValue = baselineValues[field.path] ?? "";
+                          const fieldChanged = currentValue !== previousValue;
+                          const meta = buildScoringMeta(field.path, currentValue);
+                          const isMetaOpen = openMetaFieldPath === field.path;
+                          const confidenceLabel = `${Math.round(meta.field_score * 100)}%`;
+                          return (
+                            <div
+                              key={field.path}
+                              className={`nested-field-row ${fieldChanged ? "field-changed" : ""}`}
+                            >
+                              <div className="field-row-main">
+                                <button
+                                  type="button"
+                                  className="field-confidence-button"
+                                  onClick={() =>
+                                    setOpenMetaFieldPath((prev) => (prev === field.path ? null : field.path))
+                                  }
+                                  aria-label={`Show confidence details for ${field.label}`}
+                                >
+                                  {confidenceLabel}
+                                </button>
+                                <span className="nested-field-name">{field.label}</span>
+                                <input
+                                  className="analyst-input"
+                                  value={currentValue}
                                   onChange={(event) =>
-                                    setFeedbackNotes((prev) => ({
+                                    setEditableValues((prev) => ({
                                       ...prev,
                                       [field.path]: event.target.value
                                     }))
                                   }
                                 />
-                              </label>
-                            ) : null}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </article>
+                              </div>
+
+                              {isMetaOpen ? (
+                                <div className="field-meta-popover">
+                                  <div className="field-meta-grid">
+                                    <div className="field-meta-label">field_id</div>
+                                    <div className="field-meta-value">{meta.field_id}</div>
+
+                                    <div className="field-meta-label">raw_value</div>
+                                    <div className="field-meta-value">{meta.raw_value || "<empty>"}</div>
+
+                                    <div className="field-meta-label">normalized_value</div>
+                                    <div className="field-meta-value">
+                                      {meta.normalized_value === null ? "<null>" : String(meta.normalized_value)}
+                                    </div>
+
+                                    <div className="field-meta-label">field_score</div>
+                                    <div className="field-meta-value">{meta.field_score}</div>
+
+                                    <div className="field-meta-label">status</div>
+                                    <div className="field-meta-value">{meta.status}</div>
+
+                                    <div className="field-meta-label">component_scores</div>
+                                    <div className="field-meta-value">
+                                      ocr={meta.component_scores.ocr}, format={meta.component_scores.format},
+                                      statistical={meta.component_scores.statistical}, cross_field=
+                                      {meta.component_scores.cross_field}
+                                    </div>
+
+                                    <div className="field-meta-label">details</div>
+                                    <div className="field-meta-value">{meta.details.join(" | ")}</div>
+
+                                    <div className="field-meta-label">rule_outputs</div>
+                                    <div className="field-meta-value">
+                                      {meta.rule_outputs.map((rule) => rule.rule_name).join(", ")}
+                                    </div>
+                                  </div>
+                                </div>
+                              ) : null}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </article>
+                ) : (
+                  <div className="state-box">No editable fields found.</div>
+                )
               ) : (
-                <div className="state-box">No editable fields found.</div>
+                <div className="changes-table-wrap">
+                  {changedRows.length === 0 ? (
+                    <div className="state-box">No changes yet.</div>
+                  ) : (
+                    <table className="changes-table">
+                      <thead>
+                        <tr>
+                          <th>Field</th>
+                          <th>Previous Value</th>
+                          <th>New Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {changedRows.map((row) => (
+                          <tr key={row.fieldPath}>
+                            <td>{row.fieldLabel}</td>
+                            <td>{row.oldValue || "<empty>"}</td>
+                            <td>{row.newValue || "<empty>"}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  )}
+                </div>
               )}
 
               <div className="encoding-submit-panel">
-                <p>
-                  <strong>Changed fields:</strong> {changedFields.length}
-                </p>
                 <button
                   type="button"
                   className="button-primary"
@@ -603,12 +633,6 @@ export function DetailPanel(props: {
                   Save Adjustments & Trigger Decision
                 </button>
                 {saveMessage ? <p className="muted-text">{saveMessage}</p> : null}
-                {feedbackPayload.length > 0 ? (
-                  <>
-                    <h4>Feedback Capture Preview</h4>
-                    <pre className="feedback-preview">{JSON.stringify(feedbackPayload, null, 2)}</pre>
-                  </>
-                ) : null}
               </div>
             </div>
 
