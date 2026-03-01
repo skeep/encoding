@@ -8,7 +8,7 @@ import { QueueDashboard } from "./QueueDashboard";
 describe("QueueDashboard", () => {
   it("renders queue tabs and table rows", async () => {
     render(<QueueDashboard />);
-    expect(screen.getByRole("tab", { name: /Intake & Encoding In Progress/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Encoding Queue/i })).toBeInTheDocument();
     expect(await screen.findByRole("cell", { name: "APP-2026-0001" })).toBeInTheDocument();
   });
 
@@ -16,7 +16,7 @@ describe("QueueDashboard", () => {
     const user = userEvent.setup();
     render(<QueueDashboard />);
 
-    await user.click(screen.getByRole("tab", { name: /Encoding Complete/i }));
+    await user.click(screen.getByRole("tab", { name: /Encoding Completed/i }));
     expect(await screen.findByRole("cell", { name: "APP-2026-0004" })).toBeInTheDocument();
     expect(await screen.findByRole("button", { name: /Save Adjustments & Trigger Decision/i })).toBeInTheDocument();
   });
@@ -40,7 +40,7 @@ describe("QueueDashboard", () => {
     expect(await screen.findByLabelText(/Filter by intake status/i)).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "Dealer Email" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("tab", { name: /Decision Running/i }));
+    await user.click(screen.getByRole("tab", { name: /Decision Queue/i }));
     await screen.findByRole("cell", { name: "APP-2026-0005" });
 
     expect(screen.queryByLabelText(/Filter by intake status/i)).not.toBeInTheDocument();

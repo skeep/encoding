@@ -1,9 +1,9 @@
 import type { ApplicationStatus, ApplicationSummary, QueueStatus } from "../../../api/types";
 
 export const statusLabels: Record<QueueStatus, string> = {
-  INTAKE_IN_PROGRESS: "Intake & Encoding In Progress",
-  ENCODING_COMPLETED: "Encoding Complete",
-  DECISION_RUNNING: "Decision Running",
+  INTAKE_IN_PROGRESS: "Encoding Queue",
+  ENCODING_COMPLETED: "Encoding Completed",
+  DECISION_RUNNING: "Decision Queue",
   DECISION_COMPLETED: "Decision Completed"
 };
 
@@ -21,16 +21,16 @@ export function renderEncodingStatus(value: ApplicationSummary["encodingStatus"]
 }
 
 export function renderDecisionStatus(value: ApplicationSummary["decisionStatus"]): string {
+  if (value === "COMPLETED") {
+    return "Completed";
+  }
   if (value === "IN_QUEUE") {
     return "In Queue";
   }
   if (value === "IN_PROGRESS") {
-    return "In Progress";
+    return "Running";
   }
-  if (value === "COMPLETED") {
-    return "Completed";
-  }
-  return "-";
+  return "Received";
 }
 
 export function renderLifecycleStatus(

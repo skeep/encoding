@@ -10,6 +10,16 @@ import {
 } from "./statusFormatters";
 
 export function useQueueColumns(activeStatus: QueueStatus): DataTableColumn<ApplicationSummary>[] {
+  const renderApprovalBucket = (item: ApplicationSummary): string => {
+    if (item.finalDecision === "REJECT") {
+      return "Rejected";
+    }
+    if (item.finalDecision === "APPROVE" && item.stpEligible) {
+      return "STP";
+    }
+    return "Checking Required";
+  };
+
   return useMemo<DataTableColumn<ApplicationSummary>[]>(() => {
     const next: DataTableColumn<ApplicationSummary>[] = [
       {
@@ -62,42 +72,35 @@ export function useQueueColumns(activeStatus: QueueStatus): DataTableColumn<Appl
       );
     }
 
-    if (activeStatus === "DECISION_RUNNING" || activeStatus === "DECISION_COMPLETED") {
+    if (activeStatus === "DECISION_RUNNING") {
       next.push(
         {
           key: "decisionStatus",
-          header: "Decision Status",
+          header: "Queue Status",
           render: (item) => renderDecisionStatus(item.decisionStatus)
         },
         {
-          key: "riskScore",
-          header: "Risk Score",
-          render: (item) => (typeof item.riskScore === "number" ? item.riskScore.toFixed(2) : "-")
-        },
-        {
-          key: "riskGrade",
-          header: "Risk Grade",
-          render: (item) => item.riskGrade ?? "-"
-        },
-        {
-          key: "policyVersion",
-          header: "Policy Version",
-          render: (item) => item.policyVersion ?? "-"
-        },
-        {
-          key: "stpEligible",
-          header: "STP",
-          render: (item) =>
-            typeof item.stpEligible === "boolean" ? (item.stpEligible ? "Yes" : "No") : "-"
+          key: "decisionWorkflow",
+          header: "Workflow",
+          render: (item) => (
+            <a
+              className="queue-inline-link"
+              href={`https://camunda.example.local/process/${item.applicationId}`}
+              target="_blank"
+              rel="noreferrer"
+            >
+              Open Queue
+            </a>
+          )
         }
       );
     }
 
     if (activeStatus === "DECISION_COMPLETED") {
       next.push({
-        key: "finalDecision",
-        header: "Final Decision",
-        render: (item) => item.finalDecision ?? "-"
+        key: "approvalBucket",
+        header: "Approval Bucket",
+        render: (item) => renderApprovalBucket(item)
       });
     }
 

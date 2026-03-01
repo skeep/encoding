@@ -322,6 +322,16 @@ input {
   font-weight: 600;
 }
 
+.queue-inline-link {
+  color: var(--brand-red);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.queue-inline-link:hover {
+  text-decoration: underline;
+}
+
 .pagination-row {
   display: flex;
   justify-content: space-between;
