@@ -1,66 +1,16 @@
-import type {
-  ApplicationDetail,
-  DecisionView,
-  EncodingView,
-  PaginatedApplications,
-  QueueStatus,
-  QueueSummary,
-  TimelineEvent
-} from "./types";
-import { mockHandlers } from "../mocks/handlers";
+import { applicationApi } from "./applicationApi";
+import { decisionApi } from "./decisionApi";
+import { encodingApi } from "./encodingApi";
+import { queueApi } from "./queueApi";
+import { apiClientBase, type ApiConfig } from "./baseClient";
 
-const MOCK_LATENCY_MS = 220;
-
-export type ApiConfig = {
-  failureRate?: number;
-};
-
-const defaultConfig: ApiConfig = {
-  failureRate: 0
-};
-
-function withMockLatency<T>(operation: () => T, config: ApiConfig = defaultConfig): Promise<T> {
-  return new Promise<T>((resolve, reject) => {
-    const randomFail = Math.random() < (config.failureRate ?? 0);
-    setTimeout(() => {
-      if (randomFail) {
-        reject(new Error("Mock API failure"));
-        return;
-      }
-      try {
-        resolve(operation());
-      } catch (error) {
-        reject(error);
-      }
-    }, MOCK_LATENCY_MS);
-  });
-}
-
+// Backward-compatible aggregate client while features migrate to scoped APIs.
 export const apiClient = {
-  getQueueSummary(config?: ApiConfig): Promise<QueueSummary[]> {
-    return withMockLatency(() => mockHandlers.getQueueSummary(), config);
-  },
-  getApplications(
-    params: {
-      status: QueueStatus;
-      q?: string;
-      page?: number;
-      size?: number;
-    },
-    config?: ApiConfig
-  ): Promise<PaginatedApplications> {
-    return withMockLatency(() => mockHandlers.getApplications(params), config);
-  },
-  getApplicationById(applicationId: string, config?: ApiConfig): Promise<ApplicationDetail> {
-    return withMockLatency(() => mockHandlers.getApplicationById(applicationId), config);
-  },
-  getEncodingView(applicationId: string, config?: ApiConfig): Promise<EncodingView> {
-    return withMockLatency(() => mockHandlers.getEncodingView(applicationId), config);
-  },
-  getDecisionView(applicationId: string, config?: ApiConfig): Promise<DecisionView> {
-    return withMockLatency(() => mockHandlers.getDecisionView(applicationId), config);
-  },
-  getTimeline(applicationId: string, config?: ApiConfig): Promise<TimelineEvent[]> {
-    return withMockLatency(() => mockHandlers.getTimeline(applicationId), config);
-  }
+  ...queueApi,
+  ...applicationApi,
+  ...encodingApi,
+  ...decisionApi,
+  getTimeline: apiClientBase.getTimeline
 };
+
+export type { ApiConfig };
