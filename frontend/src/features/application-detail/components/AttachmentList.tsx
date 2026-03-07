@@ -2,6 +2,7 @@ import type { ApplicationDetail } from "../../../api/types";
 import {
   buildAttachmentPreviewUrl,
   getAttachmentBadge,
+  getDetectedAttachmentKind,
   getAttachmentTypeLabel
 } from "../utils/attachments";
 
@@ -17,11 +18,15 @@ export function AttachmentList(props: { detail: ApplicationDetail; compact?: boo
               href={buildAttachmentPreviewUrl(attachment.name, attachment.mimeType, attachment.sizeKb)}
               target="_blank"
               rel="noreferrer"
-              title={`${attachment.name} (${attachment.mimeType}, ${attachment.sizeKb} KB)`}
+              title={`${attachment.name} (${getDetectedAttachmentKind(
+                attachment.name,
+                attachment.mimeType
+              )}, ${attachment.mimeType}, ${attachment.sizeKb} KB)`}
             >
               <span className="attachment-badge">{getAttachmentBadge(attachment.mimeType, attachment.name)}</span>
               <span className="attachment-name">{attachment.name}</span>
               <span className="attachment-meta-inline">
+                {getDetectedAttachmentKind(attachment.name, attachment.mimeType)} -{" "}
                 {getAttachmentTypeLabel(attachment.mimeType, attachment.name)} - {attachment.sizeKb} KB
               </span>
             </a>
@@ -44,7 +49,9 @@ export function AttachmentList(props: { detail: ApplicationDetail; compact?: boo
             <span>{attachment.name}</span>
           </a>
           <span className="attachment-meta">
-            ({attachment.mimeType}, {attachment.sizeKb} KB)
+            ({getDetectedAttachmentKind(attachment.name, attachment.mimeType)} -{" "}
+            {getAttachmentTypeLabel(attachment.mimeType, attachment.name)} - {attachment.mimeType},{" "}
+            {attachment.sizeKb} KB)
           </span>
         </li>
       ))}
