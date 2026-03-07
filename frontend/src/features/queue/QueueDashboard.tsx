@@ -7,7 +7,12 @@ import { QueueTabs } from "./components/QueueTabs";
 import { useQueueDashboardData } from "./hooks/useQueueDashboardData";
 import { useQueueTableRows } from "./hooks/useQueueTableRows";
 import { useResizableSplit } from "./hooks/useResizableSplit";
-import { queueTableFeaturesByStatus, type FilterField, type IntakeStatusFilter } from "./types/tableFeatures";
+import {
+  queueTableFeaturesByStatus,
+  type ApprovalBucketFilter,
+  type FilterField,
+  type IntakeStatusFilter
+} from "./types/tableFeatures";
 import { useQueueColumns } from "./utils/queueColumns";
 
 export function QueueDashboard(): JSX.Element {
@@ -16,6 +21,7 @@ export function QueueDashboard(): JSX.Element {
   const [filterField, setFilterField] = useState<FilterField>("applicationId");
   const [filterValue, setFilterValue] = useState("");
   const [intakeStatusFilter, setIntakeStatusFilter] = useState<IntakeStatusFilter>("ALL");
+  const [approvalBucketFilter, setApprovalBucketFilter] = useState<ApprovalBucketFilter>("ALL");
   const { mainRef, leftPanePercent, isResizing, setIsResizing } = useResizableSplit(60);
   const [pageSizeByStatus, setPageSizeByStatus] = useState<Record<QueueStatus, number>>({
     INTAKE_IN_PROGRESS: 10,
@@ -47,7 +53,8 @@ export function QueueDashboard(): JSX.Element {
     activeStatus,
     filterField,
     filterValue,
-    intakeStatusFilter
+    intakeStatusFilter,
+    approvalBucketFilter
   });
   const filterFieldOptions = useMemo(() => activeFeatures.fieldFilterOptions, [activeFeatures.fieldFilterOptions]);
   const canFilterByCurrentField = useMemo(
@@ -66,6 +73,12 @@ export function QueueDashboard(): JSX.Element {
       setIntakeStatusFilter("ALL");
     }
   }, [activeFeatures.showIntakeStatusFilter, intakeStatusFilter]);
+
+  useEffect(() => {
+    if (!activeFeatures.showApprovalBucketFilter && approvalBucketFilter !== "ALL") {
+      setApprovalBucketFilter("ALL");
+    }
+  }, [activeFeatures.showApprovalBucketFilter, approvalBucketFilter]);
 
   return (
     <div className="dashboard-root">
@@ -116,6 +129,8 @@ export function QueueDashboard(): JSX.Element {
             onFilterValueChange={setFilterValue}
             intakeStatusFilter={intakeStatusFilter}
             onIntakeStatusFilterChange={setIntakeStatusFilter}
+            approvalBucketFilter={approvalBucketFilter}
+            onApprovalBucketFilterChange={setApprovalBucketFilter}
             page={page}
             totalPages={totalPages}
             pageStart={pageStart}

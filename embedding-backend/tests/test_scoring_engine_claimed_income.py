@@ -1,3 +1,4 @@
+
 import copy
 import json
 import tempfile
@@ -35,7 +36,7 @@ def make_raw_json(claimed_income_value: str | None) -> list[dict]:
 
 class ClaimedIncomeScoringEngineTests(unittest.TestCase):
     def setUp(self) -> None:
-        self.repo = Path("/Users/Suman_Paul/Projects/encoding")
+        self.repo = Path(__file__).resolve().parents[1]
         self.taxonomy_path = self.repo / "docs/field_taxonomy/claimed_income.yaml"
         self.stats_path = self.repo / "data/stats/minimal_stats_artifact.json"
         with self.taxonomy_path.open("r", encoding="utf-8") as handle:

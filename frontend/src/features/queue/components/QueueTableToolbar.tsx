@@ -1,6 +1,11 @@
 import { PaginationControls } from "./PaginationControls";
 import { QueueFilters } from "./QueueFilters";
-import type { FilterField, IntakeStatusFilter, QueueTableFeatureConfig } from "../types/tableFeatures";
+import type {
+  ApprovalBucketFilter,
+  FilterField,
+  IntakeStatusFilter,
+  QueueTableFeatureConfig
+} from "../types/tableFeatures";
 
 export function QueueTableToolbar(props: {
   features: QueueTableFeatureConfig;
@@ -10,6 +15,8 @@ export function QueueTableToolbar(props: {
   onFilterValueChange: (value: string) => void;
   intakeStatusFilter: IntakeStatusFilter;
   onIntakeStatusFilterChange: (value: IntakeStatusFilter) => void;
+  approvalBucketFilter: ApprovalBucketFilter;
+  onApprovalBucketFilterChange: (value: ApprovalBucketFilter) => void;
   page: number;
   totalPages: number;
   pageStart: number;
@@ -35,6 +42,8 @@ export function QueueTableToolbar(props: {
         onFilterValueChange={props.onFilterValueChange}
         intakeStatusFilter={props.intakeStatusFilter}
         onIntakeStatusFilterChange={props.onIntakeStatusFilterChange}
+        approvalBucketFilter={props.approvalBucketFilter}
+        onApprovalBucketFilterChange={props.onApprovalBucketFilterChange}
       />
       {features.showPagination ? (
         <PaginationControls

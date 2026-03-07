@@ -2,7 +2,8 @@ import { useMemo } from "react";
 
 import type { ApplicationSummary, QueueStatus } from "../../../api/types";
 import { renderLifecycleStatus } from "../utils/statusFormatters";
-import type { FilterField, IntakeStatusFilter } from "../types/tableFeatures";
+import { getApprovalBucket } from "../utils/approvalBucket";
+import type { ApprovalBucketFilter, FilterField, IntakeStatusFilter } from "../types/tableFeatures";
 
 function getIntakeStatusRank(status: string): number {
   if (status === "Encoding In Progress") {
@@ -23,14 +24,29 @@ export function useQueueTableRows(params: {
   filterField: FilterField;
   filterValue: string;
   intakeStatusFilter: IntakeStatusFilter;
+  approvalBucketFilter: ApprovalBucketFilter;
 }): ApplicationSummary[] {
-  const { rows, activeStatus, filterField, filterValue, intakeStatusFilter } = params;
+  const { rows, activeStatus, filterField, filterValue, intakeStatusFilter, approvalBucketFilter } = params;
 
   return useMemo(() => {
     const query = filterValue.trim().toLowerCase();
     const filteredByField = query
       ? rows.filter((row) => String(row[filterField] ?? "").toLowerCase().includes(query))
       : rows;
+
+    if (activeStatus === "DECISION_COMPLETED" && approvalBucketFilter !== "ALL") {
+      const next = filteredByField.filter((row) => {
+        const bucket = getApprovalBucket(row);
+        if (approvalBucketFilter === "STP") {
+          return bucket === "STP";
+        }
+        if (approvalBucketFilter === "REJECTED") {
+          return bucket === "Rejected";
+        }
+        return bucket === "Human Review Needed";
+      });
+      return next;
+    }
 
     if (activeStatus !== "INTAKE_IN_PROGRESS") {
       return filteredByField;
@@ -60,5 +76,5 @@ export function useQueueTableRows(params: {
       }
       return left.applicationId.localeCompare(right.applicationId);
     });
-  }, [activeStatus, filterField, filterValue, intakeStatusFilter, rows]);
+  }, [activeStatus, approvalBucketFilter, filterField, filterValue, intakeStatusFilter, rows]);
 }

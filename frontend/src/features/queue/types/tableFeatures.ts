@@ -3,11 +3,13 @@ import type { QueueStatus } from "../../../api/types";
 export type FilterField = "applicationId" | "dealerEmailFrom";
 
 export type IntakeStatusFilter = "ALL" | "ENCODING_IN_PROGRESS" | "ENCODING_IN_QUEUE" | "EMAIL_RECEIVED";
+export type ApprovalBucketFilter = "ALL" | "STP" | "HUMAN_REVIEW_NEEDED" | "REJECTED";
 
 export type QueueTableFeatureConfig = {
   showFilters: boolean;
   showFieldFilter: boolean;
   showIntakeStatusFilter: boolean;
+  showApprovalBucketFilter: boolean;
   showPagination: boolean;
   showRowsPerPage: boolean;
   stickyHeader: boolean;
@@ -20,6 +22,7 @@ export const defaultQueueTableFeatures: QueueTableFeatureConfig = {
   showFilters: true,
   showFieldFilter: true,
   showIntakeStatusFilter: false,
+  showApprovalBucketFilter: false,
   showPagination: true,
   showRowsPerPage: true,
   stickyHeader: true,
@@ -47,6 +50,7 @@ export const queueTableFeaturesByStatus: Record<QueueStatus, QueueTableFeatureCo
   DECISION_COMPLETED: {
     ...defaultQueueTableFeatures,
     showIntakeStatusFilter: false,
+    showApprovalBucketFilter: true,
     fieldFilterOptions: ["applicationId"]
   }
 };

@@ -1,6 +1,11 @@
 import type { ApplicationSummary } from "../../../api/types";
 import { DataTable, type DataTableColumn } from "../../../components/DataTable";
-import type { FilterField, IntakeStatusFilter, QueueTableFeatureConfig } from "../types/tableFeatures";
+import type {
+  ApprovalBucketFilter,
+  FilterField,
+  IntakeStatusFilter,
+  QueueTableFeatureConfig
+} from "../types/tableFeatures";
 import { QueueTableToolbar } from "./QueueTableToolbar";
 
 export function QueueTableContainer(props: {
@@ -19,6 +24,8 @@ export function QueueTableContainer(props: {
   onFilterValueChange: (value: string) => void;
   intakeStatusFilter: IntakeStatusFilter;
   onIntakeStatusFilterChange: (value: IntakeStatusFilter) => void;
+  approvalBucketFilter: ApprovalBucketFilter;
+  onApprovalBucketFilterChange: (value: ApprovalBucketFilter) => void;
   page: number;
   totalPages: number;
   pageStart: number;
@@ -54,6 +61,8 @@ export function QueueTableContainer(props: {
         onFilterValueChange={props.onFilterValueChange}
         intakeStatusFilter={props.intakeStatusFilter}
         onIntakeStatusFilterChange={props.onIntakeStatusFilterChange}
+        approvalBucketFilter={props.approvalBucketFilter}
+        onApprovalBucketFilterChange={props.onApprovalBucketFilterChange}
         page={props.page}
         totalPages={props.totalPages}
         pageStart={props.pageStart}

@@ -1,4 +1,9 @@
-import type { FilterField, IntakeStatusFilter, QueueTableFeatureConfig } from "../types/tableFeatures";
+import type {
+  ApprovalBucketFilter,
+  FilterField,
+  IntakeStatusFilter,
+  QueueTableFeatureConfig
+} from "../types/tableFeatures";
 
 const filterFieldLabels: Record<FilterField, string> = {
   applicationId: "Application ID",
@@ -13,6 +18,8 @@ export function QueueFilters(props: {
   onFilterValueChange: (value: string) => void;
   intakeStatusFilter: IntakeStatusFilter;
   onIntakeStatusFilterChange: (value: IntakeStatusFilter) => void;
+  approvalBucketFilter: ApprovalBucketFilter;
+  onApprovalBucketFilterChange: (value: ApprovalBucketFilter) => void;
 }): JSX.Element | null {
   const {
     features,
@@ -21,7 +28,9 @@ export function QueueFilters(props: {
     filterValue,
     onFilterValueChange,
     intakeStatusFilter,
-    onIntakeStatusFilterChange
+    onIntakeStatusFilterChange,
+    approvalBucketFilter,
+    onApprovalBucketFilterChange
   } = props;
 
   if (!features.showFilters) {
@@ -65,6 +74,19 @@ export function QueueFilters(props: {
           <option value="ENCODING_IN_PROGRESS">Encoding In Progress</option>
           <option value="ENCODING_IN_QUEUE">Encoding In Queue</option>
           <option value="EMAIL_RECEIVED">Email Received</option>
+        </select>
+      ) : null}
+      {features.showApprovalBucketFilter ? (
+        <select
+          className="table-filter-select"
+          value={approvalBucketFilter}
+          onChange={(event) => onApprovalBucketFilterChange(event.target.value as ApprovalBucketFilter)}
+          aria-label="Filter by approval bucket"
+        >
+          <option value="ALL">All Buckets</option>
+          <option value="STP">STP</option>
+          <option value="HUMAN_REVIEW_NEEDED">Human Review Needed</option>
+          <option value="REJECTED">Rejected</option>
         </select>
       ) : null}
     </div>

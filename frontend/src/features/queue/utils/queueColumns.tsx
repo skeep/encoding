@@ -8,18 +8,9 @@ import {
   renderEncodingStatus,
   renderLifecycleStatus
 } from "./statusFormatters";
+import { getApprovalBucket } from "./approvalBucket";
 
 export function useQueueColumns(activeStatus: QueueStatus): DataTableColumn<ApplicationSummary>[] {
-  const renderApprovalBucket = (item: ApplicationSummary): string => {
-    if (item.finalDecision === "REJECT") {
-      return "Rejected";
-    }
-    if (item.finalDecision === "APPROVE" && item.stpEligible) {
-      return "STP";
-    }
-    return "Checking Required";
-  };
-
   return useMemo<DataTableColumn<ApplicationSummary>[]>(() => {
     const next: DataTableColumn<ApplicationSummary>[] = [
       {
@@ -100,7 +91,7 @@ export function useQueueColumns(activeStatus: QueueStatus): DataTableColumn<Appl
       next.push({
         key: "approvalBucket",
         header: "Approval Bucket",
-        render: (item) => renderApprovalBucket(item)
+        render: (item) => getApprovalBucket(item)
       });
     }
 

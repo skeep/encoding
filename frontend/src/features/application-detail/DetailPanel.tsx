@@ -4,6 +4,7 @@ import type { ApplicationStatus, QueueStatus } from "../../api/types";
 import { formatIsoDate } from "../../app/formatters";
 import samplePostEncoding from "../../../sample/sample_post_encoding.json";
 import { AttachmentList } from "./components/AttachmentList";
+import { DecisionCompletedPanel } from "./components/DecisionCompletedPanel";
 import { EncodingWorkbench } from "./components/EncodingWorkbench";
 import type { DetailPanelState } from "./types";
 import { buildEditorTargets } from "./utils/editorTargets";
@@ -26,6 +27,7 @@ export function DetailPanel(props: {
   const { activeStatus, selectedAppId, state } = props;
   const editorTargets = useMemo(() => buildEditorTargets(samplePostEncoding), []);
   const isEncodingCompletedView = activeStatus === "ENCODING_COMPLETED" && !!state.encoding;
+  const showBaseOverview = !isEncodingCompletedView && activeStatus !== "DECISION_COMPLETED";
 
   if (!selectedAppId) {
     return <div className="state-box">Select an application to view details.</div>;
@@ -42,7 +44,7 @@ export function DetailPanel(props: {
 
   return (
     <div className={`detail-content ${isEncodingCompletedView ? "encoding-detail-content" : ""}`}>
-      {!isEncodingCompletedView ? (
+      {showBaseOverview ? (
         <>
           <section className="detail-section">
             <h3>Overview</h3>
@@ -77,48 +79,7 @@ export function DetailPanel(props: {
       ) : null}
 
       {activeStatus === "DECISION_COMPLETED" && state.decision ? (
-        <section className="detail-section">
-          <h3>Decision Completed</h3>
-          <p>
-            <strong>Decision:</strong> {state.decision.summary.finalDecision}
-          </p>
-          <p>
-            <strong>Risk Score:</strong> {state.decision.summary.riskScore}
-          </p>
-          <p>
-            <strong>Risk Grade:</strong> {state.decision.summary.riskGrade}
-          </p>
-          <p>
-            <strong>Policy Version:</strong> {state.decision.summary.policyVersion}
-          </p>
-          <p>
-            <strong>STP Eligible:</strong> {state.decision.summary.stpEligible ? "Yes" : "No"}
-          </p>
-          <h4>Rule Matrix</h4>
-          <div className="rule-matrix">
-            {state.decision.rules.map((rule) => (
-              <article key={rule.ruleId} className="rule-card">
-                <p>
-                  <strong>{rule.ruleId}</strong> - {rule.description}
-                </p>
-                <p>
-                  <strong>Condition:</strong> {rule.conditionEvaluated}
-                </p>
-                <p>
-                  <strong>Outcome:</strong> {rule.passed ? "Passed" : "Failed"}
-                </p>
-                <p>
-                  <strong>Explanation:</strong> {rule.explanation}
-                </p>
-                <p>
-                  <strong>Impact:</strong> {rule.impact}
-                </p>
-              </article>
-            ))}
-          </div>
-          <h4>Credit Memo</h4>
-          <p>{state.decision.creditMemo}</p>
-        </section>
+        <DecisionCompletedPanel detail={state.detail} decision={state.decision} />
       ) : null}
 
       {activeStatus === "DECISION_RUNNING" ? (

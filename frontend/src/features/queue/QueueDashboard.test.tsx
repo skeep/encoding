@@ -27,10 +27,11 @@ describe("QueueDashboard", () => {
 
     await user.click(screen.getByRole("tab", { name: /Decision Completed/i }));
     await waitFor(() => {
-      expect(screen.getByRole("heading", { name: "Decision Completed", level: 3 })).toBeInTheDocument();
+      expect(screen.getByText("Decision Completed")).toBeInTheDocument();
     });
-    expect(await screen.findByText(/Rule Matrix/i)).toBeInTheDocument();
-    expect(await screen.findByText(/Credit Memo/i)).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Rule Matrix" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Decision Memo" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Case Details" })).toBeInTheDocument();
   });
 
   it("shows feature-gated filters by status tab", async () => {
@@ -45,6 +46,10 @@ describe("QueueDashboard", () => {
 
     expect(screen.queryByLabelText(/Filter by intake status/i)).not.toBeInTheDocument();
     expect(screen.queryByRole("option", { name: "Dealer Email" })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("tab", { name: /Decision Completed/i }));
+    await screen.findByRole("cell", { name: "APP-2026-0007" });
+    expect(screen.getByLabelText(/Filter by approval bucket/i)).toBeInTheDocument();
   });
 
   it("sorts intake statuses with encoding in progress first", async () => {
