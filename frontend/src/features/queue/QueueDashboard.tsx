@@ -22,7 +22,7 @@ export function QueueDashboard(): JSX.Element {
   const [filterValue, setFilterValue] = useState("");
   const [intakeStatusFilter, setIntakeStatusFilter] = useState<IntakeStatusFilter>("ALL");
   const [approvalBucketFilter, setApprovalBucketFilter] = useState<ApprovalBucketFilter>("ALL");
-  const { mainRef, leftPanePercent, isResizing, setIsResizing } = useResizableSplit(60);
+  const { mainRef, leftPanePercent, isResizing, setIsResizing } = useResizableSplit(40);
   const [pageSizeByStatus, setPageSizeByStatus] = useState<Record<QueueStatus, number>>({
     INTAKE_IN_PROGRESS: 10,
     ENCODING_COMPLETED: 10,

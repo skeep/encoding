@@ -11,7 +11,6 @@ export function QueueTabs(props: {
     <div className="tab-row" role="tablist" aria-label="Workflow state tabs">
       {queueStatuses.map((status) => {
         const count = summary.find((item) => item.status === status)?.count ?? 0;
-        const stale = summary.find((item) => item.status === status)?.stale ?? false;
         return (
           <button
             key={status}
@@ -22,7 +21,6 @@ export function QueueTabs(props: {
           >
             <span>{statusLabels[status]}</span>
             <strong>{count}</strong>
-            {stale ? <em className="stale-pill">stale</em> : null}
           </button>
         );
       })}

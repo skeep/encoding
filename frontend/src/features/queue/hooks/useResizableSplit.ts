@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Dispatch, MutableRefObject, SetStateAction } from "react";
 
 export function useResizableSplit(
-  initialLeftPercent = 60
+  initialLeftPercent = 40
 ): {
   mainRef: MutableRefObject<HTMLElement | null>;
   leftPanePercent: number;
@@ -20,7 +20,8 @@ export function useResizableSplit(
       }
       const rect = mainRef.current.getBoundingClientRect();
       const raw = ((event.clientX - rect.left) / rect.width) * 100;
-      const clamped = Math.max(40, Math.min(70, raw));
+      // Left pane range 30-60 => right pane range 70-40.
+      const clamped = Math.max(30, Math.min(60, raw));
       setLeftPanePercent(clamped);
     }
 

@@ -158,7 +158,7 @@ input {
   display: grid;
   gap: 0;
   min-height: 0;
-  grid-template-columns: 60% 8px 40%;
+  grid-template-columns: 40% 8px 60%;
   padding: 0;
 }
 
@@ -549,18 +549,14 @@ input {
 .decision-rule-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 12px;
 }
 
 .decision-legend-item {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid var(--border-default);
-  background: var(--bg-app);
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--text-secondary);
   white-space: nowrap;
 }
@@ -600,31 +596,19 @@ input {
   z-index: 1;
 }
 
-.decision-status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  border-radius: 999px;
-  padding: 3px 8px;
-  font-weight: 600;
-  font-size: 0.75rem;
-  border: 1px solid var(--border-default);
-  background: var(--bg-app);
-  color: var(--text-secondary);
-  width: 30px;
-  justify-content: center;
-}
-
 .decision-status-icon {
   width: 18px;
   height: 18px;
-  border-radius: 999px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.68rem;
-  font-weight: 700;
-  border: 1px solid transparent;
+  line-height: 0;
+}
+
+.decision-status-glyph {
+  width: 15px;
+  height: 15px;
+  stroke-width: 2.3;
 }
 
 .decision-rule-cell-rule {
@@ -694,39 +678,24 @@ input {
   gap: 4px;
 }
 
-.decision-status-icon.passed,
-.decision-status-pill.passed {
-  background: var(--state-success-soft);
+.decision-status-icon.passed {
   color: var(--state-success);
-  border-color: rgba(21, 128, 61, 0.25);
 }
 
-.decision-status-icon.failed,
-.decision-status-pill.failed {
-  background: var(--state-error-soft);
+.decision-status-icon.failed {
   color: var(--state-error);
-  border-color: rgba(185, 28, 28, 0.25);
 }
 
-.decision-status-icon.rejected,
-.decision-status-pill.rejected {
-  background: #fce7f3;
+.decision-status-icon.rejected {
   color: #9d174d;
-  border-color: rgba(157, 23, 77, 0.25);
 }
 
-.decision-status-icon.not_executed,
-.decision-status-pill.not_executed {
-  background: var(--state-info-soft);
+.decision-status-icon.not_executed {
   color: var(--state-info);
-  border-color: rgba(29, 78, 216, 0.25);
 }
 
-.decision-status-icon.skipped,
-.decision-status-pill.skipped {
-  background: var(--state-warning-soft);
+.decision-status-icon.skipped {
   color: var(--state-warning);
-  border-color: rgba(180, 83, 9, 0.25);
 }
 
 .decision-primary-cause-tag {
@@ -803,6 +772,53 @@ input {
   border-radius: 8px;
   padding: 10px;
   background: var(--bg-surface);
+  display: grid;
+  gap: 8px;
+}
+
+.decision-memo-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.decision-icon-button {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.decision-memo-icon {
+  width: 16px;
+  height: 16px;
+}
+
+.decision-memo-markdown {
+  display: grid;
+  gap: 8px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.decision-memo-markdown h2,
+.decision-memo-markdown h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 0.92rem;
+}
+
+.decision-memo-markdown p {
+  margin: 0;
+}
+
+.decision-memo-markdown ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
 }
 
 .decision-case-grid {
@@ -865,15 +881,20 @@ input {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 36px;
-  height: 22px;
-  padding: 0 6px;
-  border-radius: 9999px;
+  min-width: 30px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border-radius: 8px;
   border: 1px solid var(--brand-gold-soft-border);
   background: var(--brand-gold-soft);
   color: var(--brand-gold-strong);
-  font-size: 0.72rem;
-  letter-spacing: 0.03em;
+}
+
+.attachment-icon-svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2;
 }
 
 .attachment-meta {

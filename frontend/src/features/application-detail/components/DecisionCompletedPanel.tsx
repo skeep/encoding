@@ -1,4 +1,6 @@
 import { useMemo, useState } from "react";
+import { AlertTriangle, CheckCircle2, Clock3, FileDown, MinusCircle, XCircle } from "lucide-react";
+import ReactMarkdown from "react-markdown";
 
 import type { ApplicationDetail, DecisionView } from "../../../api/types";
 import { formatIsoDate } from "../../../app/formatters";
@@ -31,20 +33,20 @@ function getStatusLabel(status: RuleExecutionStatus): string {
   return "Skipped";
 }
 
-function getStatusIcon(status: RuleExecutionStatus): string {
+function getStatusIcon(status: RuleExecutionStatus): JSX.Element {
   if (status === "PASSED") {
-    return "P";
+    return <CheckCircle2 className="decision-status-glyph" aria-hidden="true" />;
   }
   if (status === "FAILED") {
-    return "F";
+    return <XCircle className="decision-status-glyph" aria-hidden="true" />;
   }
   if (status === "REJECTED") {
-    return "R";
+    return <AlertTriangle className="decision-status-glyph" aria-hidden="true" />;
   }
   if (status === "NOT_EXECUTED") {
-    return "N";
+    return <Clock3 className="decision-status-glyph" aria-hidden="true" />;
   }
-  return "S";
+  return <MinusCircle className="decision-status-glyph" aria-hidden="true" />;
 }
 
 function inputText(rule: DecisionView["rules"][number]): string {
@@ -112,7 +114,13 @@ export function DecisionCompletedPanel(props: { detail: ApplicationDetail; decis
           <div className="decision-rule-legend">
             {(["PASSED", "FAILED", "REJECTED", "NOT_EXECUTED", "SKIPPED"] as RuleExecutionStatus[]).map((status) => (
               <div key={status} className="decision-legend-item">
-                <span className={`decision-status-icon ${status.toLowerCase()}`}>{getStatusIcon(status)}</span>
+                <span
+                  className={`decision-status-icon ${status.toLowerCase()}`}
+                  title={getStatusLabel(status)}
+                  aria-label={getStatusLabel(status)}
+                >
+                  {getStatusIcon(status)}
+                </span>
                 <span>{getStatusLabel(status)}</span>
               </div>
             ))}
@@ -135,10 +143,12 @@ export function DecisionCompletedPanel(props: { detail: ApplicationDetail; decis
                   return (
                     <tr key={rule.ruleId}>
                       <td>
-                        <span className={`decision-status-pill ${status.toLowerCase()}`}>
-                          <span className={`decision-status-icon ${status.toLowerCase()}`} aria-hidden="true">
-                            {getStatusIcon(status)}
-                          </span>
+                        <span
+                          className={`decision-status-icon ${status.toLowerCase()}`}
+                          title={getStatusLabel(status)}
+                          aria-label={getStatusLabel(status)}
+                        >
+                          {getStatusIcon(status)}
                         </span>
                       </td>
                       <td>
@@ -198,7 +208,19 @@ export function DecisionCompletedPanel(props: { detail: ApplicationDetail; decis
 
       {activeTab === "DECISION_MEMO" ? (
         <div className="decision-memo-panel">
-          <p>{decision.creditMemo}</p>
+          <div className="decision-memo-actions">
+            <button
+              type="button"
+              className="decision-icon-button"
+              aria-label="Download memo as PDF"
+              title="Download memo as PDF (coming soon)"
+            >
+              <FileDown className="decision-memo-icon" aria-hidden="true" />
+            </button>
+          </div>
+          <div className="decision-memo-markdown">
+            <ReactMarkdown>{decision.creditMemo}</ReactMarkdown>
+          </div>
         </div>
       ) : null}
 
