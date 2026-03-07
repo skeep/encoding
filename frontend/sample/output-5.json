@@ -1,0 +1,1206 @@
+[
+  {
+    "document_type": "auto_loan_application_form",
+    "fields": [
+      {
+        "field_id": "external_referral",
+        "value": "CT CITIMOTORS LAS PINAS CORP.",
+        "confidence_meta": {
+          "ocr": {
+            "confidence": 0.9865999999999999
+          },
+          "field_context": {
+            "confidence": 0.95,
+            "reason": "Dealer named in consent section",
+            "correction": {
+              "was_corrected": false,
+              "action": null,
+              "corrected_value": null,
+              "correction_confidence": null,
+              "source": null,
+              "original_value": null
+            }
+          },
+          "statistical_plausibility": {
+            "confidence": 0.8,
+            "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+            "is_dummy": true
+          },
+          "composite": {
+            "confidence": 0.89698,
+            "method": "weighted_average",
+            "weights": {
+              "ocr": 0.3,
+              "field_context": 0.3,
+              "cross_field_consistency": 0.2,
+              "statistical_plausibility": 0.2
+            }
+          },
+          "cross_field_consistency": {
+            "confidence": 0.78,
+            "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+            "is_dummy": true
+          }
+        }
+      },
+      {
+        "field_id": "make",
+        "value": "MIRAGE",
+        "confidence_meta": {
+          "ocr": {
+            "confidence": 0.995
+          },
+          "field_context": {
+            "confidence": 0.55,
+            "reason": "Model name used; make not shown",
+            "correction": {
+              "was_corrected": false,
+              "action": "none",
+              "corrected_value": null,
+              "correction_confidence": null,
+              "source": "Vehicle make not explicitly labeled",
+              "original_value": null
+            }
+          },
+          "statistical_plausibility": {
+            "confidence": 0.8,
+            "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+            "is_dummy": true
+          },
+          "composite": {
+            "confidence": 0.7795,
+            "method": "weighted_average",
+            "weights": {
+              "ocr": 0.3,
+              "field_context": 0.3,
+              "cross_field_consistency": 0.2,
+              "statistical_plausibility": 0.2
+            }
+          },
+          "cross_field_consistency": {
+            "confidence": 0.78,
+            "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+            "is_dummy": true
+          }
+        }
+      },
+      {
+        "field_id": "model",
+        "value": "MIRAGE G4",
+        "confidence_meta": {
+          "ocr": {
+            "confidence": 0.9895
+          },
+          "field_context": {
+            "confidence": 0.95,
+            "reason": "Matches vehicle description",
+            "correction": {
+              "was_corrected": false,
+              "action": null,
+              "corrected_value": null,
+              "correction_confidence": null,
+              "source": null,
+              "original_value": null
+            }
+          },
+          "statistical_plausibility": {
+            "confidence": 0.8,
+            "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+            "is_dummy": true
+          },
+          "composite": {
+            "confidence": 0.89785,
+            "method": "weighted_average",
+            "weights": {
+              "ocr": 0.3,
+              "field_context": 0.3,
+              "cross_field_consistency": 0.2,
+              "statistical_plausibility": 0.2
+            }
+          },
+          "cross_field_consistency": {
+            "confidence": 0.78,
+            "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+            "is_dummy": true
+          }
+        }
+      },
+      {
+        "field_id": "cash_price",
+        "value": "PHP785,000",
+        "confidence_meta": {
+          "ocr": {
+            "confidence": 0.992
+          },
+          "field_context": {
+            "confidence": 0.97,
+            "reason": "Matches Selling Price field",
+            "correction": {
+              "was_corrected": false,
+              "action": null,
+              "corrected_value": null,
+              "correction_confidence": null,
+              "source": null,
+              "original_value": null
+            }
+          },
+          "statistical_plausibility": {
+            "confidence": 0.8,
+            "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+            "is_dummy": true
+          },
+          "composite": {
+            "confidence": 0.9046,
+            "method": "weighted_average",
+            "weights": {
+              "ocr": 0.3,
+              "field_context": 0.3,
+              "cross_field_consistency": 0.2,
+              "statistical_plausibility": 0.2
+            }
+          },
+          "cross_field_consistency": {
+            "confidence": 0.78,
+            "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+            "is_dummy": true
+          }
+        }
+      },
+      {
+        "field_id": "amount_applied",
+        "value": "PHP 628,000",
+        "confidence_meta": {
+          "ocr": {
+            "confidence": 0.9955
+          },
+          "field_context": {
+            "confidence": 0.97,
+            "reason": "Matches Amount for Financing",
+            "correction": {
+              "was_corrected": false,
+              "action": null,
+              "corrected_value": null,
+              "correction_confidence": null,
+              "source": null,
+              "original_value": null
+            }
+          },
+          "statistical_plausibility": {
+            "confidence": 0.8,
+            "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+            "is_dummy": true
+          },
+          "composite": {
+            "confidence": 0.90565,
+            "method": "weighted_average",
+            "weights": {
+              "ocr": 0.3,
+              "field_context": 0.3,
+              "cross_field_consistency": 0.2,
+              "statistical_plausibility": 0.2
+            }
+          },
+          "cross_field_consistency": {
+            "confidence": 0.78,
+            "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+            "is_dummy": true
+          }
+        }
+      },
+      {
+        "field_id": "down_payment",
+        "value": "0.2",
+        "confidence_meta": {
+          "ocr": {
+            "confidence": 1
+          },
+          "field_context": {
+            "confidence": 0.95,
+            "reason": "Down payment shown as 0.2",
+            "correction": {
+              "was_corrected": false,
+              "action": null,
+              "corrected_value": null,
+              "correction_confidence": null,
+              "source": null,
+              "original_value": null
+            }
+          },
+          "statistical_plausibility": {
+            "confidence": 0.8,
+            "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+            "is_dummy": true
+          },
+          "composite": {
+            "confidence": 0.901,
+            "method": "weighted_average",
+            "weights": {
+              "ocr": 0.3,
+              "field_context": 0.3,
+              "cross_field_consistency": 0.2,
+              "statistical_plausibility": 0.2
+            }
+          },
+          "cross_field_consistency": {
+            "confidence": 0.78,
+            "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+            "is_dummy": true
+          }
+        }
+      },
+      {
+        "field_id": "applied_term",
+        "value": "72",
+        "confidence_meta": {
+          "ocr": {
+            "confidence": 0.997
+          },
+          "field_context": {
+            "confidence": 0.96,
+            "reason": "Matches Terms field",
+            "correction": {
+              "was_corrected": false,
+              "action": null,
+              "corrected_value": null,
+              "correction_confidence": null,
+              "source": null,
+              "original_value": null
+            }
+          },
+          "statistical_plausibility": {
+            "confidence": 0.8,
+            "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+            "is_dummy": true
+          },
+          "composite": {
+            "confidence": 0.9031,
+            "method": "weighted_average",
+            "weights": {
+              "ocr": 0.3,
+              "field_context": 0.3,
+              "cross_field_consistency": 0.2,
+              "statistical_plausibility": 0.2
+            }
+          },
+          "cross_field_consistency": {
+            "confidence": 0.78,
+            "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+            "is_dummy": true
+          }
+        }
+      },
+      {
+        "field_id": "manufactured_year",
+        "value": "2025",
+        "confidence_meta": {
+          "ocr": {
+            "confidence": 0.989
+          },
+          "field_context": {
+            "confidence": 0.95,
+            "reason": "Year included in vehicle line",
+            "correction": {
+              "was_corrected": false,
+              "action": null,
+              "corrected_value": null,
+              "correction_confidence": null,
+              "source": null,
+              "original_value": null
+            }
+          },
+          "statistical_plausibility": {
+            "confidence": 0.8,
+            "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+            "is_dummy": true
+          },
+          "composite": {
+            "confidence": 0.8977,
+            "method": "weighted_average",
+            "weights": {
+              "ocr": 0.3,
+              "field_context": 0.3,
+              "cross_field_consistency": 0.2,
+              "statistical_plausibility": 0.2
+            }
+          },
+          "cross_field_consistency": {
+            "confidence": 0.78,
+            "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+            "is_dummy": true
+          }
+        }
+      }
+    ],
+    "customer_fields": [
+      {
+        "group_id": "applicant_1",
+        "name_split_confidence": 0.9,
+        "fields": [
+          {
+            "field_id": "last_name",
+            "value": "TELLO",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0
+              },
+              "field_context": {
+                "confidence": 0.95,
+                "reason": "Matches name line",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.601,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "first_name",
+            "value": "THAPTEN",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.995
+              },
+              "field_context": {
+                "confidence": 0.95,
+                "reason": "Matches name line",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8995,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "middle_name",
+            "value": "VILLEGAS",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.992
+              },
+              "field_context": {
+                "confidence": 0.95,
+                "reason": "Matches name line",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8986,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "date_of_birth",
+            "value": "10/27/94",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.995
+              },
+              "field_context": {
+                "confidence": 0.9,
+                "reason": "Matches Birth Date field",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8845,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "place_of_birth",
+            "value": null,
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.9969999999999999
+              },
+              "field_context": {
+                "confidence": 0.2,
+                "reason": "Residence address, not birth place",
+                "correction": {
+                  "was_corrected": true,
+                  "action": "remove",
+                  "corrected_value": null,
+                  "correction_confidence": 0.95,
+                  "source": "No Place of Birth field present",
+                  "original_value": "CALANGCANG MAKATO AKLAN"
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.6751,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "gender",
+            "value": "FEMALE",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.994
+              },
+              "field_context": {
+                "confidence": 0.96,
+                "reason": "Female checkbox marked",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.9022,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "marital_status",
+            "value": "SINGLE",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.995
+              },
+              "field_context": {
+                "confidence": 0.96,
+                "reason": "Single checkbox marked",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.9025,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "citizenship",
+            "value": "FILIPINO",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.994
+              },
+              "field_context": {
+                "confidence": 0.96,
+                "reason": "Matches Citizenship field",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.9022,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "no_of_dependent",
+            "value": "0",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.891
+              },
+              "field_context": {
+                "confidence": 0.9,
+                "reason": "Explicit dependents count",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8533,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "employer_name",
+            "value": "OFFICE OF THE SOLICITOR GENERAL",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.9936
+              },
+              "field_context": {
+                "confidence": 0.96,
+                "reason": "Matches employer field",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.90208,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "employer_address",
+            "value": "MAKATI CITY",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.992
+              },
+              "field_context": {
+                "confidence": 0.9,
+                "reason": "Office address shown",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8836,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "nature_of_business",
+            "value": "GOVERNMENT AGENCY",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.994
+              },
+              "field_context": {
+                "confidence": 0.96,
+                "reason": "Matches Nature of Business",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.9022,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "job_title",
+            "value": "ATTORNEY II",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.929
+              },
+              "field_context": {
+                "confidence": 0.95,
+                "reason": "Matches Position field",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8797,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "employment_type",
+            "value": "Salary",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.995
+              },
+              "field_context": {
+                "confidence": 0.95,
+                "reason": "Salary option checked",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8995,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "length_of_service",
+            "value": "25",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.992
+              },
+              "field_context": {
+                "confidence": 0.85,
+                "reason": "Length of stay shown as 25",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8686,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "claimed_income",
+            "value": "80K",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.997
+              },
+              "field_context": {
+                "confidence": 0.95,
+                "reason": "Monthly income value shown",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.9001,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "income_derived",
+            "value": "REMITTANCE",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 1
+              },
+              "field_context": {
+                "confidence": 0.9,
+                "reason": "Income source indicated",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.886,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "address",
+            "value": "CALANGCANG MAKATO AKLAN",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.9969999999999999
+              },
+              "field_context": {
+                "confidence": 0.96,
+                "reason": "Matches residence address",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.9031,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "field_id": "residential_status",
+            "value": "Living with Family",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.9940000000000001
+              },
+              "field_context": {
+                "confidence": 0.96,
+                "reason": "Living with Family checked",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.9022,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          }
+        ],
+        "contact_fields": [
+          {
+            "contact_type": "mobile",
+            "contact_details": "9481234576",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.994
+              },
+              "field_context": {
+                "confidence": 0.95,
+                "reason": "Matches Mobile Number field",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8992,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          },
+          {
+            "contact_type": "email",
+            "contact_details": "ttvtelloibpdl@gmail.com",
+            "confidence_meta": {
+              "ocr": {
+                "confidence": 0.956
+              },
+              "field_context": {
+                "confidence": 0.95,
+                "reason": "Matches Email Address field",
+                "correction": {
+                  "was_corrected": false,
+                  "action": null,
+                  "corrected_value": null,
+                  "correction_confidence": null,
+                  "source": null,
+                  "original_value": null
+                }
+              },
+              "statistical_plausibility": {
+                "confidence": 0.8,
+                "reason": "Dummy placeholder until statistical plausibility scoring is integrated.",
+                "is_dummy": true
+              },
+              "composite": {
+                "confidence": 0.8878,
+                "method": "weighted_average",
+                "weights": {
+                  "ocr": 0.3,
+                  "field_context": 0.3,
+                  "cross_field_consistency": 0.2,
+                  "statistical_plausibility": 0.2
+                }
+              },
+              "cross_field_consistency": {
+                "confidence": 0.78,
+                "reason": "Dummy placeholder until cross-field checks are integrated (e.g., age consistency derived from date_of_birth).",
+                "is_dummy": true
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]
