@@ -215,9 +215,9 @@ export function buildScoringMeta(path: string, value: string, applicationId?: st
     );
   const correction = sampledMeta.field_context?.correction;
   const wasCorrected = correction?.was_corrected ?? false;
-  const weightedFormula = `0.30*ocr(${ocrScore.toFixed(3)}) + 0.30*field_context(${fieldContextScore.toFixed(
+  const weightedFormula = `0.30 x OCR(${ocrScore.toFixed(3)}) + 0.30 x FieldContext(${fieldContextScore.toFixed(
     3
-  )}) + 0.20*cross_field(${crossFieldScore.toFixed(3)}) + 0.20*statistical(${statisticalScore.toFixed(3)})`;
+  )}) + 0.20 x CrossField(${crossFieldScore.toFixed(3)}) + 0.20 x Statistical(${statisticalScore.toFixed(3)})`;
   const fieldContextNarrative = wasCorrected
     ? `Field context model corrected the extracted value using ${correction?.action ?? "replace"} action.`
     : "Field context model accepted the extracted value without correction.";

@@ -107,6 +107,12 @@ export function EncodingWorkbench(props: EncodingWorkbenchProps): JSX.Element {
                       const isMetaOpen = openMetaFieldPath === field.path;
                       const confidenceLabel = `${Math.round(meta.field_score * 100)}%`;
                       const toPercent = (score: number): string => `${Math.round(score * 100)}%`;
+                      const componentTitle = (component: string): string => {
+                        if (component === "ocr") {
+                          return "OCR";
+                        }
+                        return component.replace(/_/g, " ").replace(/^./, (char) => char.toUpperCase());
+                      };
                       return (
                         <div key={field.path} className={`nested-field-row ${fieldChanged ? "field-changed" : ""}`}>
                           <div className="field-row-main">
@@ -136,11 +142,14 @@ export function EncodingWorkbench(props: EncodingWorkbenchProps): JSX.Element {
                           {isMetaOpen ? (
                             <div className="field-meta-popover">
                               <div className="field-meta-narrative">
-                                <p className="field-meta-summary">{meta.explainability.summary}</p>
                                 <div className="field-meta-facts">
                                   <div className="field-meta-fact">
                                     <span className="field-meta-fact-label">Field</span>
                                     <span className="field-meta-fact-value">{meta.field_id}</span>
+                                  </div>
+                                  <div className="field-meta-fact">
+                                    <span className="field-meta-fact-label">Status</span>
+                                    <span className="field-meta-fact-value">{meta.status}</span>
                                   </div>
                                   <div className="field-meta-fact">
                                     <span className="field-meta-fact-label">Raw Value</span>
@@ -152,20 +161,23 @@ export function EncodingWorkbench(props: EncodingWorkbenchProps): JSX.Element {
                                       {meta.normalized_value === null ? "<null>" : String(meta.normalized_value)}
                                     </span>
                                   </div>
-                                  <div className="field-meta-fact">
-                                    <span className="field-meta-fact-label">Status</span>
-                                    <span className="field-meta-fact-value">{meta.status}</span>
-                                  </div>
                                 </div>
 
                                 <div className="field-meta-components">
                                   {meta.explainability.component_narratives.map((item) => (
                                     <div key={item.component} className="field-meta-component-card">
                                       <div className="field-meta-component-header">
-                                        <strong>{item.component.replace(/_/g, " ")}</strong>
+                                        <strong>{componentTitle(item.component)}</strong>
+                                        <button
+                                          type="button"
+                                          className="field-meta-info-icon"
+                                          aria-label={`More info about ${componentTitle(item.component)}`}
+                                          title={item.narrative}
+                                        >
+                                          i
+                                        </button>
                                         <span>{toPercent(item.score)}</span>
                                       </div>
-                                      <p>{item.narrative}</p>
                                       {item.evidence ? <p className="field-meta-evidence">{item.evidence}</p> : null}
                                     </div>
                                   ))}
