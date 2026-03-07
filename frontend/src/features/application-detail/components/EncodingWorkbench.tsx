@@ -103,9 +103,10 @@ export function EncodingWorkbench(props: EncodingWorkbenchProps): JSX.Element {
                       const currentValue = editableValues[field.path] ?? "";
                       const previousValue = baselineValues[field.path] ?? "";
                       const fieldChanged = currentValue !== previousValue;
-                      const meta = buildScoringMeta(field.path, currentValue);
+                      const meta = buildScoringMeta(field.path, currentValue, selectedAppId);
                       const isMetaOpen = openMetaFieldPath === field.path;
                       const confidenceLabel = `${Math.round(meta.field_score * 100)}%`;
+                      const toPercent = (score: number): string => `${Math.round(score * 100)}%`;
                       return (
                         <div key={field.path} className={`nested-field-row ${fieldChanged ? "field-changed" : ""}`}>
                           <div className="field-row-main">
@@ -134,36 +135,45 @@ export function EncodingWorkbench(props: EncodingWorkbenchProps): JSX.Element {
 
                           {isMetaOpen ? (
                             <div className="field-meta-popover">
-                              <div className="field-meta-grid">
-                                <div className="field-meta-label">field_id</div>
-                                <div className="field-meta-value">{meta.field_id}</div>
-
-                                <div className="field-meta-label">raw_value</div>
-                                <div className="field-meta-value">{meta.raw_value || "<empty>"}</div>
-
-                                <div className="field-meta-label">normalized_value</div>
-                                <div className="field-meta-value">
-                                  {meta.normalized_value === null ? "<null>" : String(meta.normalized_value)}
+                              <div className="field-meta-narrative">
+                                <p className="field-meta-summary">{meta.explainability.summary}</p>
+                                <div className="field-meta-facts">
+                                  <div className="field-meta-fact">
+                                    <span className="field-meta-fact-label">Field</span>
+                                    <span className="field-meta-fact-value">{meta.field_id}</span>
+                                  </div>
+                                  <div className="field-meta-fact">
+                                    <span className="field-meta-fact-label">Raw Value</span>
+                                    <span className="field-meta-fact-value">{meta.raw_value || "<empty>"}</span>
+                                  </div>
+                                  <div className="field-meta-fact">
+                                    <span className="field-meta-fact-label">Normalized Value</span>
+                                    <span className="field-meta-fact-value">
+                                      {meta.normalized_value === null ? "<null>" : String(meta.normalized_value)}
+                                    </span>
+                                  </div>
+                                  <div className="field-meta-fact">
+                                    <span className="field-meta-fact-label">Status</span>
+                                    <span className="field-meta-fact-value">{meta.status}</span>
+                                  </div>
                                 </div>
 
-                                <div className="field-meta-label">field_score</div>
-                                <div className="field-meta-value">{meta.field_score}</div>
-
-                                <div className="field-meta-label">status</div>
-                                <div className="field-meta-value">{meta.status}</div>
-
-                                <div className="field-meta-label">component_scores</div>
-                                <div className="field-meta-value">
-                                  ocr={meta.component_scores.ocr}, format={meta.component_scores.format}, statistical=
-                                  {meta.component_scores.statistical}, cross_field={meta.component_scores.cross_field}
+                                <div className="field-meta-components">
+                                  {meta.explainability.component_narratives.map((item) => (
+                                    <div key={item.component} className="field-meta-component-card">
+                                      <div className="field-meta-component-header">
+                                        <strong>{item.component.replace(/_/g, " ")}</strong>
+                                        <span>{toPercent(item.score)}</span>
+                                      </div>
+                                      <p>{item.narrative}</p>
+                                      {item.evidence ? <p className="field-meta-evidence">{item.evidence}</p> : null}
+                                    </div>
+                                  ))}
                                 </div>
 
-                                <div className="field-meta-label">details</div>
-                                <div className="field-meta-value">{meta.details.join(" | ")}</div>
-
-                                <div className="field-meta-label">rule_outputs</div>
-                                <div className="field-meta-value">
-                                  {meta.rule_outputs.map((rule) => rule.rule_name).join(", ")}
+                                <div className="field-meta-composite">
+                                  <p>{meta.explainability.final_narrative}</p>
+                                  <p className="field-meta-formula">Formula: {meta.explainability.weighted_formula}</p>
                                 </div>
                               </div>
                             </div>
