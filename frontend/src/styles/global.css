@@ -492,6 +492,9 @@ input {
   display: grid;
   gap: 10px;
   align-content: start;
+  min-height: 0;
+  height: 100%;
+  grid-template-rows: auto auto 1fr;
 }
 
 .decision-summary-bar {
@@ -540,6 +543,7 @@ input {
   display: grid;
   gap: 10px;
   min-height: 0;
+  grid-template-rows: auto 1fr;
 }
 
 .decision-rule-legend {
@@ -558,19 +562,22 @@ input {
   padding: 4px 10px;
   font-size: 0.78rem;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .decision-rule-table-wrap {
   border: 1px solid var(--border-default);
   border-radius: 10px;
   overflow: auto;
-  max-height: 52vh;
+  min-height: 0;
+  height: 100%;
+  max-height: none;
 }
 
 .decision-rule-table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 920px;
+  min-width: 880px;
   font-size: 0.82rem;
 }
 
@@ -604,6 +611,8 @@ input {
   border: 1px solid var(--border-default);
   background: var(--bg-app);
   color: var(--text-secondary);
+  width: 30px;
+  justify-content: center;
 }
 
 .decision-status-icon {
@@ -616,6 +625,73 @@ input {
   font-size: 0.68rem;
   font-weight: 700;
   border: 1px solid transparent;
+}
+
+.decision-rule-cell-rule {
+  display: grid;
+  gap: 2px;
+}
+
+.decision-rule-cell-rule strong {
+  color: var(--text-primary);
+}
+
+.decision-rule-cell-rule span {
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+.decision-rule-cell-io {
+  display: grid;
+  gap: 4px;
+}
+
+.decision-inline-subtle {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.decision-attachments-inline {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.decision-inline-button {
+  border: 1px solid var(--border-default);
+  background: var(--bg-app);
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 0.74rem;
+  color: var(--brand-red);
+}
+
+.decision-attachments-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 3;
+  width: 290px;
+  max-height: 190px;
+  overflow: auto;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  background: var(--bg-surface);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.14);
+  padding: 8px;
+}
+
+.decision-attachments-popover strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 0.78rem;
+}
+
+.decision-attachments-popover ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 4px;
 }
 
 .decision-status-icon.passed,

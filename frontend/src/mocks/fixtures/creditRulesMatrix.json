@@ -4,17 +4,19 @@
     "sourceRow": 2,
     "ruleName": "Validate and Route Auto Loan Email Applications",
     "description": "Validate and Route Auto Loan Email Applications",
-    "inputValue": "Incoming Email & Attachments",
-    "outputValue": "Success: Trigger Rule Validate Application Readability.",
-    "executionStatus": "NOT_EXECUTED",
+    "inputValue": "email_from=dealer@partner.ph; detected_applications=1; attachments_count=7",
+    "outputValue": "validated_applications=1; route=validate_readability; exception_queue=false",
+    "executionStatus": "SKIPPED",
     "isPrimaryCause": false,
     "inputValues": {
-      "workbook_input": "Incoming Email & Attachments"
+      "email_from": "dealer@partner.ph",
+      "detected_applications": "1",
+      "attachments_count": "7"
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": false,
-    "explanation": "Start Workflow: Start the workflow when a new email is received.",
-    "impact": "Success: Trigger Rule Validate Application Readability."
+    "explanation": "Skipped: Start Workflow: Start the workflow when a new email is received.",
+    "impact": "validated_applications=1; route=validate_readability; exception_queue=false"
   },
   {
     "ruleId": "CR002",
@@ -30,7 +32,7 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": false,
-    "explanation": "Initial Notification: Send a notification to the Sales Officer between 6:00 AM and 10:00 PM (any day, including weekends).",
+    "explanation": "Skipped: Initial Notification: Send a notification to the Sales Officer between 6:00 AM and 10:00 PM (any day, including weekends).",
     "impact": "Workflow Resumption (on response) or Terminal Closure (on deadline)."
   },
   {
@@ -38,34 +40,39 @@
     "sourceRow": 4,
     "ruleName": "Validate Application Readability",
     "description": "Validate Application Readability",
-    "inputValue": "Application Form and requirement attachments.",
-    "outputValue": "Success: Digital text stream for extraction.",
+    "inputValue": "readability_score=0.93; handwritten_pages=0; low_quality_pages=0",
+    "outputValue": "readability_passed=true; extraction_mode=automated",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
-      "workbook_input": "Application Form and requirement attachments."
+      "readability_score": "0.93",
+      "handwritten_pages": "0",
+      "low_quality_pages": "0"
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Assess Readability: Verify if the submitted application is legible and can be accurately parsed by the AI Agent for data extraction. Possible route for Handwritten Applications and Low Quality Attachments",
-    "impact": "Success: Digital text stream for extraction."
+    "explanation": "Passed: Assess Readability: Verify if the submitted application is legible and can be accurately parsed by the AI Agent for data extraction. Possible route for Handwritten Applications and Low Quality Attachments",
+    "impact": "readability_passed=true; extraction_mode=automated"
   },
   {
     "ruleId": "CR004",
     "sourceRow": 5,
     "ruleName": "Verify Duplicate Applications",
     "description": "Verify Duplicate Applications",
-    "inputValue": "Normalized Borrower & Co-borrower Data, Asset Data, Source/Referrer Info",
-    "outputValue": "Terminal Path: Stop Workflow (Duplicate Found).",
+    "inputValue": "window_days=30; borrower_match=100%; collateral_match=100%; coborrower_set_match=true",
+    "outputValue": "duplicate_found=true; decision=stop_workflow",
     "executionStatus": "REJECTED",
     "isPrimaryCause": true,
     "inputValues": {
-      "workbook_input": "Normalized Borrower & Co-borrower Data, Asset Data, Source/Referrer Info"
+      "window_days": "30",
+      "borrower_match": "100%",
+      "collateral_match": "100%",
+      "coborrower_set_match": "true"
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": false,
-    "explanation": "30-Day Window: Analyze the last 30 days of application history for the Primary Borrower.",
-    "impact": "Terminal Path: Stop Workflow (Duplicate Found)."
+    "explanation": "Rejected: 30-Day Window: Analyze the last 30 days of application history for the Primary Borrower.",
+    "impact": "duplicate_found=true; decision=stop_workflow"
   },
   {
     "ruleId": "CR005",
@@ -73,7 +80,7 @@
     "ruleName": "Integrated Identity & Historical Search",
     "description": "Integrated Identity & Historical Search",
     "inputValue": "Extracted Names, Birthdate, & Multiple Name Variations for All Borrowers",
-    "outputValue": "Output: RM Number(s), Comprehensive Relationship Tags, validated Name Variation Metadata, and Historical Memo entries.",
+    "outputValue": "Output: RM Number(s), Comprehensive Relationship Tags, validated Name Variation Metadata, and Historical Memo entries. Will be done on the basis of LOS and current appli\u2026",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -81,8 +88,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Multi-Variation Search: Execute search using Primary and Co-borrower names (including maiden names, aliases, and initials) paired with Birthdates (all variations based on submitted documents).",
-    "impact": "Output: RM Number(s), Comprehensive Relationship Tags, validated Name Variation Metadata, and Historical Memo entries."
+    "explanation": "Passed: Multi-Variation Search: Execute search using Primary and Co-borrower names (including maiden names, aliases, and initials) paired with Birthdates (all variations based on submitted documents).",
+    "impact": "Output: RM Number(s), Comprehensive Relationship Tags, validated Name Variation Metadata, and Historical Memo entries. Will be done on the basis of LOS and current appli\u2026"
   },
   {
     "ruleId": "CR006",
@@ -90,7 +97,7 @@
     "ruleName": "Analyze First Touch Policy & Assignment",
     "description": "Analyze First Touch Policy & Assignment",
     "inputValue": "Current App Data & Formatted History List",
-    "outputValue": "Transfer Path: Notification signals & Human Lane Trigger.",
+    "outputValue": "Transfer Path: Notification signals & Human Lane Trigger. Proceed Path: Proceed to next rule, Extract and Organize Borrower Data | Assignment to current Sales Officer (w\u2026",
     "executionStatus": "SKIPPED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -98,8 +105,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": false,
-    "explanation": "Product Filter: Strictly isolate previous applications where the Apl. Ref. No starts with \"AL\" (Auto Loan). Exclude all non-auto loan records (e.g., Housing or Motorcycle loans) from this analysis.",
-    "impact": "Transfer Path: Notification signals & Human Lane Trigger."
+    "explanation": "Skipped: Product Filter: Strictly isolate previous applications where the Apl. Ref. No starts with \"AL\" (Auto Loan). Exclude all non-auto loan records (e.g., Housing or Motorcycle loans) from this analysis.",
+    "impact": "Transfer Path: Notification signals & Human Lane Trigger. Proceed Path: Proceed to next rule, Extract and Organize Borrower Data | Assignment to current Sales Officer (w\u2026"
   },
   {
     "ruleId": "CR007",
@@ -115,7 +122,7 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Data Aggregation: Fetch and consolidate all data points from the Application Form and supporting attachments.",
+    "explanation": "Passed: Data Aggregation: Fetch and consolidate all data points from the Application Form and supporting attachments.",
     "impact": "Structured Borrower Profile (grouped data objects per borrower)."
   },
   {
@@ -124,7 +131,7 @@
     "ruleName": "Income Arbiter & Normalization: Document-Specific Extraction",
     "description": "Income Arbiter & Normalization: Document-Specific Extraction",
     "inputValue": "All Extracted Income Documents",
-    "outputValue": "Passed and forwarded to downstream processing.",
+    "outputValue": "rule_result=passed; forwarded_to_next_stage=true",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -132,8 +139,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Document-Specific Extraction: For each uploaded income document file extract the following, guidance for aliases of term. please refer to Label Variations per document:",
-    "impact": "Passed and forwarded to downstream processing."
+    "explanation": "Passed: Document-Specific Extraction: For each uploaded income document file extract the following, guidance for aliases of term. please refer to Label Variations per document:",
+    "impact": "rule_result=passed; forwarded_to_next_stage=true"
   },
   {
     "ruleId": "CR009",
@@ -149,7 +156,7 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Initial Currency Check: Identify the source currency. If Currency == PHP, skip all conversion steps.",
+    "explanation": "Passed: Initial Currency Check: Identify the source currency. If Currency == PHP, skip all conversion steps.",
     "impact": "Normalized PHP Income for Encoding and Consistency Checks."
   },
   {
@@ -158,7 +165,7 @@
     "ruleName": "Income Arbiter & Normalization: Confidence & Authenticity Scoring",
     "description": "Income Arbiter & Normalization: Confidence & Authenticity Scoring",
     "inputValue": "All Extracted Income Documents",
-    "outputValue": "Passed and forwarded to downstream processing.",
+    "outputValue": "rule_result=passed; forwarded_to_next_stage=true",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -166,8 +173,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Tailored Forensic Audit: Execute authenticity and logic rules assigned specifically per document type (see rubric below).",
-    "impact": "Passed and forwarded to downstream processing."
+    "explanation": "Passed: Tailored Forensic Audit: Execute authenticity and logic rules assigned specifically per document type (see rubric below).",
+    "impact": "rule_result=passed; forwarded_to_next_stage=true"
   },
   {
     "ruleId": "CR011",
@@ -183,7 +190,7 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "The \"Highest Validated\" & Declaration Protocol",
+    "explanation": "Passed: The \"Highest Validated\" & Declaration Protocol",
     "impact": "Reconciled Income Data Point (Tagged with Source)."
   },
   {
@@ -200,7 +207,7 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Field Mapping: Map the reconciled data (both standard and income-specific) to the designated LOS fields.",
+    "explanation": "Passed: Field Mapping: Map the reconciled data (both standard and income-specific) to the designated LOS fields.",
     "impact": "Normalized Data Set ready for LOS injection."
   },
   {
@@ -217,7 +224,7 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Analyze Attachments: Scan all stored attachments for a valid government-issued ID belonging to the borrower.",
+    "explanation": "Passed: Analyze Attachments: Scan all stored attachments for a valid government-issued ID belonging to the borrower.",
     "impact": "ID Authenticity Status and Specific Fraud Tags for Memo."
   },
   {
@@ -234,7 +241,7 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Field Audit: Analyze the application to ensure all mandatory fields required for LOS Encoding are populated.",
+    "explanation": "Passed: Field Audit: Analyze the application to ensure all mandatory fields required for LOS Encoding are populated.",
     "impact": "Field Status Report (Complete / Missing / Low Confidence)."
   },
   {
@@ -242,34 +249,36 @@
     "sourceRow": 36,
     "ruleName": "Handle Missing Mandatory Fields",
     "description": "Handle Missing Mandatory Fields",
-    "inputValue": "\"Missing\" Exception Trigger and Pre-filled Platform Link.",
-    "outputValue": "Notification to SO/MA for data completion.",
+    "inputValue": "mandatory_fields_missing=2 (TIN, Employer Address)",
+    "outputValue": "decision=human_intervention_required",
     "executionStatus": "FAILED",
     "isPrimaryCause": false,
     "inputValues": {
-      "workbook_input": "\"Missing\" Exception Trigger and Pre-filled Platform Link."
+      "mandatory_fields_missing": "2",
+      "missing_list": "TIN, Employer Address"
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": false,
-    "explanation": "Trigger Exception: Initiate for cases where mandatory data is entirely absent.",
-    "impact": "Notification to SO/MA for data completion."
+    "explanation": "Failed: Trigger Exception: Initiate for cases where mandatory data is entirely absent.",
+    "impact": "decision=human_intervention_required"
   },
   {
     "ruleId": "CR016",
     "sourceRow": 37,
     "ruleName": "Handle Low Confidence Field Extraction",
     "description": "Handle Low Confidence Field Extraction",
-    "inputValue": "\"Low Confidence\" Exception Trigger and Pre-filled Platform Link.",
-    "outputValue": "Notification to COG for manual verification.",
+    "inputValue": "low_confidence_fields=3; min_confidence=0.47",
+    "outputValue": "decision=manual_review_lane",
     "executionStatus": "FAILED",
     "isPrimaryCause": false,
     "inputValues": {
-      "workbook_input": "\"Low Confidence\" Exception Trigger and Pre-filled Platform Link."
+      "low_confidence_fields": "3",
+      "min_confidence": "0.47"
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": false,
-    "explanation": "Trigger Human Lane: Initiate for cases where the AI agent lacks the required confidence score for extracted data.",
-    "impact": "Notification to COG for manual verification."
+    "explanation": "Failed: Trigger Human Lane: Initiate for cases where the AI agent lacks the required confidence score for extracted data.",
+    "impact": "decision=manual_review_lane"
   },
   {
     "ruleId": "CR017",
@@ -277,7 +286,7 @@
     "ruleName": "Evaluate Historical Rejection Reasons",
     "description": "Evaluate Historical Rejection Reasons",
     "inputValue": "Current Application Data & Historical Application Registry",
-    "outputValue": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization.",
+    "outputValue": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization. Proceed Path: Move to the next workflow stage",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -285,8 +294,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Skip Conditions: Skip this rule if the previous search returned \"No previous app\" or if the history contains no \"Rejected/Declined\" records.",
-    "impact": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization."
+    "explanation": "Passed: Skip Conditions: Skip this rule if the previous search returned \"No previous app\" or if the history contains no \"Rejected/Declined\" records.",
+    "impact": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization. Proceed Path: Move to the next workflow stage"
   },
   {
     "ruleId": "CR018",
@@ -294,7 +303,7 @@
     "ruleName": "Evaluate Historical Rejection Reasons - Poor/Slow Payer (with ACA/Foreclosed Account) & Settlement Validation",
     "description": "Evaluate Historical Rejection Reasons - Poor/Slow Payer (with ACA/Foreclosed Account) & Settlement Validation",
     "inputValue": "Current Application Data & Historical Application Registry",
-    "outputValue": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization.",
+    "outputValue": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization. Proceed Path: Move to the next workflow stage",
     "executionStatus": "REJECTED",
     "isPrimaryCause": true,
     "inputValues": {
@@ -302,8 +311,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": false,
-    "explanation": "Skip Conditions: Skip this rule if the previous search returned \"No previous app\" or if the history contains no \"Rejected/Declined\" records.",
-    "impact": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization."
+    "explanation": "Rejected: Skip Conditions: Skip this rule if the previous search returned \"No previous app\" or if the history contains no \"Rejected/Declined\" records.",
+    "impact": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization. Proceed Path: Move to the next workflow stage"
   },
   {
     "ruleId": "CR019",
@@ -311,7 +320,7 @@
     "ruleName": "Evaluate Historical Rejection Reasons -Employer Stability & Match Validation",
     "description": "Evaluate Historical Rejection Reasons -Employer Stability & Match Validation",
     "inputValue": "Current Application Data & Historical Application Registry",
-    "outputValue": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization.",
+    "outputValue": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization. Proceed Path: Move to the next workflow stage",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -319,8 +328,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Skip Conditions: Skip this rule if the previous search returned \"No previous app\" or if the history contains no \"Rejected/Declined\" records.",
-    "impact": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization."
+    "explanation": "Passed: Skip Conditions: Skip this rule if the previous search returned \"No previous app\" or if the history contains no \"Rejected/Declined\" records.",
+    "impact": "Terminal Path: API-initiated Encoding followed by Withdrawal at FDE stage with \"Sales Blacktag\" categorization. Proceed Path: Move to the next workflow stage"
   },
   {
     "ruleId": "CR020",
@@ -328,7 +337,7 @@
     "ruleName": "Evaluate repayment via tiered GMIR standards and mitigation.",
     "description": "Evaluate repayment via tiered GMIR standards and mitigation.",
     "inputValue": "Combined Monthly Income; Vehicle Cash Price; Applied Downpayment (DP); Applied Term; Borrower Age; Add-on Rate.",
-    "outputValue": "Success: Final GMIR status, Adjusted Term, and Adjusted DP passed to LOS.",
+    "outputValue": "Success: Final GMIR status, Adjusted Term, and Adjusted DP passed to LOS. Note adjustments in Application Memo (e.g., \"Acceptable via 30% DP increase\"). Drop-off: Reject\u2026",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -336,8 +345,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Eligibility Gate: If any borrower is Self-Employed, skip this rule. If Combined Monthly Income is < \u20b130,000, the account is REJECTED (Auto-decline by LOS) and skips GMIR analysis. If \u2265 \u20b130,000, proceed.",
-    "impact": "Success: Final GMIR status, Adjusted Term, and Adjusted DP passed to LOS."
+    "explanation": "Passed: Eligibility Gate: If any borrower is Self-Employed, skip this rule. If Combined Monthly Income is < \u20b130,000, the account is REJECTED (Auto-decline by LOS) and skips GMIR analysis. If \u2265 \u20b130,000, proceed.",
+    "impact": "Success: Final GMIR status, Adjusted Term, and Adjusted DP passed to LOS. Note adjustments in Application Memo (e.g., \"Acceptable via 30% DP increase\"). Drop-off: Reject\u2026"
   },
   {
     "ruleId": "CR021",
@@ -345,7 +354,7 @@
     "ruleName": "Watchtower (Fraud & Misrepresentation) Screening",
     "description": "Watchtower (Fraud & Misrepresentation) Screening",
     "inputValue": "Declared Employer/Business, Residence Address, Applicant Name",
-    "outputValue": "Fraud Result: Withdrawal Tag (Sales Blacktag).",
+    "outputValue": "Fraud Result: Withdrawal Tag (Sales Blacktag). Non-Fraud Result: Risk Flag or Clean Pass + Continued Workflow.",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -353,8 +362,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Employer/Business Check: Cross-reference the declared employer or business name against the Identified Fraud Employers List.",
-    "impact": "Fraud Result: Withdrawal Tag (Sales Blacktag)."
+    "explanation": "Passed: Employer/Business Check: Cross-reference the declared employer or business name against the Identified Fraud Employers List.",
+    "impact": "Fraud Result: Withdrawal Tag (Sales Blacktag). Non-Fraud Result: Risk Flag or Clean Pass + Continued Workflow."
   },
   {
     "ruleId": "CR022",
@@ -362,7 +371,7 @@
     "ruleName": "Business & Employer Legitimacy Check Highlighted for potential Human Lane",
     "description": "Business & Employer Legitimacy Check Highlighted for potential Human Lane",
     "inputValue": "Business/Employer Name, Declared Address, Contact Number, Website",
-    "outputValue": "NTB Result: Withdrawal Tag (Sales Blacktag).",
+    "outputValue": "NTB Result: Withdrawal Tag (Sales Blacktag).ETB Result: Risk Flag + Continued Workflow.",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -370,8 +379,8 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Registration Status Check: Verify registration via official sites (SEC/DTI for PH; OpenCorporates or government registries for abroad).",
-    "impact": "NTB Result: Withdrawal Tag (Sales Blacktag)."
+    "explanation": "Passed: Registration Status Check: Verify registration via official sites (SEC/DTI for PH; OpenCorporates or government registries for abroad).",
+    "impact": "NTB Result: Withdrawal Tag (Sales Blacktag).ETB Result: Risk Flag + Continued Workflow."
   },
   {
     "ruleId": "CR023",
@@ -387,7 +396,7 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Scope & Logic Entry",
+    "explanation": "Passed: Scope & Logic Entry",
     "impact": "Signal: \"Withdrawal Tag\" (NTB Hit) OR \"Proceed Tag\" (Skip/ETB Hit/No Match) with Memo Logs."
   },
   {
@@ -396,7 +405,7 @@
     "ruleName": "Historical Data Consistency Check",
     "description": "Historical Data Consistency Check",
     "inputValue": "Full Historical Registry (from Rule 5), Relationship Tag",
-    "outputValue": "NTB Critical Risk: Withdrawal Tag (Sales Blacktag).",
+    "outputValue": "NTB Critical Risk: Withdrawal Tag (Sales Blacktag). ETB/Non-Critical: Risk Flag + Continued Workflow.",
     "executionStatus": "PASSED",
     "isPrimaryCause": false,
     "inputValues": {
@@ -404,24 +413,25 @@
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
     "passed": true,
-    "explanation": "Baseline Retrieval: Identify the latest application record in the 12-month historical registry (regardless of status).",
-    "impact": "NTB Critical Risk: Withdrawal Tag (Sales Blacktag)."
+    "explanation": "Passed: Baseline Retrieval: Identify the latest application record in the 12-month historical registry (regardless of status).",
+    "impact": "NTB Critical Risk: Withdrawal Tag (Sales Blacktag). ETB/Non-Critical: Risk Flag + Continued Workflow."
   },
   {
     "ruleId": "CR025",
     "sourceRow": 46,
     "ruleName": "API Encoding Orchestration",
     "description": "API Encoding Orchestration",
-    "inputValue": "Normalized Data, RM Number, PAA/PPA Tags, Name Variation Metadata, and Routing Signal",
-    "outputValue": "Terminal Path: LOS Record Created + Withdrawn.",
-    "executionStatus": "PASSED",
+    "inputValue": "orchestration_payload_ready=true; api_endpoint=/encoding/submit",
+    "outputValue": "execution=pending_connector_activation",
+    "executionStatus": "NOT_EXECUTED",
     "isPrimaryCause": false,
     "inputValues": {
-      "workbook_input": "Normalized Data, RM Number, PAA/PPA Tags, Name Variation Metadata, and Routing Signal"
+      "orchestration_payload_ready": "true",
+      "api_endpoint": "/encoding/submit"
     },
     "conditionEvaluated": "Goal checklist entry mapped from credit rules workbook",
-    "passed": true,
-    "explanation": "API Initialization: Trigger LOS API using RM Number (Existing) or OCR Data (New).",
-    "impact": "Terminal Path: LOS Record Created + Withdrawn."
+    "passed": false,
+    "explanation": "Not executed: API Initialization: Trigger LOS API using RM Number (Existing) or OCR Data (New).",
+    "impact": "execution=pending_connector_activation"
   }
 ]

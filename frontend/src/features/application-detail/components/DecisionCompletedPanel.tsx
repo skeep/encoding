@@ -64,6 +64,7 @@ function outputText(rule: DecisionView["rules"][number]): string {
 export function DecisionCompletedPanel(props: { detail: ApplicationDetail; decision: DecisionView }): JSX.Element {
   const { detail, decision } = props;
   const [activeTab, setActiveTab] = useState<DecisionTab>("RULE_MATRIX");
+  const [openAttachmentRuleId, setOpenAttachmentRuleId] = useState<string | null>(null);
 
   const approvalBucket = useMemo(() => {
     if (decision.summary.finalDecision === "REJECT") {
@@ -122,8 +123,7 @@ export function DecisionCompletedPanel(props: { detail: ApplicationDetail; decis
               <thead>
                 <tr>
                   <th>Status</th>
-                  <th>Rule ID</th>
-                  <th>Rule Name</th>
+                  <th>Rule</th>
                   <th>Input Value</th>
                   <th>Output Value</th>
                   <th>Explanation</th>
@@ -139,12 +139,47 @@ export function DecisionCompletedPanel(props: { detail: ApplicationDetail; decis
                           <span className={`decision-status-icon ${status.toLowerCase()}`} aria-hidden="true">
                             {getStatusIcon(status)}
                           </span>
-                          {getStatusLabel(status)}
                         </span>
                       </td>
-                      <td>{rule.ruleId}</td>
-                      <td>{rule.ruleName ?? rule.description}</td>
-                      <td>{inputText(rule)}</td>
+                      <td>
+                        <div className="decision-rule-cell-rule">
+                          <strong>{rule.ruleId}</strong>
+                          <span>{rule.ruleName ?? rule.description}</span>
+                        </div>
+                      </td>
+                      <td>
+                        <div className="decision-rule-cell-io">
+                          <span>{inputText(rule)}</span>
+                          {rule.inputValues.attachments_count ? (
+                            <div className="decision-attachments-inline">
+                              <button
+                                type="button"
+                                className="decision-inline-button"
+                                onClick={() =>
+                                  setOpenAttachmentRuleId((prev) => (prev === rule.ruleId ? null : rule.ruleId))
+                                }
+                              >
+                                attachments={detail.attachments.length}
+                              </button>
+                              {openAttachmentRuleId === rule.ruleId ? (
+                                <div className="decision-attachments-popover">
+                                  <strong>Attachments</strong>
+                                  <ul>
+                                    {detail.attachments.map((attachment) => (
+                                      <li key={attachment.name}>
+                                        {attachment.name} ({attachment.sizeKb} KB)
+                                      </li>
+                                    ))}
+                                  </ul>
+                                </div>
+                              ) : null}
+                            </div>
+                          ) : null}
+                          {rule.inputValues.email_from ? (
+                            <span className="decision-inline-subtle">email_from={detail.emailFrom}</span>
+                          ) : null}
+                        </div>
+                      </td>
                       <td>{outputText(rule)}</td>
                       <td>
                         {rule.explanation}
