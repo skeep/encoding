@@ -5,20 +5,28 @@
     "applicantName": "Carla Dela Cruz",
     "receivedAt": "2026-02-26T06:55:00Z",
     "updatedAt": "2026-02-26T08:22:00Z",
-    "emailSubject": "Car loan request with supporting income files",
+    "emailSubject": "Encoding package for Carla Dela Cruz",
     "emailFrom": "submissions@mitsubishi-makati.ph",
     "attachments": [
-      { "name": "dealership_request.pdf", "mimeType": "application/pdf", "sizeKb": 520 },
-      { "name": "borrower_id_front.jpg", "mimeType": "image/jpeg", "sizeKb": 380 },
       {
-        "name": "income_statement_q1.xlsx",
+        "name": "app-2026-0004_application.pdf",
+        "mimeType": "application/pdf",
+        "sizeKb": 520
+      },
+      {
+        "name": "app-2026-0004_id_scan.jpg",
+        "mimeType": "image/jpeg",
+        "sizeKb": 380
+      },
+      {
+        "name": "app-2026-0004_income_sheet.xlsx",
         "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "sizeKb": 860
       }
     ],
     "metadata": {
       "channel": "EMAIL",
-      "branchCode": "BLR-01",
+      "branchCode": "ENC-SAMPLES",
       "assignedQueue": "Encoding Completed"
     }
   },
@@ -36,8 +44,16 @@
         "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "sizeKb": 440
       },
-      { "name": "gov_id_scan.png", "mimeType": "image/png", "sizeKb": 220 },
-      { "name": "dealer_quote.pdf", "mimeType": "application/pdf", "sizeKb": 512 }
+      {
+        "name": "gov_id_scan.png",
+        "mimeType": "image/png",
+        "sizeKb": 220
+      },
+      {
+        "name": "dealer_quote.pdf",
+        "mimeType": "application/pdf",
+        "sizeKb": 512
+      }
     ],
     "metadata": {
       "channel": "EMAIL",
@@ -64,12 +80,140 @@
         "mimeType": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
         "sizeKb": 640
       },
-      { "name": "signed_consent.pdf", "mimeType": "application/pdf", "sizeKb": 225 }
+      {
+        "name": "signed_consent.pdf",
+        "mimeType": "application/pdf",
+        "sizeKb": 225
+      }
     ],
     "metadata": {
       "channel": "EMAIL",
       "branchCode": "DEL-02",
       "assignedQueue": "Decision Completed"
+    }
+  },
+  {
+    "applicationId": "APP-2026-0012",
+    "status": "ENCODING_COMPLETED",
+    "applicantName": "Maricel Ong",
+    "receivedAt": "2026-02-26T06:48:00Z",
+    "updatedAt": "2026-02-26T08:31:00Z",
+    "emailSubject": "Encoding package for Maricel Ong",
+    "emailFrom": "creditdesk@chery-ortigas.ph",
+    "attachments": [
+      {
+        "name": "app-2026-0012_application.pdf",
+        "mimeType": "application/pdf",
+        "sizeKb": 520
+      },
+      {
+        "name": "app-2026-0012_id_scan.jpg",
+        "mimeType": "image/jpeg",
+        "sizeKb": 380
+      },
+      {
+        "name": "app-2026-0012_income_sheet.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sizeKb": 860
+      }
+    ],
+    "metadata": {
+      "channel": "EMAIL",
+      "branchCode": "ENC-SAMPLES",
+      "assignedQueue": "Encoding Completed"
+    }
+  },
+  {
+    "applicationId": "APP-2026-0013",
+    "status": "ENCODING_COMPLETED",
+    "applicantName": "Rafael Villanueva",
+    "receivedAt": "2026-02-26T06:42:00Z",
+    "updatedAt": "2026-02-26T08:22:00Z",
+    "emailSubject": "Encoding package for Rafael Villanueva",
+    "emailFrom": "encoding@honda-makati.ph",
+    "attachments": [
+      {
+        "name": "app-2026-0013_application.pdf",
+        "mimeType": "application/pdf",
+        "sizeKb": 520
+      },
+      {
+        "name": "app-2026-0013_id_scan.jpg",
+        "mimeType": "image/jpeg",
+        "sizeKb": 380
+      },
+      {
+        "name": "app-2026-0013_income_sheet.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sizeKb": 860
+      }
+    ],
+    "metadata": {
+      "channel": "EMAIL",
+      "branchCode": "ENC-SAMPLES",
+      "assignedQueue": "Encoding Completed"
+    }
+  },
+  {
+    "applicationId": "APP-2026-0014",
+    "status": "ENCODING_COMPLETED",
+    "applicantName": "Patricia Ramos",
+    "receivedAt": "2026-02-26T06:43:00Z",
+    "updatedAt": "2026-02-26T08:23:00Z",
+    "emailSubject": "Encoding package for Patricia Ramos",
+    "emailFrom": "ops@toyota-quezonave.ph",
+    "attachments": [
+      {
+        "name": "app-2026-0014_application.pdf",
+        "mimeType": "application/pdf",
+        "sizeKb": 520
+      },
+      {
+        "name": "app-2026-0014_id_scan.jpg",
+        "mimeType": "image/jpeg",
+        "sizeKb": 380
+      },
+      {
+        "name": "app-2026-0014_income_sheet.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sizeKb": 860
+      }
+    ],
+    "metadata": {
+      "channel": "EMAIL",
+      "branchCode": "ENC-SAMPLES",
+      "assignedQueue": "Encoding Completed"
+    }
+  },
+  {
+    "applicationId": "APP-2026-0015",
+    "status": "ENCODING_COMPLETED",
+    "applicantName": "Nico Alonzo",
+    "receivedAt": "2026-02-26T06:44:00Z",
+    "updatedAt": "2026-02-26T08:24:00Z",
+    "emailSubject": "Encoding package for Nico Alonzo",
+    "emailFrom": "workflow@mitsubishi-pasig.ph",
+    "attachments": [
+      {
+        "name": "app-2026-0015_application.pdf",
+        "mimeType": "application/pdf",
+        "sizeKb": 520
+      },
+      {
+        "name": "app-2026-0015_id_scan.jpg",
+        "mimeType": "image/jpeg",
+        "sizeKb": 380
+      },
+      {
+        "name": "app-2026-0015_income_sheet.xlsx",
+        "mimeType": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "sizeKb": 860
+      }
+    ],
+    "metadata": {
+      "channel": "EMAIL",
+      "branchCode": "ENC-SAMPLES",
+      "assignedQueue": "Encoding Completed"
     }
   }
 ]

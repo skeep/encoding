@@ -1,6 +1,22 @@
 [
-  { "status": "INTAKE_IN_PROGRESS", "count": 7, "stale": false },
-  { "status": "ENCODING_COMPLETED", "count": 2, "stale": false },
-  { "status": "DECISION_RUNNING", "count": 2, "stale": true },
-  { "status": "DECISION_COMPLETED", "count": 1, "stale": false }
+  {
+    "status": "INTAKE_IN_PROGRESS",
+    "count": 7,
+    "stale": false
+  },
+  {
+    "status": "ENCODING_COMPLETED",
+    "count": 5,
+    "stale": false
+  },
+  {
+    "status": "DECISION_RUNNING",
+    "count": 2,
+    "stale": true
+  },
+  {
+    "status": "DECISION_COMPLETED",
+    "count": 1,
+    "stale": false
+  }
 ]

@@ -2,77 +2,1565 @@
   {
     "applicationId": "APP-2026-0004",
     "documentPreview": [
-      { "name": "salary_slip_jan.pdf", "pages": 2, "type": "Salary Slip" },
-      { "name": "bank_statement_q4.pdf", "pages": 12, "type": "Bank Statement" }
+      {
+        "name": "output.json",
+        "pages": 1,
+        "type": "Encoding Output Sample"
+      },
+      {
+        "name": "supporting-doc.json",
+        "pages": 2,
+        "type": "Loan Attachment"
+      }
     ],
     "fields": [
       {
-        "fieldName": "claimed_income",
-        "extractedValue": "98000",
-        "confidence": 0.94,
+        "fieldName": "external_referral",
+        "extractedValue": "Toyota Alabang Inc.",
+        "confidence": 0.8956,
         "sourceTrace": {
-          "documentName": "salary_slip_jan.pdf",
+          "documentName": "output.json",
           "page": 1,
-          "location": "x=312,y=418,w=140,h=28"
+          "location": "sample::derived"
         },
-        "originalOcrValue": "98,000.00",
+        "originalOcrValue": "Toyota Alabang Inc.",
         "transformationLog": [
           {
-            "step": "trim",
-            "input": " 98,000.00 ",
-            "output": "98,000.00",
-            "rationale": "Leading/trailing spaces removed"
-          },
-          {
-            "step": "remove_commas",
-            "input": "98,000.00",
-            "output": "98000.00",
-            "rationale": "Numeric normalization"
-          },
-          {
-            "step": "cast_to_number",
-            "input": "98000.00",
-            "output": "98000",
-            "rationale": "Canonical integer income value"
+            "step": "sample_mapping",
+            "input": "Toyota Alabang Inc.",
+            "output": "Toyota Alabang Inc.",
+            "rationale": "Derived from frontend sample output fixture"
           }
-        ],
-        "triangulation": {
-          "selectedValue": "98000",
-          "selectionReason": "Highest confidence and consistent with bank credits",
-          "candidates": [
-            {
-              "source": "salary_slip_jan.pdf",
-              "value": "98000",
-              "confidence": 0.94,
-              "selected": true,
-              "reason": "Primary employer-issued document"
-            },
-            {
-              "source": "bank_statement_q4.pdf",
-              "value": "97500",
-              "confidence": 0.88,
-              "selected": false,
-              "reason": "Average monthly credit slightly lower"
-            }
-          ]
-        }
+        ]
       },
       {
-        "fieldName": "employer_name",
-        "extractedValue": "BluePeak Technologies",
-        "confidence": 0.91,
+        "fieldName": "make",
+        "extractedValue": "Toyota",
+        "confidence": 0.9076,
         "sourceTrace": {
-          "documentName": "salary_slip_jan.pdf",
+          "documentName": "output.json",
           "page": 1,
-          "location": "x=92,y=132,w=268,h=24"
+          "location": "sample::derived"
         },
-        "originalOcrValue": "BluePeak Technologies",
+        "originalOcrValue": "Toyota",
         "transformationLog": [
           {
-            "step": "trim",
-            "input": "BluePeak Technologies",
-            "output": "BluePeak Technologies",
-            "rationale": "No formatting adjustments required"
+            "step": "sample_mapping",
+            "input": "Toyota",
+            "output": "Toyota",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "model",
+        "extractedValue": "GR Supra 3.0L M/T",
+        "confidence": 0.90775,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "GR Supra 3.0L M/T",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "GR Supra 3.0L M/T",
+            "output": "GR Supra 3.0L M/T",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "cash_price",
+        "extractedValue": "PHP 5,652,000",
+        "confidence": 0.9061,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "PHP 5,652,000",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "PHP 5,652,000",
+            "output": "PHP 5,652,000",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "down_payment",
+        "extractedValue": "0.4",
+        "confidence": 0.901,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "0.4",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "0.4",
+            "output": "0.4",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "amount_applied",
+        "extractedValue": "2991200",
+        "confidence": 0.901,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "2991200",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "2991200",
+            "output": "2991200",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "applied_term",
+        "extractedValue": "60",
+        "confidence": 0.8998,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "60",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "60",
+            "output": "60",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "referring_agent",
+        "extractedValue": "JANINE SALONGA",
+        "confidence": 0.89995,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "JANINE SALONGA",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "JANINE SALONGA",
+            "output": "JANINE SALONGA",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "last_name",
+        "extractedValue": "de la joya",
+        "confidence": 0.7854,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "de la joya",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "de la joya",
+            "output": "de la joya",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "first_name",
+        "extractedValue": "john maximus astra",
+        "confidence": 0.7849,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "john maximus astra",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "john maximus astra",
+            "output": "john maximus astra",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "middle_name",
+        "extractedValue": "del mundo-cruz",
+        "confidence": 0.72025,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "del mundo-cruz",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "del mundo-cruz",
+            "output": "del mundo-cruz",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "suffix",
+        "extractedValue": "Jr.",
+        "confidence": 0.8992,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Jr.",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Jr.",
+            "output": "Jr.",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "date_of_birth",
+        "extractedValue": "06/13/1998",
+        "confidence": 0.9082,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "06/13/1998",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "06/13/1998",
+            "output": "06/13/1998",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "marital_status",
+        "extractedValue": "Single",
+        "confidence": 0.9094,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Single",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Single",
+            "output": "Single",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "citizenship",
+        "extractedValue": "Filipino",
+        "confidence": 0.9085,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Filipino",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Filipino",
+            "output": "Filipino",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "mothers_maiden_name",
+        "extractedValue": "JOSEPHINE/del mundo",
+        "confidence": 0.7348,
+        "sourceTrace": {
+          "documentName": "output.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "JOSEPHINE/del mundo",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "JOSEPHINE/del mundo",
+            "output": "JOSEPHINE/del mundo",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "applicationId": "APP-2026-0012",
+    "documentPreview": [
+      {
+        "name": "output-2.json",
+        "pages": 1,
+        "type": "Encoding Output Sample"
+      },
+      {
+        "name": "supporting-doc-2.json",
+        "pages": 2,
+        "type": "Loan Attachment"
+      }
+    ],
+    "fields": [
+      {
+        "fieldName": "external_referral",
+        "extractedValue": "Toyota Alabang Inc.",
+        "confidence": 0.8957,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Toyota Alabang Inc.",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Toyota Alabang Inc.",
+            "output": "Toyota Alabang Inc.",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "referring_agent",
+        "extractedValue": "DENISE ABALONA",
+        "confidence": 0.9025,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "DENISE ABALONA",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "DENISE ABALONA",
+            "output": "DENISE ABALONA",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "make",
+        "extractedValue": "Toyota",
+        "confidence": 0.7486,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Toyota",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Toyota",
+            "output": "Toyota",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "model",
+        "extractedValue": "86 White Pearl",
+        "confidence": 0.8991,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "86 White Pearl",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "86 White Pearl",
+            "output": "86 White Pearl",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "applied_term",
+        "extractedValue": "36",
+        "confidence": 0.8995,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "36",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "36",
+            "output": "36",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "last_name",
+        "extractedValue": "AVUEZ",
+        "confidence": 0.601,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "AVUEZ",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "AVUEZ",
+            "output": "AVUEZ",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "first_name",
+        "extractedValue": "CRISTINA",
+        "confidence": 0.8995,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "CRISTINA",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "CRISTINA",
+            "output": "CRISTINA",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "middle_name",
+        "extractedValue": "GO",
+        "confidence": 0.9007,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "GO",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "GO",
+            "output": "GO",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "date_of_birth",
+        "extractedValue": "03/16/1980",
+        "confidence": 0.9025,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "03/16/1980",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "03/16/1980",
+            "output": "03/16/1980",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "marital_status",
+        "extractedValue": "MARRIED",
+        "confidence": 0.9025,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "MARRIED",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "MARRIED",
+            "output": "MARRIED",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "citizenship",
+        "extractedValue": "FILIPINO",
+        "confidence": 0.9025,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "FILIPINO",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "FILIPINO",
+            "output": "FILIPINO",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "mothers_maiden_name",
+        "extractedValue": "BEA/CONSOLACION",
+        "confidence": 0.8995,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "BEA/CONSOLACION",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "BEA/CONSOLACION",
+            "output": "BEA/CONSOLACION",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "place_of_birth",
+        "extractedValue": "QUEZON CITY",
+        "confidence": 0.8992,
+        "sourceTrace": {
+          "documentName": "output-2.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "QUEZON CITY",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "QUEZON CITY",
+            "output": "QUEZON CITY",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "applicationId": "APP-2026-0013",
+    "documentPreview": [
+      {
+        "name": "output-3.json",
+        "pages": 1,
+        "type": "Encoding Output Sample"
+      },
+      {
+        "name": "supporting-doc-3.json",
+        "pages": 2,
+        "type": "Loan Attachment"
+      }
+    ],
+    "fields": [
+      {
+        "fieldName": "external_referral",
+        "extractedValue": "GRANDCARS INC. / GRANDCANYON MULTIHOLDINGS INC./ BRITANNICA UNITED MOTORS INC",
+        "confidence": 0.89392,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "GRANDCARS INC. / GRANDCANYON MULTIHOLDINGS INC./ BRITANNICA UNITED MOTORS INC",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "GRANDCARS INC. / GRANDCANYON MULTIHOLDINGS INC./ BRITANNICA UNITED MOTORS INC",
+            "output": "GRANDCARS INC. / GRANDCANYON MULTIHOLDINGS INC./ BRITANNICA UNITED MOTORS INC",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "referring_agent",
+        "extractedValue": "CHRIS GARCIA",
+        "confidence": 0.91195,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "CHRIS GARCIA",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "CHRIS GARCIA",
+            "output": "CHRIS GARCIA",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "make",
+        "extractedValue": "MITSUBISHI",
+        "confidence": 0.9085,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "MITSUBISHI",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "MITSUBISHI",
+            "output": "MITSUBISHI",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "model",
+        "extractedValue": "MITSUBISHI MIRAGE HB GLX 1.2G MT",
+        "confidence": 0.90555,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "MITSUBISHI MIRAGE HB GLX 1.2G MT",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "MITSUBISHI MIRAGE HB GLX 1.2G MT",
+            "output": "MITSUBISHI MIRAGE HB GLX 1.2G MT",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "manufactured_year",
+        "extractedValue": "2025",
+        "confidence": 0.9067,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "2025",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "2025",
+            "output": "2025",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "cash_price",
+        "extractedValue": "711000",
+        "confidence": 0.913,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "711000",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "711000",
+            "output": "711000",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "down_payment",
+        "extractedValue": "0.35",
+        "confidence": 0.901,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "0.35",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "0.35",
+            "output": "0.35",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "applied_term",
+        "extractedValue": "60 MONTHS",
+        "confidence": 0.91195,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "60 MONTHS",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "60 MONTHS",
+            "output": "60 MONTHS",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "last_name",
+        "extractedValue": "Dela Cruz",
+        "confidence": 0.74935,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Dela Cruz",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Dela Cruz",
+            "output": "Dela Cruz",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "first_name",
+        "extractedValue": "Juana Maria",
+        "confidence": 0.9091,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Juana Maria",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Juana Maria",
+            "output": "Juana Maria",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "middle_name",
+        "extractedValue": "Villa Nueva",
+        "confidence": 0.90865,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Villa Nueva",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Villa Nueva",
+            "output": "Villa Nueva",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "date_of_birth",
+        "extractedValue": "3/26/1982",
+        "confidence": 0.9115,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "3/26/1982",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "3/26/1982",
+            "output": "3/26/1982",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "place_of_birth",
+        "extractedValue": "San Pascual, Batangas",
+        "confidence": 0.9119,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "San Pascual, Batangas",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "San Pascual, Batangas",
+            "output": "San Pascual, Batangas",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "gender",
+        "extractedValue": "F",
+        "confidence": 0.9115,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "F",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "F",
+            "output": "F",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "marital_status",
+        "extractedValue": "MARRIED",
+        "confidence": 0.9115,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "MARRIED",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "MARRIED",
+            "output": "MARRIED",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "no_of_dependent",
+        "extractedValue": "0",
+        "confidence": 0.8524,
+        "sourceTrace": {
+          "documentName": "output-3.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "0",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "0",
+            "output": "0",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "applicationId": "APP-2026-0014",
+    "documentPreview": [
+      {
+        "name": "output-4.json",
+        "pages": 1,
+        "type": "Encoding Output Sample"
+      },
+      {
+        "name": "supporting-doc-4.json",
+        "pages": 2,
+        "type": "Loan Attachment"
+      }
+    ],
+    "fields": [
+      {
+        "fieldName": "external_referral",
+        "extractedValue": "TOYOTA BALINTAWAK",
+        "confidence": 0.8158,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "TOYOTA BALINTAWAK",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "TOYOTA BALINTAWAK",
+            "output": "TOYOTA BALINTAWAK",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "referring_agent",
+        "extractedValue": "LUCHIE ALBA",
+        "confidence": 0.907,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "LUCHIE ALBA",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "LUCHIE ALBA",
+            "output": "LUCHIE ALBA",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "make",
+        "extractedValue": "Toyota",
+        "confidence": 0.718,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Toyota",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Toyota",
+            "output": "Toyota",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "model",
+        "extractedValue": "Fortuner",
+        "confidence": 0.7846,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Fortuner",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Fortuner",
+            "output": "Fortuner",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "cash_price",
+        "extractedValue": "1378000",
+        "confidence": 0.91,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "1378000",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "1378000",
+            "output": "1378000",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "down_payment",
+        "extractedValue": "0.3",
+        "confidence": 0.91,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "0.3",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "0.3",
+            "output": "0.3",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "amount_applied",
+        "extractedValue": "413400",
+        "confidence": 0.91,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "413400",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "413400",
+            "output": "413400",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "applied_term",
+        "extractedValue": "",
+        "confidence": 0.69055,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "",
+            "output": "",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "manufactured_year",
+        "extractedValue": "2025",
+        "confidence": 0.898,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "2025",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "2025",
+            "output": "2025",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "last_name",
+        "extractedValue": "Dela Cruz",
+        "confidence": 0.9064,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Dela Cruz",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Dela Cruz",
+            "output": "Dela Cruz",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "first_name",
+        "extractedValue": "Juana",
+        "confidence": 0.9088,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Juana",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Juana",
+            "output": "Juana",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "middle_name",
+        "extractedValue": "Martinez",
+        "confidence": 0.9079,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Martinez",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Martinez",
+            "output": "Martinez",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "date_of_birth",
+        "extractedValue": "11/15/1995",
+        "confidence": 0.9082,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "11/15/1995",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "11/15/1995",
+            "output": "11/15/1995",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "citizenship",
+        "extractedValue": "Filipino",
+        "confidence": 0.9088,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Filipino",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Filipino",
+            "output": "Filipino",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "address",
+        "extractedValue": "Greater Lagro Quezon City 1118",
+        "confidence": 0.89902,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Greater Lagro Quezon City 1118",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Greater Lagro Quezon City 1118",
+            "output": "Greater Lagro Quezon City 1118",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "residential_status",
+        "extractedValue": "Rented",
+        "confidence": 0.9085,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "Rented",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "Rented",
+            "output": "Rented",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "years_at_address",
+        "extractedValue": "35 years",
+        "confidence": 0.89965,
+        "sourceTrace": {
+          "documentName": "output-4.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "35 years",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "35 years",
+            "output": "35 years",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "applicationId": "APP-2026-0015",
+    "documentPreview": [
+      {
+        "name": "output-5.json",
+        "pages": 1,
+        "type": "Encoding Output Sample"
+      },
+      {
+        "name": "supporting-doc-5.json",
+        "pages": 2,
+        "type": "Loan Attachment"
+      }
+    ],
+    "fields": [
+      {
+        "fieldName": "external_referral",
+        "extractedValue": "CT CITIMOTORS LAS PINAS CORP.",
+        "confidence": 0.89698,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "CT CITIMOTORS LAS PINAS CORP.",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "CT CITIMOTORS LAS PINAS CORP.",
+            "output": "CT CITIMOTORS LAS PINAS CORP.",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "make",
+        "extractedValue": "MIRAGE",
+        "confidence": 0.7795,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "MIRAGE",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "MIRAGE",
+            "output": "MIRAGE",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "model",
+        "extractedValue": "MIRAGE G4",
+        "confidence": 0.89785,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "MIRAGE G4",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "MIRAGE G4",
+            "output": "MIRAGE G4",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "cash_price",
+        "extractedValue": "PHP785,000",
+        "confidence": 0.9046,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "PHP785,000",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "PHP785,000",
+            "output": "PHP785,000",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "amount_applied",
+        "extractedValue": "PHP 628,000",
+        "confidence": 0.90565,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "PHP 628,000",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "PHP 628,000",
+            "output": "PHP 628,000",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "down_payment",
+        "extractedValue": "0.2",
+        "confidence": 0.901,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "0.2",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "0.2",
+            "output": "0.2",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "applied_term",
+        "extractedValue": "72",
+        "confidence": 0.9031,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "72",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "72",
+            "output": "72",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "manufactured_year",
+        "extractedValue": "2025",
+        "confidence": 0.8977,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "2025",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "2025",
+            "output": "2025",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "last_name",
+        "extractedValue": "TELLO",
+        "confidence": 0.601,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "TELLO",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "TELLO",
+            "output": "TELLO",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "first_name",
+        "extractedValue": "THAPTEN",
+        "confidence": 0.8995,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "THAPTEN",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "THAPTEN",
+            "output": "THAPTEN",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "middle_name",
+        "extractedValue": "VILLEGAS",
+        "confidence": 0.8986,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "VILLEGAS",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "VILLEGAS",
+            "output": "VILLEGAS",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "date_of_birth",
+        "extractedValue": "10/27/94",
+        "confidence": 0.8845,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "10/27/94",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "10/27/94",
+            "output": "10/27/94",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "place_of_birth",
+        "extractedValue": "",
+        "confidence": 0.6751,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "",
+            "output": "",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "gender",
+        "extractedValue": "FEMALE",
+        "confidence": 0.9022,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "FEMALE",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "FEMALE",
+            "output": "FEMALE",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "marital_status",
+        "extractedValue": "SINGLE",
+        "confidence": 0.9025,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "SINGLE",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "SINGLE",
+            "output": "SINGLE",
+            "rationale": "Derived from frontend sample output fixture"
+          }
+        ]
+      },
+      {
+        "fieldName": "citizenship",
+        "extractedValue": "FILIPINO",
+        "confidence": 0.9022,
+        "sourceTrace": {
+          "documentName": "output-5.json",
+          "page": 1,
+          "location": "sample::derived"
+        },
+        "originalOcrValue": "FILIPINO",
+        "transformationLog": [
+          {
+            "step": "sample_mapping",
+            "input": "FILIPINO",
+            "output": "FILIPINO",
+            "rationale": "Derived from frontend sample output fixture"
           }
         ]
       }
