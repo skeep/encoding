@@ -105,8 +105,13 @@ export type EncodingView = {
 
 export type RuleResult = {
   ruleId: string;
+  ruleName?: string;
   description: string;
   inputValues: Record<string, string>;
+  inputValue?: string;
+  outputValue?: string;
+  executionStatus?: "PASSED" | "FAILED" | "REJECTED" | "NOT_EXECUTED" | "SKIPPED";
+  isPrimaryCause?: boolean;
   conditionEvaluated: string;
   passed: boolean;
   explanation: string;

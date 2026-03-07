@@ -536,6 +536,136 @@ input {
   color: var(--brand-red);
 }
 
+.decision-rule-matrix-wrap {
+  display: grid;
+  gap: 10px;
+  min-height: 0;
+}
+
+.decision-rule-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.decision-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid var(--border-default);
+  background: var(--bg-app);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.decision-rule-table-wrap {
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  overflow: auto;
+  max-height: 52vh;
+}
+
+.decision-rule-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 920px;
+  font-size: 0.82rem;
+}
+
+.decision-rule-table th,
+.decision-rule-table td {
+  border-bottom: 1px solid var(--border-default);
+  text-align: left;
+  vertical-align: top;
+  padding: 8px 10px;
+}
+
+.decision-rule-table th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-surface);
+  color: var(--text-secondary);
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  z-index: 1;
+}
+
+.decision-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 3px 8px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  border: 1px solid var(--border-default);
+  background: var(--bg-app);
+  color: var(--text-secondary);
+}
+
+.decision-status-icon {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.decision-status-icon.passed,
+.decision-status-pill.passed {
+  background: var(--state-success-soft);
+  color: var(--state-success);
+  border-color: rgba(21, 128, 61, 0.25);
+}
+
+.decision-status-icon.failed,
+.decision-status-pill.failed {
+  background: var(--state-error-soft);
+  color: var(--state-error);
+  border-color: rgba(185, 28, 28, 0.25);
+}
+
+.decision-status-icon.rejected,
+.decision-status-pill.rejected {
+  background: #fce7f3;
+  color: #9d174d;
+  border-color: rgba(157, 23, 77, 0.25);
+}
+
+.decision-status-icon.not_executed,
+.decision-status-pill.not_executed {
+  background: var(--state-info-soft);
+  color: var(--state-info);
+  border-color: rgba(29, 78, 216, 0.25);
+}
+
+.decision-status-icon.skipped,
+.decision-status-pill.skipped {
+  background: var(--state-warning-soft);
+  color: var(--state-warning);
+  border-color: rgba(180, 83, 9, 0.25);
+}
+
+.decision-primary-cause-tag {
+  display: inline-flex;
+  margin-left: 8px;
+  margin-top: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #9d174d;
+  background: #fce7f3;
+  border: 1px solid rgba(157, 23, 77, 0.25);
+  border-radius: 999px;
+  padding: 2px 7px;
+}
+
 .decision-rule-list {
   list-style: none;
   margin: 0;

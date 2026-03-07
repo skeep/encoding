@@ -6,18 +6,59 @@ import { AttachmentList } from "./AttachmentList";
 
 type DecisionTab = "RULE_MATRIX" | "DECISION_MEMO" | "CASE_DETAILS";
 
-function getRuleTone(rule: DecisionView["rules"][number]): "pass" | "fail" | "memo" | "neutral" {
-  const combined = `${rule.impact} ${rule.explanation} ${rule.conditionEvaluated}`.toLowerCase();
-  if (!rule.passed) {
-    return "fail";
+type RuleExecutionStatus = "PASSED" | "FAILED" | "REJECTED" | "NOT_EXECUTED" | "SKIPPED";
+
+function getExecutionStatus(rule: DecisionView["rules"][number]): RuleExecutionStatus {
+  if (rule.executionStatus) {
+    return rule.executionStatus;
   }
-  if (combined.includes("memo") || combined.includes("comment") || combined.includes("manual")) {
-    return "memo";
+  return rule.passed ? "PASSED" : "FAILED";
+}
+
+function getStatusLabel(status: RuleExecutionStatus): string {
+  if (status === "PASSED") {
+    return "Passed";
   }
-  if (combined.includes("not applicable") || combined.includes("not run") || combined.includes("skipped")) {
-    return "neutral";
+  if (status === "FAILED") {
+    return "Failed";
   }
-  return "pass";
+  if (status === "REJECTED") {
+    return "Rejected";
+  }
+  if (status === "NOT_EXECUTED") {
+    return "Not executed";
+  }
+  return "Skipped";
+}
+
+function getStatusIcon(status: RuleExecutionStatus): string {
+  if (status === "PASSED") {
+    return "P";
+  }
+  if (status === "FAILED") {
+    return "F";
+  }
+  if (status === "REJECTED") {
+    return "R";
+  }
+  if (status === "NOT_EXECUTED") {
+    return "N";
+  }
+  return "S";
+}
+
+function inputText(rule: DecisionView["rules"][number]): string {
+  if (rule.inputValue && rule.inputValue.trim().length > 0) {
+    return rule.inputValue;
+  }
+  const compact = Object.entries(rule.inputValues)
+    .map(([k, v]) => `${k}: ${v}`)
+    .join(" | ");
+  return compact || "-";
+}
+
+function outputText(rule: DecisionView["rules"][number]): string {
+  return rule.outputValue?.trim() || rule.impact || "-";
 }
 
 export function DecisionCompletedPanel(props: { detail: ApplicationDetail; decision: DecisionView }): JSX.Element {
@@ -66,27 +107,58 @@ export function DecisionCompletedPanel(props: { detail: ApplicationDetail; decis
       </div>
 
       {activeTab === "RULE_MATRIX" ? (
-        <ul className="decision-rule-list">
-          {decision.rules.map((rule) => {
-            const tone = getRuleTone(rule);
-            return (
-              <li key={rule.ruleId} className={`decision-rule-item ${tone}`}>
-                <span className="decision-rule-dot" aria-hidden="true" />
-                <div className="decision-rule-main">
-                  <p className="decision-rule-title">
-                    <strong>{rule.ruleId}</strong> - {rule.description}
-                  </p>
-                  <p>
-                    <strong>Rule Output:</strong> {rule.passed ? "Passed" : "Failed"}
-                  </p>
-                  <p>
-                    <strong>Explanation:</strong> {rule.explanation}
-                  </p>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="decision-rule-matrix-wrap">
+          <div className="decision-rule-legend">
+            {(["PASSED", "FAILED", "REJECTED", "NOT_EXECUTED", "SKIPPED"] as RuleExecutionStatus[]).map((status) => (
+              <div key={status} className="decision-legend-item">
+                <span className={`decision-status-icon ${status.toLowerCase()}`}>{getStatusIcon(status)}</span>
+                <span>{getStatusLabel(status)}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="decision-rule-table-wrap">
+            <table className="decision-rule-table">
+              <thead>
+                <tr>
+                  <th>Status</th>
+                  <th>Rule ID</th>
+                  <th>Rule Name</th>
+                  <th>Input Value</th>
+                  <th>Output Value</th>
+                  <th>Explanation</th>
+                </tr>
+              </thead>
+              <tbody>
+                {decision.rules.map((rule) => {
+                  const status = getExecutionStatus(rule);
+                  return (
+                    <tr key={rule.ruleId}>
+                      <td>
+                        <span className={`decision-status-pill ${status.toLowerCase()}`}>
+                          <span className={`decision-status-icon ${status.toLowerCase()}`} aria-hidden="true">
+                            {getStatusIcon(status)}
+                          </span>
+                          {getStatusLabel(status)}
+                        </span>
+                      </td>
+                      <td>{rule.ruleId}</td>
+                      <td>{rule.ruleName ?? rule.description}</td>
+                      <td>{inputText(rule)}</td>
+                      <td>{outputText(rule)}</td>
+                      <td>
+                        {rule.explanation}
+                        {rule.isPrimaryCause ? (
+                          <span className="decision-primary-cause-tag">Primary rejection cause</span>
+                        ) : null}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
       ) : null}
 
       {activeTab === "DECISION_MEMO" ? (
