@@ -40,8 +40,32 @@ export function renderLifecycleStatus(
   if (appStatus === "EMAIL_RECEIVED") {
     return "Email Received";
   }
+  if (appStatus === "DOCUMENT_REQUESTED") {
+    return "Document Requested";
+  }
   if (appStatus === "ENCODING_IN_PROGRESS") {
     return encodingStatus === "IN_PROGRESS" ? "Encoding In Progress" : "Encoding In Queue";
   }
   return appStatus;
+}
+
+export function renderSalesPipelineStatus(item: ApplicationSummary): string {
+  switch (item.status) {
+    case "EMAIL_RECEIVED":
+      return "Email Received";
+    case "DOCUMENT_REQUESTED":
+      return "Document Requested";
+    case "ENCODING_IN_PROGRESS":
+      return item.encodingStatus === "IN_PROGRESS" ? "Encoding In Progress" : "Encoding In Queue";
+    case "ENCODING_COMPLETED":
+      return "Encoding Completed";
+    case "DECISION_RUNNING":
+      return renderDecisionStatus(item.decisionStatus);
+    case "DECISION_COMPLETED":
+      return "Decision Completed";
+    case "LOAN_DISBURSED":
+      return "Loan Disbursed";
+    default:
+      return item.status;
+  }
 }

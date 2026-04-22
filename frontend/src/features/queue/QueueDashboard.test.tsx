@@ -1,5 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { MemoryRouter } from "react-router-dom";
 import { vi } from "vitest";
 
 import { queueApi } from "../../api/queueApi";
@@ -7,14 +8,22 @@ import { QueueDashboard } from "./QueueDashboard";
 
 describe("QueueDashboard", () => {
   it("renders queue tabs and table rows", async () => {
-    render(<QueueDashboard />);
+    render(
+      <MemoryRouter>
+        <QueueDashboard />
+      </MemoryRouter>
+    );
     expect(screen.getByRole("tab", { name: /Encoding Queue/i })).toBeInTheDocument();
     expect(await screen.findByRole("cell", { name: "APP-2026-0001" })).toBeInTheDocument();
   });
 
   it("switches tab and loads encoding detail content", async () => {
     const user = userEvent.setup();
-    render(<QueueDashboard />);
+    render(
+      <MemoryRouter>
+        <QueueDashboard />
+      </MemoryRouter>
+    );
 
     await user.click(screen.getByRole("tab", { name: /Encoding Completed/i }));
     expect(await screen.findByRole("cell", { name: "APP-2026-0004" })).toBeInTheDocument();
@@ -23,7 +32,11 @@ describe("QueueDashboard", () => {
 
   it("shows decision summary when decision completed tab selected", async () => {
     const user = userEvent.setup();
-    render(<QueueDashboard />);
+    render(
+      <MemoryRouter>
+        <QueueDashboard />
+      </MemoryRouter>
+    );
 
     await user.click(screen.getByRole("tab", { name: /Decision Completed/i }));
     await waitFor(() => {
@@ -36,7 +49,11 @@ describe("QueueDashboard", () => {
 
   it("shows feature-gated filters by status tab", async () => {
     const user = userEvent.setup();
-    render(<QueueDashboard />);
+    render(
+      <MemoryRouter>
+        <QueueDashboard />
+      </MemoryRouter>
+    );
 
     expect(await screen.findByLabelText(/Filter by intake status/i)).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "Dealer Email" })).toBeInTheDocument();
@@ -53,7 +70,11 @@ describe("QueueDashboard", () => {
   });
 
   it("sorts intake statuses with encoding in progress first", async () => {
-    render(<QueueDashboard />);
+    render(
+      <MemoryRouter>
+        <QueueDashboard />
+      </MemoryRouter>
+    );
     await screen.findByRole("cell", { name: "APP-2026-0003" });
     const inProgressCell = screen.getByRole("cell", { name: "APP-2026-0003" });
     const inQueueCell = screen.getByRole("cell", { name: "APP-2026-0002" });
@@ -66,7 +87,11 @@ describe("QueueDashboard", () => {
   it("supports rows-per-page and sticky-header table classes", async () => {
     const user = userEvent.setup();
     const getApplicationsSpy = vi.spyOn(queueApi, "getApplications");
-    render(<QueueDashboard />);
+    render(
+      <MemoryRouter>
+        <QueueDashboard />
+      </MemoryRouter>
+    );
 
     await screen.findByRole("cell", { name: "APP-2026-0001" });
     const rowsSelect = screen.getByRole("combobox", { name: /Rows/i });

@@ -9,9 +9,11 @@ export type QueueStatus = (typeof queueStatuses)[number];
 export type ApplicationStatus =
   | "EMAIL_RECEIVED"
   | "ENCODING_IN_PROGRESS"
+  | "DOCUMENT_REQUESTED"
   | "ENCODING_COMPLETED"
   | "DECISION_RUNNING"
-  | "DECISION_COMPLETED";
+  | "DECISION_COMPLETED"
+  | "LOAN_DISBURSED";
 
 export type QueueSummary = {
   status: QueueStatus;
@@ -48,6 +50,50 @@ export type PaginatedApplications = {
   page: number;
   size: number;
   total: number;
+};
+
+export type SalesSupplementPayload = Record<string, string>;
+
+export type SalesPendingTaskSource = "ENCODER" | "CREDIT";
+
+export type SalesPendingTask = {
+  id: string;
+  title: string;
+  body: string;
+  source: SalesPendingTaskSource;
+  createdAt: string;
+  fieldsRequested?: string[];
+};
+
+export type SalesQueueRow = ApplicationSummary & {
+  pendingTaskCount: number;
+};
+
+export type PaginatedSalesApplications = {
+  items: SalesQueueRow[];
+  page: number;
+  size: number;
+  total: number;
+};
+
+export type SalesStatusBreakdownItem = {
+  status: ApplicationStatus;
+  count: number;
+};
+
+export type SalesDealerBreakdownRow = {
+  dealerEmail: string;
+  count: number;
+  byStatus: Partial<Record<ApplicationStatus, number>>;
+};
+
+export type SalesDashboardSnapshot = {
+  dateFrom: string | null;
+  dateTo: string | null;
+  distinctDealerCount: number;
+  totalOpenApplications: number;
+  byStatus: SalesStatusBreakdownItem[];
+  byDealer: SalesDealerBreakdownRow[];
 };
 
 export type ApplicationDetail = {

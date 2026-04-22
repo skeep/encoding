@@ -1,0 +1,21 @@
+{
+  "APP-2026-0016": [
+    {
+      "id": "sales-task-doc-001",
+      "title": "Provide applicant identity details",
+      "body": "Credit analyst requested verified applicant contact details before proceeding.",
+      "source": "CREDIT",
+      "createdAt": "2026-02-26T07:55:00Z",
+      "fieldsRequested": ["firstName", "lastName", "phone", "address"]
+    }
+  ],
+  "APP-2026-0001": [
+    {
+      "id": "sales-task-mail-001",
+      "title": "Confirm vehicle trim with dealer",
+      "body": "Encoding could not match the trim line to the price sheet. Please confirm with the dealer and reply in the app.",
+      "source": "ENCODER",
+      "createdAt": "2026-02-26T08:00:00Z"
+    }
+  ]
+}

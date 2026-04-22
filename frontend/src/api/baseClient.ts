@@ -3,8 +3,12 @@ import type {
   DecisionView,
   EncodingView,
   PaginatedApplications,
+  PaginatedSalesApplications,
   QueueStatus,
   QueueSummary,
+  SalesDashboardSnapshot,
+  SalesPendingTask,
+  SalesSupplementPayload,
   TimelineEvent
 } from "./types";
 import { mockHandlers } from "../mocks/handlers";
@@ -62,5 +66,35 @@ export const apiClientBase = {
   },
   getTimeline(applicationId: string, config?: ApiConfig): Promise<TimelineEvent[]> {
     return withMockLatency(() => mockHandlers.getTimeline(applicationId), config);
+  },
+  getSalesApplications(
+    params: {
+      q?: string;
+      page?: number;
+      size?: number;
+      dateFrom?: string | null;
+      dateTo?: string | null;
+    },
+    config?: ApiConfig
+  ): Promise<PaginatedSalesApplications> {
+    return withMockLatency(() => mockHandlers.getSalesApplications(params), config);
+  },
+  getSalesDashboard(
+    params: { q?: string; dateFrom?: string | null; dateTo?: string | null },
+    config?: ApiConfig
+  ): Promise<SalesDashboardSnapshot> {
+    return withMockLatency(() => mockHandlers.getSalesDashboard(params), config);
+  },
+  getSalesTasks(applicationId: string, config?: ApiConfig): Promise<SalesPendingTask[]> {
+    return withMockLatency(() => mockHandlers.getSalesTasks(applicationId), config);
+  },
+  submitSalesSupplement(
+    applicationId: string,
+    params: { taskId: string; payload: SalesSupplementPayload },
+    config?: ApiConfig
+  ): Promise<void> {
+    return withMockLatency(() => {
+      mockHandlers.submitSalesSupplement(applicationId, params);
+    }, config);
   }
 };

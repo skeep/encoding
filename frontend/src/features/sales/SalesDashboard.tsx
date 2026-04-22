@@ -1,62 +1,59 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { AppShell } from "../../app/AppShell";
-import type { QueueStatus } from "../../api/types";
-import { DetailPanel } from "../application-detail/DetailPanel";
-import { QueueTableContainer } from "./components/QueueTableContainer";
-import { QueueTabs } from "./components/QueueTabs";
-import { useQueueDashboardData } from "./hooks/useQueueDashboardData";
-import { useQueueTableRows } from "./hooks/useQueueTableRows";
-import { useResizableSplit } from "./hooks/useResizableSplit";
-import {
-  queueTableFeaturesByStatus,
-  type ApprovalBucketFilter,
-  type FilterField,
-  type IntakeStatusFilter
-} from "./types/tableFeatures";
-import { useQueueColumns } from "./utils/queueColumns";
+import { QueueTableContainer } from "../queue/components/QueueTableContainer";
+import type {
+  ApprovalBucketFilter,
+  FilterField,
+  IntakeStatusFilter
+} from "../queue/types/tableFeatures";
+import { useResizableSplit } from "../queue/hooks/useResizableSplit";
+import { SalesMetricsStrip } from "./components/SalesMetricsStrip";
+import { SalesDetailPanel } from "./components/SalesDetailPanel";
+import { salesQueueTableFeatures } from "./salesTableFeatures";
+import { useSalesQueueColumns } from "./hooks/useSalesQueueColumns";
+import { useSalesQueueData } from "./hooks/useSalesQueueData";
+import { useSalesTableRows } from "./hooks/useSalesTableRows";
 
-export function QueueDashboard(): JSX.Element {
-  const [activeStatus, setActiveStatus] = useState<QueueStatus>("INTAKE_IN_PROGRESS");
+const intakeStatusFilter: IntakeStatusFilter = "ALL";
+const approvalBucketFilter: ApprovalBucketFilter = "ALL";
+
+export function SalesDashboard(): JSX.Element {
   const [search, setSearch] = useState("");
+  const [dateFrom, setDateFrom] = useState<string | null>(null);
+  const [dateTo, setDateTo] = useState<string | null>(null);
   const [filterField, setFilterField] = useState<FilterField>("applicationId");
   const [filterValue, setFilterValue] = useState("");
-  const [intakeStatusFilter, setIntakeStatusFilter] = useState<IntakeStatusFilter>("ALL");
-  const [approvalBucketFilter, setApprovalBucketFilter] = useState<ApprovalBucketFilter>("ALL");
+  const [pageSize, setPageSize] = useState(10);
+
   const { mainRef, leftPanePercent, isResizing, setIsResizing } = useResizableSplit(40);
-  const [pageSizeByStatus, setPageSizeByStatus] = useState<Record<QueueStatus, number>>({
-    INTAKE_IN_PROGRESS: 10,
-    ENCODING_COMPLETED: 10,
-    DECISION_RUNNING: 10,
-    DECISION_COMPLETED: 10
-  });
-  const activeFeatures = queueTableFeaturesByStatus[activeStatus];
 
   const {
     page,
     setPage,
     selectedAppId,
     setSelectedAppId,
-    summary,
+    dashboardSnapshot,
+    snapshotLoading,
+    snapshotError,
     applications,
     tableLoading,
     tableError,
     detailState,
+    refreshDashboard,
     refreshApplications,
+    refreshDetail,
     totalPages,
     pageStart,
     pageEnd,
-    pageSize
-  } = useQueueDashboardData(activeStatus, search, { pageSizeByStatus });
-  const columns = useQueueColumns(activeStatus);
-  const visibleRows = useQueueTableRows({
-    rows: applications.items,
-    activeStatus,
-    filterField,
-    filterValue,
-    intakeStatusFilter,
-    approvalBucketFilter
-  });
+    pageSize: effectivePageSize
+  } = useSalesQueueData(search, dateFrom, dateTo, pageSize);
+
+  const columns = useSalesQueueColumns();
+  const visibleRows = useSalesTableRows(applications.items, filterField, filterValue);
+
+  const activeFeatures = salesQueueTableFeatures;
+
   const filterFieldOptions = useMemo(() => activeFeatures.fieldFilterOptions, [activeFeatures.fieldFilterOptions]);
   const canFilterByCurrentField = useMemo(
     () => filterFieldOptions.includes(filterField),
@@ -69,17 +66,21 @@ export function QueueDashboard(): JSX.Element {
     }
   }, [canFilterByCurrentField, filterFieldOptions]);
 
-  useEffect(() => {
-    if (!activeFeatures.showIntakeStatusFilter && intakeStatusFilter !== "ALL") {
-      setIntakeStatusFilter("ALL");
-    }
-  }, [activeFeatures.showIntakeStatusFilter, intakeStatusFilter]);
+  async function handleAfterSubmit(): Promise<void> {
+    await refreshApplications();
+    await refreshDashboard();
+    await refreshDetail();
+  }
 
-  useEffect(() => {
-    if (!activeFeatures.showApprovalBucketFilter && approvalBucketFilter !== "ALL") {
-      setApprovalBucketFilter("ALL");
+  function handlePreset(preset: "all" | "feb2026"): void {
+    if (preset === "all") {
+      setDateFrom(null);
+      setDateTo(null);
+      return;
     }
-  }, [activeFeatures.showApprovalBucketFilter, approvalBucketFilter]);
+    setDateFrom("2026-02-01");
+    setDateTo("2026-02-28");
+  }
 
   return (
     <AppShell
@@ -92,15 +93,26 @@ export function QueueDashboard(): JSX.Element {
         />
       }
     >
-      <main
-        ref={mainRef}
-        className="dashboard-main"
-        style={{
-          gridTemplateColumns: `${leftPanePercent}% 8px ${100 - leftPanePercent}%`
-        }}
-      >
+      <div className="sales-page-body">
+        <SalesMetricsStrip
+          snapshot={dashboardSnapshot}
+          loading={snapshotLoading}
+          error={snapshotError}
+          dateFrom={dateFrom}
+          dateTo={dateTo}
+          onDateFromChange={setDateFrom}
+          onDateToChange={setDateTo}
+          onPreset={handlePreset}
+        />
+
+        <main
+          ref={mainRef}
+          className="dashboard-main"
+          style={{
+            gridTemplateColumns: `${leftPanePercent}% 8px ${100 - leftPanePercent}%`
+          }}
+        >
         <section className="queue-column">
-          <QueueTabs activeStatus={activeStatus} summary={summary} onChange={setActiveStatus} />
           <QueueTableContainer
             features={activeFeatures}
             columns={columns}
@@ -116,26 +128,22 @@ export function QueueDashboard(): JSX.Element {
             filterValue={filterValue}
             onFilterValueChange={setFilterValue}
             intakeStatusFilter={intakeStatusFilter}
-            onIntakeStatusFilterChange={setIntakeStatusFilter}
+            onIntakeStatusFilterChange={() => undefined}
             approvalBucketFilter={approvalBucketFilter}
-            onApprovalBucketFilterChange={setApprovalBucketFilter}
+            onApprovalBucketFilterChange={() => undefined}
             page={page}
             totalPages={totalPages}
             pageStart={pageStart}
             pageEnd={pageEnd}
             total={applications.total}
-            pageSize={pageSize}
+            pageSize={effectivePageSize}
             pageSizeOptions={activeFeatures.pageSizeOptions}
-            onPageSizeChange={(value) =>
-              setPageSizeByStatus((prev) => ({
-                ...prev,
-                [activeStatus]: value
-              }))
-            }
+            onPageSizeChange={setPageSize}
             onFirst={() => setPage(1)}
             onPrev={() => setPage((prev) => prev - 1)}
             onNext={() => setPage((prev) => prev + 1)}
             onLast={() => setPage(totalPages)}
+            loadingLabel="Loading sales applications…"
           />
         </section>
 
@@ -154,9 +162,14 @@ export function QueueDashboard(): JSX.Element {
         </div>
 
         <aside className="detail-column">
-          <DetailPanel activeStatus={activeStatus} selectedAppId={selectedAppId} state={detailState} />
+          <SalesDetailPanel
+            selectedAppId={selectedAppId}
+            state={detailState}
+            onAfterSubmit={handleAfterSubmit}
+          />
         </aside>
       </main>
+      </div>
     </AppShell>
   );
 }

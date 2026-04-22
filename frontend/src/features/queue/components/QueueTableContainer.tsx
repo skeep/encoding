@@ -8,13 +8,14 @@ import type {
 } from "../types/tableFeatures";
 import { QueueTableToolbar } from "./QueueTableToolbar";
 
-export function QueueTableContainer(props: {
+export function QueueTableContainer<T extends ApplicationSummary = ApplicationSummary>(props: {
   features: QueueTableFeatureConfig;
-  columns: DataTableColumn<ApplicationSummary>[];
-  rows: ApplicationSummary[];
+  columns: DataTableColumn<T>[];
+  rows: T[];
   selectedAppId: string | null;
-  onSelectRow: (row: ApplicationSummary) => void;
+  onSelectRow: (row: T) => void;
   loading: boolean;
+  loadingLabel?: string;
   error?: string;
   hasSourceRows: boolean;
   onRetry: () => void;
@@ -46,6 +47,7 @@ export function QueueTableContainer(props: {
     selectedAppId,
     onSelectRow,
     loading,
+    loadingLabel = "Loading queue applications...",
     error,
     hasSourceRows,
     onRetry
@@ -84,7 +86,7 @@ export function QueueTableContainer(props: {
           </button>
         </div>
       ) : null}
-      {loading ? <div className="state-box">Loading queue applications...</div> : null}
+      {loading ? <div className="state-box">{loadingLabel}</div> : null}
       {!loading && !error && !hasSourceRows ? <div className="state-box">No applications in this state.</div> : null}
       {!loading && !error && hasSourceRows && rows.length === 0 ? (
         <div className="state-box">No applications match the selected filters.</div>

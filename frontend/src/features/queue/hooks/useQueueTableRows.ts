@@ -9,6 +9,9 @@ function getIntakeStatusRank(status: string): number {
   if (status === "Encoding In Progress") {
     return 0;
   }
+  if (status === "Document Requested") {
+    return 0.5;
+  }
   if (status === "Encoding In Queue") {
     return 1;
   }

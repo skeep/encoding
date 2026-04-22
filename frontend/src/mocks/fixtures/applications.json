@@ -243,5 +243,34 @@
     "receivedAt": "2026-02-26T06:44:00Z",
     "lastUpdatedAt": "2026-02-26T08:24:00Z",
     "slaAgeMinutes": 132
+  },
+  {
+    "applicationId": "APP-2026-0016",
+    "status": "DOCUMENT_REQUESTED",
+    "applicantName": "Sofia Reyes",
+    "product": "Car Loan",
+    "market": "Philippines",
+    "dealerEmailFrom": "sales@bmw-alabang.ph",
+    "documentCount": 4,
+    "receivedAt": "2026-02-26T07:50:00Z",
+    "lastUpdatedAt": "2026-02-26T08:05:00Z",
+    "slaAgeMinutes": 95,
+    "priority": "HIGH",
+    "riskFlag": "MEDIUM"
+  },
+  {
+    "applicationId": "APP-2026-0017",
+    "status": "LOAN_DISBURSED",
+    "finalDecision": "APPROVE",
+    "applicantName": "Closed Deal Sample",
+    "product": "Car Loan",
+    "market": "Philippines",
+    "dealerEmailFrom": "closed@sample.ph",
+    "documentCount": 6,
+    "receivedAt": "2026-02-01T09:00:00Z",
+    "lastUpdatedAt": "2026-02-25T17:00:00Z",
+    "slaAgeMinutes": 0,
+    "priority": "LOW",
+    "riskFlag": "NONE"
   }
 ]

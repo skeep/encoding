@@ -14,9 +14,11 @@ export type { DetailPanelState } from "./types";
 const statusLabels: Record<ApplicationStatus, string> = {
   EMAIL_RECEIVED: "Email Received",
   ENCODING_IN_PROGRESS: "Encoding In Progress",
+  DOCUMENT_REQUESTED: "Document Requested",
   ENCODING_COMPLETED: "Encoding Completed",
   DECISION_RUNNING: "Decision Running",
-  DECISION_COMPLETED: "Decision Completed"
+  DECISION_COMPLETED: "Decision Completed",
+  LOAN_DISBURSED: "Loan Disbursed"
 };
 
 export function DetailPanel(props: {
