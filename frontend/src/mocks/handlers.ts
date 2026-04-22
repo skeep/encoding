@@ -90,7 +90,8 @@ function matchesSearch(item: ApplicationSummary, term: string): boolean {
     item.applicationId.toLowerCase().includes(term) ||
     item.applicantName.toLowerCase().includes(term) ||
     item.product.toLowerCase().includes(term) ||
-    item.dealerEmailFrom.toLowerCase().includes(term)
+    item.dealerEmailFrom.toLowerCase().includes(term) ||
+    item.loanType.toLowerCase().includes(term)
   );
 }
 
@@ -209,7 +210,8 @@ export const mockHandlers = {
         item.applicationId.toLowerCase().includes(term) ||
         item.applicantName.toLowerCase().includes(term) ||
         item.product.toLowerCase().includes(term) ||
-        item.dealerEmailFrom.toLowerCase().includes(term)
+        item.dealerEmailFrom.toLowerCase().includes(term) ||
+        item.loanType.toLowerCase().includes(term)
       );
     });
     const pageResult = paginate(filtered, page, size);

@@ -3,11 +3,17 @@ import { useMemo } from "react";
 import type { SalesQueueRow } from "../../../api/types";
 import { formatIsoDate } from "../../../app/formatters";
 import type { DataTableColumn } from "../../../components/DataTable";
+import { renderLoanTypeIcon } from "../../queue/utils/renderLoanTypeIcon";
 import { renderSalesPipelineStatus } from "../../queue/utils/statusFormatters";
 
 export function useSalesQueueColumns(): DataTableColumn<SalesQueueRow>[] {
   return useMemo<DataTableColumn<SalesQueueRow>[]>(
     () => [
+      {
+        key: "loanType",
+        header: "Type",
+        render: (item) => renderLoanTypeIcon(item.loanType)
+      },
       {
         key: "applicationId",
         header: "Application ID",

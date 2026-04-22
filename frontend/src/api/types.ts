@@ -21,12 +21,15 @@ export type QueueSummary = {
   stale: boolean;
 };
 
+export type LoanType = "Auto" | "2W" | "Home";
+
 export type ApplicationSummary = {
   applicationId: string;
   status: ApplicationStatus;
   applicantName: string;
   product: string;
   market: "Philippines";
+  loanType: LoanType;
   dealerEmailFrom: string;
   documentCount: number;
   encodingStatus?: "IN_QUEUE" | "IN_PROGRESS" | "COMPLETED";

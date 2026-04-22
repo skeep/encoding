@@ -11,7 +11,8 @@
     "lastUpdatedAt": "2026-02-26T08:05:00Z",
     "slaAgeMinutes": 42,
     "priority": "MEDIUM",
-    "riskFlag": "NONE"
+    "riskFlag": "NONE",
+    "loanType": "Auto"
   },
   {
     "applicationId": "APP-2026-0002",
@@ -26,7 +27,8 @@
     "lastUpdatedAt": "2026-02-26T08:15:00Z",
     "slaAgeMinutes": 84,
     "priority": "HIGH",
-    "riskFlag": "MEDIUM"
+    "riskFlag": "MEDIUM",
+    "loanType": "2W"
   },
   {
     "applicationId": "APP-2026-0003",
@@ -41,7 +43,8 @@
     "lastUpdatedAt": "2026-02-26T08:20:00Z",
     "slaAgeMinutes": 105,
     "priority": "HIGH",
-    "riskFlag": "NONE"
+    "riskFlag": "NONE",
+    "loanType": "Home"
   },
   {
     "applicationId": "APP-2026-0004",
@@ -58,7 +61,8 @@
     "lastUpdatedAt": "2026-02-26T08:22:00Z",
     "slaAgeMinutes": 110,
     "priority": "HIGH",
-    "riskFlag": "MEDIUM"
+    "riskFlag": "MEDIUM",
+    "loanType": "Auto"
   },
   {
     "applicationId": "APP-2026-0005",
@@ -77,7 +81,8 @@
     "lastUpdatedAt": "2026-02-26T08:24:00Z",
     "slaAgeMinutes": 145,
     "priority": "MEDIUM",
-    "riskFlag": "HIGH"
+    "riskFlag": "HIGH",
+    "loanType": "2W"
   },
   {
     "applicationId": "APP-2026-0006",
@@ -96,7 +101,8 @@
     "lastUpdatedAt": "2026-02-26T08:27:00Z",
     "slaAgeMinutes": 176,
     "priority": "HIGH",
-    "riskFlag": "HIGH"
+    "riskFlag": "HIGH",
+    "loanType": "Home"
   },
   {
     "applicationId": "APP-2026-0007",
@@ -116,7 +122,8 @@
     "lastUpdatedAt": "2026-02-26T08:28:00Z",
     "slaAgeMinutes": 241,
     "priority": "LOW",
-    "riskFlag": "NONE"
+    "riskFlag": "NONE",
+    "loanType": "Auto"
   },
   {
     "applicationId": "APP-2026-0008",
@@ -130,7 +137,8 @@
     "lastUpdatedAt": "2026-02-26T08:18:00Z",
     "slaAgeMinutes": 29,
     "priority": "MEDIUM",
-    "riskFlag": "NONE"
+    "riskFlag": "NONE",
+    "loanType": "2W"
   },
   {
     "applicationId": "APP-2026-0009",
@@ -144,7 +152,8 @@
     "lastUpdatedAt": "2026-02-26T08:26:00Z",
     "slaAgeMinutes": 21,
     "priority": "LOW",
-    "riskFlag": "NONE"
+    "riskFlag": "NONE",
+    "loanType": "Home"
   },
   {
     "applicationId": "APP-2026-0010",
@@ -159,7 +168,8 @@
     "lastUpdatedAt": "2026-02-26T08:12:00Z",
     "slaAgeMinutes": 74,
     "priority": "HIGH",
-    "riskFlag": "MEDIUM"
+    "riskFlag": "MEDIUM",
+    "loanType": "Auto"
   },
   {
     "applicationId": "APP-2026-0011",
@@ -174,7 +184,8 @@
     "lastUpdatedAt": "2026-02-26T08:29:00Z",
     "slaAgeMinutes": 98,
     "priority": "HIGH",
-    "riskFlag": "NONE"
+    "riskFlag": "NONE",
+    "loanType": "2W"
   },
   {
     "applicationId": "APP-2026-0012",
@@ -191,7 +202,8 @@
     "lastUpdatedAt": "2026-02-26T08:31:00Z",
     "slaAgeMinutes": 116,
     "priority": "MEDIUM",
-    "riskFlag": "MEDIUM"
+    "riskFlag": "MEDIUM",
+    "loanType": "Home"
   },
   {
     "applicationId": "APP-2026-0013",
@@ -208,7 +220,8 @@
     "averageFieldConfidence": 0.8949,
     "receivedAt": "2026-02-26T06:42:00Z",
     "lastUpdatedAt": "2026-02-26T08:22:00Z",
-    "slaAgeMinutes": 116
+    "slaAgeMinutes": 116,
+    "loanType": "Auto"
   },
   {
     "applicationId": "APP-2026-0014",
@@ -225,7 +238,8 @@
     "averageFieldConfidence": 0.8701,
     "receivedAt": "2026-02-26T06:43:00Z",
     "lastUpdatedAt": "2026-02-26T08:23:00Z",
-    "slaAgeMinutes": 124
+    "slaAgeMinutes": 124,
+    "loanType": "2W"
   },
   {
     "applicationId": "APP-2026-0015",
@@ -242,7 +256,8 @@
     "averageFieldConfidence": 0.8595,
     "receivedAt": "2026-02-26T06:44:00Z",
     "lastUpdatedAt": "2026-02-26T08:24:00Z",
-    "slaAgeMinutes": 132
+    "slaAgeMinutes": 132,
+    "loanType": "Home"
   },
   {
     "applicationId": "APP-2026-0016",
@@ -256,7 +271,8 @@
     "lastUpdatedAt": "2026-02-26T08:05:00Z",
     "slaAgeMinutes": 95,
     "priority": "HIGH",
-    "riskFlag": "MEDIUM"
+    "riskFlag": "MEDIUM",
+    "loanType": "Auto"
   },
   {
     "applicationId": "APP-2026-0017",
@@ -271,6 +287,7 @@
     "lastUpdatedAt": "2026-02-25T17:00:00Z",
     "slaAgeMinutes": 0,
     "priority": "LOW",
-    "riskFlag": "NONE"
+    "riskFlag": "NONE",
+    "loanType": "2W"
   }
 ]

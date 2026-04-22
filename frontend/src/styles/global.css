@@ -1624,6 +1624,18 @@ body.is-resizing-divider * {
   border: 0;
 }
 
+.loan-type-icon-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  color: var(--text-secondary);
+}
+
+.loan-type-icon {
+  flex-shrink: 0;
+}
+
 /* Sales dashboard */
 .sales-page-body {
   display: flex;

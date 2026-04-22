@@ -21,6 +21,7 @@ function minimalSummary(status: ApplicationSummary["status"]): ApplicationSummar
     applicantName: "Sample",
     product: "Car Loan",
     market: "Philippines",
+    loanType: "Auto",
     dealerEmailFrom: "sample@dealer.ph",
     documentCount: 0,
     receivedAt: base,

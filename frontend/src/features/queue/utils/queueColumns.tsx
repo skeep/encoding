@@ -9,10 +9,16 @@ import {
   renderLifecycleStatus
 } from "./statusFormatters";
 import { getApprovalBucket } from "./approvalBucket";
+import { renderLoanTypeIcon } from "./renderLoanTypeIcon";
 
 export function useQueueColumns(activeStatus: QueueStatus): DataTableColumn<ApplicationSummary>[] {
   return useMemo<DataTableColumn<ApplicationSummary>[]>(() => {
     const next: DataTableColumn<ApplicationSummary>[] = [
+      {
+        key: "loanType",
+        header: "Type",
+        render: (item) => renderLoanTypeIcon(item.loanType)
+      },
       {
         key: "applicationId",
         header: "Application ID",
