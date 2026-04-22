@@ -1,5 +1,18 @@
+import { ChevronDown, ChevronRight } from "lucide-react";
+import { useState } from "react";
+
 import type { ApplicationSummary, SalesDashboardSnapshot } from "../../../api/types";
 import { renderSalesPipelineStatus } from "../../queue/utils/statusFormatters";
+
+const SALES_DEALER_PANEL_ID = "sales-dealer-breakdown-panel";
+
+function truncateMiddle(text: string, maxChars: number): string {
+  if (text.length <= maxChars) {
+    return text;
+  }
+  const half = Math.floor((maxChars - 1) / 2);
+  return `${text.slice(0, half)}…${text.slice(text.length - half)}`;
+}
 
 function minimalSummary(status: ApplicationSummary["status"]): ApplicationSummary {
   const base = new Date().toISOString();
@@ -51,6 +64,8 @@ export function SalesMetricsStrip(props: {
 }): JSX.Element {
   const { snapshot, loading, error, dateFrom, dateTo, onDateFromChange, onDateToChange, onPreset } =
     props;
+
+  const [dealerExpanded, setDealerExpanded] = useState(false);
 
   const totalStatusCount =
     snapshot?.byStatus.reduce((acc, row) => acc + row.count, 0) ?? 0;
@@ -136,30 +151,61 @@ export function SalesMetricsStrip(props: {
 
       {snapshot && snapshot.byDealer.length > 0 ? (
         <div className="sales-dealer-breakdown">
-          <h3 className="sales-dealer-heading">Top dealers by volume</h3>
-          <table className="sales-dealer-table">
-            <thead>
-              <tr>
-                <th scope="col">Dealer email</th>
-                <th scope="col">Apps</th>
-                <th scope="col">Status notes</th>
-              </tr>
-            </thead>
-            <tbody>
-              {snapshot.byDealer.slice(0, 6).map((row) => (
-                <tr key={row.dealerEmail}>
-                  <td>{row.dealerEmail}</td>
-                  <td>{row.count}</td>
-                  <td className="sales-dealer-meta">
-                    {Object.entries(row.byStatus)
-                      .filter(([, n]) => (n ?? 0) > 0)
-                      .map(([st, n]) => `${statusSliceLabel(st as ApplicationSummary["status"])}: ${n}`)
-                      .join(" · ")}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <button
+            type="button"
+            className="sales-dealer-disclosure-trigger"
+            aria-expanded={dealerExpanded}
+            aria-controls={SALES_DEALER_PANEL_ID}
+            onClick={() => setDealerExpanded((open) => !open)}
+          >
+            <span className="sales-dealer-disclosure-chevron" aria-hidden="true">
+              {dealerExpanded ? (
+                <ChevronDown size={18} strokeWidth={2.25} />
+              ) : (
+                <ChevronRight size={18} strokeWidth={2.25} />
+              )}
+            </span>
+            <span className="sales-dealer-disclosure-title">Top dealers by volume</span>
+            <span className="sales-dealer-disclosure-teaser muted-text">
+              {snapshot.byDealer.length} dealers · Top:{" "}
+              {truncateMiddle(snapshot.byDealer[0].dealerEmail, 36)} ({snapshot.byDealer[0].count}{" "}
+              {snapshot.byDealer[0].count === 1 ? "app" : "apps"})
+            </span>
+          </button>
+          {dealerExpanded ? (
+            <div
+              id={SALES_DEALER_PANEL_ID}
+              className="sales-dealer-table-scroll"
+              role="region"
+              aria-label="Dealer breakdown table"
+            >
+              <table className="sales-dealer-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Dealer email</th>
+                    <th scope="col">Apps</th>
+                    <th scope="col">Status notes</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {snapshot.byDealer.slice(0, 6).map((row) => (
+                    <tr key={row.dealerEmail}>
+                      <td>{row.dealerEmail}</td>
+                      <td>{row.count}</td>
+                      <td className="sales-dealer-meta">
+                        {Object.entries(row.byStatus)
+                          .filter(([, n]) => (n ?? 0) > 0)
+                          .map(([st, n]) =>
+                            `${statusSliceLabel(st as ApplicationSummary["status"])}: ${n}`
+                          )
+                          .join(" · ")}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : null}
         </div>
       ) : null}
     </section>

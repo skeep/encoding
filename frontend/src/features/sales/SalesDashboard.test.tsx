@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach } from "vitest";
@@ -38,6 +38,26 @@ describe("SalesDashboard", () => {
     );
     expect(await screen.findByRole("link", { name: /^Sales$/i })).toHaveAttribute("aria-current", "page");
     expect(screen.getByRole("link", { name: /Workflow/i })).toHaveAttribute("href", "/");
+  });
+
+  it("expands top dealers disclosure to show dealer breakdown", async () => {
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter initialEntries={["/sales"]}>
+        <SalesDashboard />
+      </MemoryRouter>
+    );
+
+    const disclosure = await screen.findByRole("button", { name: /Top dealers by volume/i });
+    expect(disclosure).toHaveAttribute("aria-expanded", "false");
+
+    await user.click(disclosure);
+
+    expect(disclosure).toHaveAttribute("aria-expanded", "true");
+    const dealerPanel = await screen.findByRole("region", { name: /Dealer breakdown table/i });
+    expect(
+      within(dealerPanel).getByRole("cell", { name: "intake@toyota-manila.ph" })
+    ).toBeInTheDocument();
   });
 
   it("opens supplemental field modal and clears task after save", async () => {
