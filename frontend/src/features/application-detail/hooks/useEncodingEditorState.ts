@@ -1,8 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Dispatch, SetStateAction } from "react";
 
+import { LOW_CONFIDENCE_NAV_TARGET_ID } from "../encodingConstants";
 import type { ChangedRow } from "../types";
 import type { EditorTarget } from "../utils/editorTargets";
+
+export type EncodingMetaPane = "section" | "lowConfidence";
+
+export type EncodingOpenMeta = {
+  pane: EncodingMetaPane;
+  path: string;
+};
 
 export function useEncodingEditorState(
   selectedAppId: string | null,
@@ -15,8 +23,8 @@ export function useEncodingEditorState(
   setSaveMessage: Dispatch<SetStateAction<string>>;
   selectedTargetId: string;
   setSelectedTargetId: Dispatch<SetStateAction<string>>;
-  openMetaFieldPath: string | null;
-  setOpenMetaFieldPath: Dispatch<SetStateAction<string | null>>;
+  openMeta: EncodingOpenMeta | null;
+  setOpenMeta: Dispatch<SetStateAction<EncodingOpenMeta | null>>;
   editorTab: "fields" | "changes";
   setEditorTab: Dispatch<SetStateAction<"fields" | "changes">>;
   baselineValues: Record<string, string>;
@@ -25,8 +33,8 @@ export function useEncodingEditorState(
 } {
   const [editableValues, setEditableValues] = useState<Record<string, string>>({});
   const [saveMessage, setSaveMessage] = useState<string>("");
-  const [selectedTargetId, setSelectedTargetId] = useState<string>("");
-  const [openMetaFieldPath, setOpenMetaFieldPath] = useState<string | null>(null);
+  const [selectedTargetId, setSelectedTargetId] = useState<string>(LOW_CONFIDENCE_NAV_TARGET_ID);
+  const [openMeta, setOpenMeta] = useState<EncodingOpenMeta | null>(null);
   const [editorTab, setEditorTab] = useState<"fields" | "changes">("fields");
 
   useEffect(() => {
@@ -38,8 +46,8 @@ export function useEncodingEditorState(
     });
     setEditableValues(initialValues);
     setSaveMessage("");
-    setOpenMetaFieldPath(null);
-    setSelectedTargetId(editorTargets[0]?.id ?? "");
+    setOpenMeta(null);
+    setSelectedTargetId(LOW_CONFIDENCE_NAV_TARGET_ID);
     setEditorTab("fields");
   }, [selectedAppId, activeStatus, editorTargets]);
 
@@ -81,8 +89,8 @@ export function useEncodingEditorState(
     setSaveMessage,
     selectedTargetId,
     setSelectedTargetId,
-    openMetaFieldPath,
-    setOpenMetaFieldPath,
+    openMeta,
+    setOpenMeta,
     editorTab,
     setEditorTab,
     baselineValues,

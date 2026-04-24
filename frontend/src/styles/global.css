@@ -1082,10 +1082,23 @@ input {
   box-shadow: inset 2px 0 0 var(--brand-red);
 }
 
-.encoding-field-item em {
-  font-style: normal;
-  font-size: 0.72rem;
-  color: var(--state-warning);
+/* Unsaved edits in this section — pale red tint (no “changed” label). */
+.encoding-field-item--modified:not(.active) {
+  background: var(--state-error-soft);
+}
+
+.encoding-field-item.active.encoding-field-item--modified {
+  background: var(--brand-red-soft);
+  box-shadow:
+    inset 2px 0 0 var(--brand-red),
+    inset 0 -2px 0 0 rgba(185, 28, 28, 0.35);
+}
+
+.encoding-field-list-divider {
+  margin: 4px 0 8px;
+  border: 0;
+  border-top: 2px solid var(--border-default);
+  align-self: stretch;
 }
 
 .menu-item-chevron {
@@ -1155,6 +1168,17 @@ input {
   margin: 0 0 8px;
   font-size: 0.9rem;
   color: var(--text-primary);
+}
+
+.encoding-low-confidence-group + .encoding-low-confidence-group {
+  margin-top: 12px;
+}
+
+.encoding-low-confidence-subheading {
+  margin: 0 0 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-secondary);
 }
 
 .field-changed {
