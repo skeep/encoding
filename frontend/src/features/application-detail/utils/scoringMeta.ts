@@ -179,9 +179,11 @@ function stableIndex(seed: string, size: number): number {
   return hash % size;
 }
 
-function pickSample(path: string, value: string, applicationId?: string): ConfidenceMetaSample {
+function pickSample(path: string, applicationId?: string): ConfidenceMetaSample {
   const key = keyFromPath(path);
-  const scopedSeed = `${applicationId ?? "unknown"}::${path}::${value}`;
+  // Seed must not include the live editor value: changing typed input would pick a different
+  // fixture row and jump composite score (e.g. dropping a field out of the low-confidence list).
+  const scopedSeed = `${applicationId ?? "unknown"}::${path}`;
   const preferred = samplesByKey[key];
   if (preferred && preferred.length > 0) {
     return preferred[stableIndex(scopedSeed, preferred.length)];
@@ -203,7 +205,7 @@ function normalizeValue(value: string): string | number | null {
 
 export function buildScoringMeta(path: string, value: string, applicationId?: string): FieldScoringMeta {
   const normalized = normalizeValue(value);
-  const sampledMeta = pickSample(path, value, applicationId);
+  const sampledMeta = pickSample(path, applicationId);
   const ocrScore = sampledMeta.ocr?.confidence ?? 0.9;
   const fieldContextScore = sampledMeta.field_context?.confidence ?? 0.9;
   const crossFieldScore = sampledMeta.cross_field_consistency?.confidence ?? 0.78;
