@@ -27,6 +27,17 @@ function targetSectionHeading(target: EditorTarget): string {
   return target.isRepeatable ? `${target.sectionLabel} ${target.itemLabel}` : target.sectionLabel;
 }
 
+/** Composite field score 0–1 → traffic-light styling for encoding-completed review. */
+function fieldConfidenceButtonClass(fieldScore: number): string {
+  if (fieldScore < 0.75) {
+    return "field-confidence-button field-confidence-button--low";
+  }
+  if (fieldScore <= 0.9) {
+    return "field-confidence-button field-confidence-button--mid";
+  }
+  return "field-confidence-button field-confidence-button--high";
+}
+
 export function EncodingWorkbench(props: EncodingWorkbenchProps): JSX.Element {
   const { selectedAppId, activeStatus, detail, editorTargets } = props;
   const {
@@ -281,7 +292,7 @@ function EncodingFieldRow(props: EncodingFieldRowProps): JSX.Element {
       <div className="field-row-main">
         <button
           type="button"
-          className="field-confidence-button"
+          className={fieldConfidenceButtonClass(meta.field_score)}
           onClick={() =>
             setOpenMeta((prev) =>
               prev?.pane === pane && prev.path === field.path ? null : { pane, path: field.path }

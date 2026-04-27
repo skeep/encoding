@@ -14,8 +14,8 @@ export function AppShell(props: AppShellProps): JSX.Element {
         <div className="top-nav-left">
           <img className="header-logo" src="/assets/BPHLY_BIG.D.svg" alt="BPI logo" />
           <div className="header-title">
-            <h1>Credit Trace Platform</h1>
-            <p className="muted-text">Workflow Dashboard</p>
+            <h1>Encoding Platform</h1>
+            <p className="muted-text">Sales and encoding command center</p>
           </div>
         </div>
         <div className="top-nav-center app-nav-and-search">
@@ -37,7 +37,7 @@ export function AppShell(props: AppShellProps): JSX.Element {
           {headerCenter}
         </div>
         <div className="top-nav-right">
-          <span className="user-name">Suman Paul</span>
+          <span className="user-name">Encoding User 1</span>
           <button type="button">Logout</button>
         </div>
       </header>

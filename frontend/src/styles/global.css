@@ -1263,6 +1263,24 @@ input {
   padding: 0 8px;
 }
 
+.field-confidence-button--low {
+  border-color: var(--brand-red-soft-border);
+  background: var(--brand-red-soft);
+  color: var(--brand-red);
+}
+
+.field-confidence-button--mid {
+  border-color: var(--state-warning-border);
+  background: var(--state-warning-soft);
+  color: var(--state-warning);
+}
+
+.field-confidence-button--high {
+  border-color: #86efac;
+  background: var(--state-success-soft);
+  color: var(--state-success);
+}
+
 .field-meta-popover {
   border: 1px solid var(--border-default);
   border-radius: 10px;
