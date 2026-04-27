@@ -12,7 +12,9 @@ export function AppShell(props: AppShellProps): JSX.Element {
     <div className="dashboard-root">
       <header className="top-nav">
         <div className="top-nav-left">
-          <img className="header-logo" src="/assets/BPHLY_BIG.D.svg" alt="BPI logo" />
+          <div className="header-app-mark" aria-hidden="true">
+            EP
+          </div>
           <div className="header-title">
             <h1>Encoding Platform</h1>
             <p className="muted-text">Sales and encoding command center</p>
