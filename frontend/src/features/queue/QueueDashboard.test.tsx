@@ -15,8 +15,8 @@ describe("QueueDashboard", () => {
     );
     expect(screen.getByRole("tab", { name: /Encoding Queue/i })).toBeInTheDocument();
     expect(screen.getByRole("tab", { name: /Encoding Completed/i })).toBeInTheDocument();
-    expect(screen.queryByRole("tab", { name: /Decision Queue/i })).not.toBeInTheDocument();
-    expect(screen.queryByRole("tab", { name: /Decision Completed/i })).not.toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Decision Queue/i })).toBeInTheDocument();
+    expect(screen.getByRole("tab", { name: /Decision Completed/i })).toBeInTheDocument();
     expect(await screen.findByRole("cell", { name: "APP-2026-0001" })).toBeInTheDocument();
   });
 
@@ -33,6 +33,23 @@ describe("QueueDashboard", () => {
     expect(await screen.findByRole("button", { name: /Save Adjustments & Trigger Decision/i })).toBeInTheDocument();
   });
 
+  it("shows decision summary when decision completed tab selected", async () => {
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter>
+        <QueueDashboard />
+      </MemoryRouter>
+    );
+
+    await user.click(screen.getByRole("tab", { name: /Decision Completed/i }));
+    await waitFor(() => {
+      expect(screen.getByText("Decision Completed")).toBeInTheDocument();
+    });
+    expect(await screen.findByRole("button", { name: "Rule Matrix" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Decision Memo" })).toBeInTheDocument();
+    expect(await screen.findByRole("button", { name: "Case Details" })).toBeInTheDocument();
+  });
+
   it("shows feature-gated filters by status tab", async () => {
     const user = userEvent.setup();
     render(
@@ -44,11 +61,15 @@ describe("QueueDashboard", () => {
     expect(await screen.findByLabelText(/Filter by intake status/i)).toBeInTheDocument();
     expect(screen.getByRole("option", { name: "Dealer Email" })).toBeInTheDocument();
 
-    await user.click(screen.getByRole("tab", { name: /Encoding Completed/i }));
-    await screen.findByRole("cell", { name: "APP-2026-0004" });
+    await user.click(screen.getByRole("tab", { name: /Decision Queue/i }));
+    await screen.findByRole("cell", { name: "APP-2026-0005" });
 
     expect(screen.queryByLabelText(/Filter by intake status/i)).not.toBeInTheDocument();
-    expect(screen.getByRole("option", { name: "Dealer Email" })).toBeInTheDocument();
+    expect(screen.queryByRole("option", { name: "Dealer Email" })).not.toBeInTheDocument();
+
+    await user.click(screen.getByRole("tab", { name: /Decision Completed/i }));
+    await screen.findByRole("cell", { name: "APP-2026-0007" });
+    expect(screen.getByLabelText(/Filter by approval bucket/i)).toBeInTheDocument();
   });
 
   it("sorts intake statuses with encoding in progress first", async () => {
